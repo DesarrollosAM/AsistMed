@@ -9,7 +9,8 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.AsistMed">
-        <activity android:name=".PruebasAlberto"></activity>
+        <activity android:name=".BienvenidaActivity"></activity>
+        <activity android:name=".PruebasAlberto" />
         <activity android:name=".LoginActivity" />
         <activity android:name=".MainActivity">
             <intent-filter>
