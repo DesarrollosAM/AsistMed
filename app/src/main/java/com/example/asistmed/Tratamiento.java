@@ -4,14 +4,14 @@ public class Tratamiento {
 
     private int id_tratamiento;
     private String nombre;
-    private int duracion;
+    private String duracion;
     private int cantidad_med;
     private int id_usuario;
 
     public Tratamiento() {
     }
 
-    public Tratamiento(int id_tratamiento, String nombre, int duracion, int cantidad_med, int id_usuario) {
+    public Tratamiento(int id_tratamiento, String nombre, String duracion, int cantidad_med, int id_usuario) {
         this.id_tratamiento = id_tratamiento;
         this.nombre = nombre;
         this.duracion = duracion;
@@ -35,11 +35,11 @@ public class Tratamiento {
         this.nombre = nombre;
     }
 
-    public int getDuracion() {
+    public String getDuracion() {
         return duracion;
     }
 
-    public void setDuracion(int duracion) {
+    public void setDuracion(String duracion) {
         this.duracion = duracion;
     }
 

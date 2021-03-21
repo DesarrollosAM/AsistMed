@@ -105,6 +105,8 @@ public class BBDD extends AppCompatActivity {
         }
     }
 
+    //**TABLA TRATAMIENTO**
+
     /**
      * Método por el que realizamos una consulta de toda la tabla tratamiento para añadir a una
      * lista los registros que se obtengan.
@@ -112,8 +114,8 @@ public class BBDD extends AppCompatActivity {
     public LinkedList<Tratamiento> consultaTablaTratamiento() {
 
         //Declaramos las variables necesarias.
-        int total = 0, id_trat, duracionTrat, cantidadMed, id_usuario;
-        String nombreTrat;
+        int total = 0, id_trat, cantidadMed, id_usuario;
+        String nombreTrat, duracionTrat;
         LinkedList<Tratamiento> listaTr = new LinkedList<>();
 
         try {
@@ -140,7 +142,7 @@ public class BBDD extends AppCompatActivity {
                     for (int i = 1; i > total; i++) {
                         id_trat = rs.getInt(1);
                         nombreTrat = rs.getString(2);
-                        duracionTrat = rs.getInt(3);
+                        duracionTrat = rs.getString(3);
                         cantidadMed = rs.getInt(4);
                         id_usuario = rs.getInt(5);
                         Tratamiento t = new Tratamiento(id_trat, nombreTrat, duracionTrat, cantidadMed, id_usuario);
@@ -174,29 +176,71 @@ public class BBDD extends AppCompatActivity {
             //Realizamos una consulta para comprobar el nombre de los tratamientos.
             conectar();
             st = cn.createStatement();
-            rs = st.executeQuery("SELECT nombre FROM TRATAMIENTO;");
+            rs = st.executeQuery("SELECT nombre_tratamiento FROM TRATAMIENTO;");
             while (rs.next()) {
                 nombreTratamiento = rs.getString(1);
                 existe = nombre.equalsIgnoreCase(nombreTratamiento);
-                if (existe){
+                if (existe) {
                     break;
                 }
             }
             desconectarTrasConsulta();
 
             //Si no existe el nombre, insertamos el nuevo tratamiento.
-            if(!existe) {
+            if (!existe) {
                 conectar();
                 st = cn.createStatement();
-                st.executeUpdate("INSERT INTO TRATAMIENTO (nombre, duracion, cantidad, id_usuario) VALUES ('" + nombre + "'," + duracion + "," + cantidad + "," + id_usuario + ");");
+                st.executeUpdate("INSERT INTO TRATAMIENTO (nombre_tratamiento, duracion, cantidad, id_usuario) VALUES ('" + nombre + "'," + duracion + "," + cantidad + "," + id_usuario + ");");
                 desconectarTrasModificacion();
-            } else{
+            } else {
                 //Lo que sea. Enviar mensaje informativo o actualizar tratamiento.
             }
         } catch (SQLException e) {
 
         }
     }
+
+    //**TABLA MEDICAMENTO**
+
+
+    //**TABLA USUARIO**
+    public boolean insertarUsuario(String nombre, String pass){
+
+        //Declaramos las variables necesarias.
+        String nombreUsuario;
+        boolean existe = false;
+
+        try {
+            //Realizamos una consulta para comprobar el nombre de los tratamientos.
+            conectar();
+            st = cn.createStatement();
+            rs = st.executeQuery("SELECT nombre_usuario FROM USUARIO;");
+            while (rs.next()) {
+                nombreUsuario = rs.getString(1);
+                existe = nombre.equalsIgnoreCase(nombreUsuario);
+                if (existe) {
+                    break;
+                }
+            }
+            desconectarTrasConsulta();
+
+            //Si no existe el nombre de usuario, insertamos el nuevo tratamiento.
+            if(!existe){
+                conectar();
+                st = cn.createStatement();
+                st.executeUpdate("INSERT INTO USUARIO (nombre_usuario, password) VALUES ('" + nombre + "','" + pass + "');");
+                desconectarTrasModificacion();
+
+            }
+            else{
+                //Lo que sea
+            }
+        } catch (SQLException e) {
+
+        }
+        return existe;
+    }
+
 
 
 }
