@@ -218,7 +218,7 @@ public class BBDD extends AppCompatActivity {
     //**TABLA USUARIO**
 
     /**
-     * Método por el que comprobamos si existe un nuevo usuario, y si no, lo insertamos en la BBDD.
+     * Método INSERTAR USUARIO por el que comprobamos si existe un nuevo usuario, y si no, lo insertamos en la BBDD.
      *
      * @param nombre Variable de tipo String.
      * @param pass   Variable de tipo String.
@@ -261,6 +261,21 @@ public class BBDD extends AppCompatActivity {
         return existe;
     }
 
+    public void eliminarUsuario(String nombre, String motivoBaja) {
+
+        try {
+            creacionLogger();
+            conectar();
+            st = cn.createStatement();
+            st.executeUpdate("DELETE FROM USUARIO WHERE nombre_usuario = '" + nombre + "';");
+            desconectarTrasModificacion();
+        } catch (SQLException | IOException e) {
+            LOGGER.log(Level.INFO, e.getMessage());
+        }
+    }
+
+
+    //**LOGGER**
     public void creacionLogger() throws IOException {
 
         //TODO: Comprobar si existe o no un filehandler.
