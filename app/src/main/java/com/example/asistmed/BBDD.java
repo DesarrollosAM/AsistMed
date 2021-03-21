@@ -204,7 +204,15 @@ public class BBDD extends AppCompatActivity {
 
 
     //**TABLA USUARIO**
-    public boolean insertarUsuario(String nombre, String pass){
+
+    /**
+     * Método por el que comprobamos si existe un nuevo usuario, y si no, lo insertamos en la BBDD.
+     *
+     * @param nombre Variable de tipo String.
+     * @param pass   Variable de tipo String.
+     * @return Devuelve un valor booleano dependiendo de si existe el registro o no.
+     */
+    public boolean insertarUsuario(String nombre, String pass) {
 
         //Declaramos las variables necesarias.
         String nombreUsuario;
@@ -225,14 +233,13 @@ public class BBDD extends AppCompatActivity {
             desconectarTrasConsulta();
 
             //Si no existe el nombre de usuario, insertamos el nuevo tratamiento.
-            if(!existe){
+            if (!existe) {
                 conectar();
                 st = cn.createStatement();
                 st.executeUpdate("INSERT INTO USUARIO (nombre_usuario, password) VALUES ('" + nombre + "','" + pass + "');");
                 desconectarTrasModificacion();
 
-            }
-            else{
+            } else {
                 //Lo que sea
             }
         } catch (SQLException e) {
@@ -240,7 +247,6 @@ public class BBDD extends AppCompatActivity {
         }
         return existe;
     }
-
 
 
 }
