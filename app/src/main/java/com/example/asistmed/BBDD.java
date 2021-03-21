@@ -33,8 +33,6 @@ public class BBDD extends AppCompatActivity {
     private String url = "jdbc:mysql://remotemysql.com:3306/AgZCNnxy2b";
     private String user = "AgZCNnxy2b";
     private String password = "LezDBm5oos";
-    private String tablaTratamiento = "TRATAMIENTO";
-    private String tablaMedicamento = "MEDICAMENTO";
     private SharedPreferences sp = getApplicationContext().getSharedPreferences("bbdd", Context.MODE_PRIVATE);
     //private SharedPreferences shared = getApplicationContext().getSharedPreferences("usuarios",Context.MODE_PRIVATE);
     private SharedPreferences.Editor editor = sp.edit();
@@ -108,7 +106,8 @@ public class BBDD extends AppCompatActivity {
     }
 
     /**
-     * Método por el que realizamos una consulta de toda la tabla tratamiento.
+     * Método por el que realizamos una consulta de toda la tabla tratamiento para añadir a una
+     * lista los registros que se obtengan.
      */
     public LinkedList<Tratamiento> consultaTablaTratamiento() {
 
@@ -121,7 +120,7 @@ public class BBDD extends AppCompatActivity {
             //Realizamos una consulta para obtener el total de registros.
             conectar();
             st = cn.createStatement();
-            rs = st.executeQuery("SELECT COUNT(*) FROM " + tablaTratamiento + ";");
+            rs = st.executeQuery("SELECT COUNT(*) FROM TRATAMIENTO;");
             while (rs.next()) {
                 total = rs.getInt(1);
             }
@@ -132,7 +131,7 @@ public class BBDD extends AppCompatActivity {
                 //Realizamos la consulta a la tabla.
                 conectar();
                 st = cn.createStatement();
-                rs = st.executeQuery("SELECT * FROM " + tablaTratamiento + ";");
+                rs = st.executeQuery("SELECT * FROM TRATAMIENTO;");
                 while (rs.next()) {
                 /*
                 Obtenemos los datos de la bbdd en cada vuelta, creamos un nuevo objeto Tratamiento
@@ -148,11 +147,55 @@ public class BBDD extends AppCompatActivity {
                         listaTr.add(i, t);
                     }
                 }
+                desconectarTrasConsulta();
             }
         } catch (SQLException e) {
             System.out.println(e.getCause());
         }
         return listaTr;
+    }
+
+    /**
+     * Método por el que comprobamos si existe un tratamiento en concreto y si no, lo insertamos a
+     * la BBDD.
+     *
+     * @param nombre     Variable de tipo String.
+     * @param duracion   Variable de tipo entero.
+     * @param cantidad   Variable de tipo entero.
+     * @param id_usuario Variable de tipo entero.
+     */
+    public void insertarTratamiento(String nombre, int duracion, int cantidad, int id_usuario) {
+
+        //Declaramos las variables necesarias.
+        String nombreTratamiento;
+        boolean existe = false;
+
+        try {
+            //Realizamos una consulta para comprobar el nombre de los tratamientos.
+            conectar();
+            st = cn.createStatement();
+            rs = st.executeQuery("SELECT nombre FROM TRATAMIENTO;");
+            while (rs.next()) {
+                nombreTratamiento = rs.getString(1);
+                existe = nombre.equalsIgnoreCase(nombreTratamiento);
+                if (existe){
+                    break;
+                }
+            }
+            desconectarTrasConsulta();
+
+            //Si no existe el nombre, insertamos el nuevo tratamiento.
+            if(!existe) {
+                conectar();
+                st = cn.createStatement();
+                st.executeUpdate("INSERT INTO TRATAMIENTO (nombre, duracion, cantidad, id_usuario) VALUES ('" + nombre + "'," + duracion + "," + cantidad + "," + id_usuario + ");");
+                desconectarTrasModificacion();
+            } else{
+                //Lo que sea. Enviar mensaje informativo o actualizar tratamiento.
+            }
+        } catch (SQLException e) {
+
+        }
     }
 
 
