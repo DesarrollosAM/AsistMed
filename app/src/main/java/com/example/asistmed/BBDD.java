@@ -10,6 +10,8 @@ import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.ArrayList;
+import java.util.LinkedList;
 
 public class BBDD extends AppCompatActivity {
 
@@ -30,7 +32,7 @@ public class BBDD extends AppCompatActivity {
     private String password = "LezDBm5oos";
     private String tablaTratamiento = "TRATAMIENTO";
     private String tablaMedicamento = "MEDICAMENTO";
-    private SharedPreferences sp = getApplicationContext().getSharedPreferences("bbdd",Context.MODE_PRIVATE);
+    private SharedPreferences sp = getApplicationContext().getSharedPreferences("bbdd", Context.MODE_PRIVATE);
     //private SharedPreferences shared = getApplicationContext().getSharedPreferences("usuarios",Context.MODE_PRIVATE);
     private SharedPreferences.Editor editor = sp.edit();
 
@@ -105,34 +107,43 @@ public class BBDD extends AppCompatActivity {
     /**
      * Método por el que realizamos una consulta de toda la tabla tratamiento.
      */
-    public void consultaTablaTratamiento(){
+    public void consultaTablaTratamiento() {
+
+        //Declaramos las variables necesarias.
         int total = 0, id_trat, duracionTrat, cantidadMed, id_usuario;
         String nombreTrat;
+        LinkedList<Tratamiento> listaTr = new LinkedList<>();
 
-        try{
+        try {
+            //Realizamos una consulta para obtener el total de registros.
             conectar();
             st = cn.createStatement();
             rs = st.executeQuery("SELECT COUNT(*) FROM " + tablaTratamiento + ";");
-            while(rs.next()){
+            while (rs.next()) {
                 total = rs.getInt(1);
             }
             desconectarTrasConsulta();
 
+            //Realizamos la consulta a la tabla.
             conectar();
             st = cn.createStatement();
-            rs = st.executeQuery("SELECT * FROM "+ tablaTratamiento + ";");
-            while(rs.next()){
+            rs = st.executeQuery("SELECT * FROM " + tablaTratamiento + ";");
+            while (rs.next()) {
+                /*
+                Obtenemos los datos de la bbdd en cada vuelta, creamos un nuevo objeto Tratamiento
+                con ellos y los añadimos a una lista.
+                 */
                 for (int i = 1; i > total; i++) {
                     id_trat = rs.getInt(1);
                     nombreTrat = rs.getString(2);
                     duracionTrat = rs.getInt(3);
                     cantidadMed = rs.getInt(4);
                     id_usuario = rs.getInt(5);
-                    String claseTrat = "trat" + i;
-                    //Tratamiento
+                    Tratamiento t = new Tratamiento(id_trat, nombreTrat, duracionTrat, cantidadMed, id_usuario);
+                    listaTr.add(i, t);
                 }
             }
-        } catch (SQLException e){
+        } catch (SQLException e) {
             System.out.println(e.getCause());
         }
     }
