@@ -44,8 +44,8 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     public void onClick(View view) {
 
         //Asignamos a una variable tipo EditText el usuario y password introducidos
-        EditText etUsuario= (EditText) findViewById(R.id.etUsuario);
-        EditText etPassword= (EditText) findViewById(R.id.etPassword);
+        EditText etUsuario = (EditText) findViewById(R.id.etUsuario);
+        EditText etPassword = (EditText) findViewById(R.id.etPassword);
         //Rescatamos los valores introducidos por el usuario al pulsar el botón de acceso
         usuario = etUsuario.getText().toString();
         password = etPassword.getText().toString();
@@ -61,8 +61,11 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
             toastUsuarioValido.show();
 
         } else {
-
-           // while (valido == false) {
+            Toast toast = Toast.makeText(this, "PRUEBAS!", Toast.LENGTH_LONG);
+            toast.show();
+            while (valido == false) {
+                btAcceso.setSelected(false);
+                usuario = etUsuario.getText().toString();
                 Toast toastUsuarioNoValido = Toast.makeText(this, "Usuario no válido!", Toast.LENGTH_LONG);
                 toastUsuarioNoValido.show();
                 pat = Pattern.compile("[A-Z]{1}[a-zA-Z0-9]{5}$");
@@ -70,7 +73,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                 if (mat.find()) {
                     valido = true;
                 }
-           // }
+            }
         }
 
 /*        //Comprobamos patrón
