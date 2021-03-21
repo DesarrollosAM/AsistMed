@@ -5,6 +5,7 @@ import android.content.SharedPreferences;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import java.io.IOException;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
@@ -12,10 +13,15 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.LinkedList;
+import java.util.logging.FileHandler;
+import java.util.logging.Handler;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import java.util.logging.SimpleFormatter;
 
 public class BBDD extends AppCompatActivity {
 
-    //TODO: añadir logger a los catch.
+    //TODO: Revisar funcionamiento de los logger.
 
 
     //Datos para BBDD del proyecto final AsistMed
@@ -25,6 +31,7 @@ public class BBDD extends AppCompatActivity {
     String user = "AgZCNnxy2b"
     String password = "LezDBm5oos";
     */
+    private final Logger LOGGER = Logger.getLogger("com.example.asistmed.BBDD");
 
     private Statement st;
     private Connection cn;
@@ -58,7 +65,7 @@ public class BBDD extends AppCompatActivity {
      *                 contraseña.
      * @param driver   Variable de tipo String en la que asignaremos el driver.
      */
-    public BBDD(Statement st, Connection cn, ResultSet rs, String url, String user, String password, String driver) {
+    public BBDD(Statement st, Connection cn, ResultSet rs, String url, String user, String password, String driver) throws IOException {
         this.st = st;
         this.cn = cn;
         this.rs = rs;
@@ -73,10 +80,11 @@ public class BBDD extends AppCompatActivity {
      */
     public void conectar() {
         try {
+            creacionLogger();
             Class.forName(driver);
             cn = DriverManager.getConnection(url, user, password);
-        } catch (SQLException | ClassNotFoundException sce) {
-            System.out.println(sce.getCause());
+        } catch (SQLException | ClassNotFoundException | IOException sce) {
+            LOGGER.log(Level.INFO, sce.getMessage());
         }
     }
 
@@ -85,11 +93,12 @@ public class BBDD extends AppCompatActivity {
      */
     public void desconectarTrasConsulta() {
         try {
+            creacionLogger();
             cn.close();
             st.close();
             rs.close();
-        } catch (SQLException e) {
-            System.out.println(e.getCause());
+        } catch (SQLException | IOException e) {
+            LOGGER.log(Level.INFO, e.getMessage());
         }
     }
 
@@ -98,10 +107,11 @@ public class BBDD extends AppCompatActivity {
      */
     public void desconectarTrasModificacion() {
         try {
+            creacionLogger();
             cn.close();
             st.close();
-        } catch (SQLException e) {
-            System.out.println(e.getCause());
+        } catch (SQLException | IOException e) {
+            LOGGER.log(Level.INFO, e.getMessage());
         }
     }
 
@@ -119,6 +129,7 @@ public class BBDD extends AppCompatActivity {
         LinkedList<Tratamiento> listaTr = new LinkedList<>();
 
         try {
+            creacionLogger();
             //Realizamos una consulta para obtener el total de registros.
             conectar();
             st = cn.createStatement();
@@ -151,8 +162,8 @@ public class BBDD extends AppCompatActivity {
                 }
                 desconectarTrasConsulta();
             }
-        } catch (SQLException e) {
-            System.out.println(e.getCause());
+        } catch (SQLException | IOException e) {
+            LOGGER.log(Level.INFO, e.getMessage());
         }
         return listaTr;
     }
@@ -174,6 +185,7 @@ public class BBDD extends AppCompatActivity {
 
         try {
             //Realizamos una consulta para comprobar el nombre de los tratamientos.
+            creacionLogger();
             conectar();
             st = cn.createStatement();
             rs = st.executeQuery("SELECT nombre_tratamiento FROM TRATAMIENTO;");
@@ -195,8 +207,8 @@ public class BBDD extends AppCompatActivity {
             } else {
                 //Lo que sea. Enviar mensaje informativo o actualizar tratamiento.
             }
-        } catch (SQLException e) {
-
+        } catch (SQLException | IOException e) {
+            LOGGER.log(Level.INFO, e.getMessage());
         }
     }
 
@@ -219,7 +231,8 @@ public class BBDD extends AppCompatActivity {
         boolean existe = false;
 
         try {
-            //Realizamos una consulta para comprobar el nombre de los tratamientos.
+            creacionLogger();
+            //Realizamos una consulta para comprobar el nombre de los usuarios.
             conectar();
             st = cn.createStatement();
             rs = st.executeQuery("SELECT nombre_usuario FROM USUARIO;");
@@ -232,7 +245,7 @@ public class BBDD extends AppCompatActivity {
             }
             desconectarTrasConsulta();
 
-            //Si no existe el nombre de usuario, insertamos el nuevo tratamiento.
+            //Si no existe el nombre de usuario, insertamos el nuevo usuario.
             if (!existe) {
                 conectar();
                 st = cn.createStatement();
@@ -242,10 +255,24 @@ public class BBDD extends AppCompatActivity {
             } else {
                 //Lo que sea
             }
-        } catch (SQLException e) {
-
+        } catch (SQLException | IOException e) {
+            LOGGER.log(Level.INFO, e.getMessage());
         }
         return existe;
+    }
+
+    public void creacionLogger() throws IOException {
+
+        //TODO: Comprobar si existe o no un filehandler.
+        Handler fil;
+        Handler fileHandler = new FileHandler("./bitacora.log", true);
+        LOGGER.setUseParentHandlers(false);
+        //Le damos formato.
+        SimpleFormatter simpleFormatter = new SimpleFormatter();
+        fileHandler.setFormatter(simpleFormatter);
+        //Lo configuramos para que inserte en todos los niveles
+        fileHandler.setLevel(Level.ALL);
+        LOGGER.addHandler(fileHandler);
     }
 
 
