@@ -217,6 +217,36 @@ public class BBDD extends AppCompatActivity {
 
     //**TABLA USUARIO**
 
+    public boolean compruebaUsuario(String usuario){
+
+        String  compruebaUsuario;
+        boolean existeUsuario = false;
+
+        try{
+            conectar();
+            st = cn.createStatement();
+            rs = st.executeQuery("SELECT nombre_usuario FROM USUARIO;");
+
+            while (rs.next()) {
+                compruebaUsuario = rs.getString(1);
+                existeUsuario = usuario.equalsIgnoreCase(compruebaUsuario);
+                if (existeUsuario) {
+                    existeUsuario = true;
+                }else {
+                    existeUsuario = false;
+                }
+            }
+            desconectarTrasConsulta();
+
+
+        } catch (SQLException exception) {
+
+        }
+
+        return existeUsuario;
+
+    }
+
     /**
      * Método INSERTAR USUARIO por el que comprobamos si existe un nuevo usuario, y si no, lo insertamos en la BBDD.
      *
@@ -260,6 +290,8 @@ public class BBDD extends AppCompatActivity {
         }
         return existe;
     }
+
+
 
     public void eliminarUsuario(String nombre, String motivoBaja) {
 

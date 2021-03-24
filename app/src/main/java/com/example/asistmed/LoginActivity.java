@@ -16,6 +16,10 @@ import java.util.regex.Pattern;
 
 public class LoginActivity extends AppCompatActivity implements View.OnClickListener {
 
+    //Declaramos un objeto de la clase BBDD
+
+    BBDD bbdd = new BBDD();
+
     //Declaramos las variables, tipo Shared, editor e ImageView
     ImageView btAcceso;
     SharedPreferences shared;
@@ -44,13 +48,40 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     public void onClick(View view) {
 
         //Asignamos a una variable tipo EditText el usuario y password introducidos
-        EditText etUsuario = (EditText) findViewById(R.id.etUsuario);
-        EditText etPassword = (EditText) findViewById(R.id.etPassword);
+        EditText etUsuario= (EditText) findViewById(R.id.etUsuario);
+        EditText etPassword= (EditText) findViewById(R.id.etPassword);
         //Rescatamos los valores introducidos por el usuario al pulsar el botón de acceso
         usuario = etUsuario.getText().toString();
         password = etPassword.getText().toString();
 
-        pat = Pattern.compile("[A-Z]{1}[a-zA-Z0-9]{5}$");
+
+        if (bbdd.compruebaUsuario(usuario)){
+
+            //Instanciamos Shared, abrimos fichero "usuarios" con acceso en modo privado y abrimos editor
+
+            shared = getApplicationContext().getSharedPreferences("usuarios", Context.MODE_PRIVATE);
+            editor = shared.edit();
+
+            //Utilizamos el editor para guardar la variable dato recogida del EditText Usuario en la clave "Usuario" de nuestro archivo Shared que hemos llamado "Datos"
+            editor.putString("usuario", usuario);
+            editor.putString("password", password);
+            editor.commit();
+
+
+            //Instanciamos un objeto Intent, pasandole con this el Activity actual, y como segundo parametro el Activity que vamos a cargar
+            Intent intent = new Intent(this, MainActivity.class);
+            startActivity(intent); // Lanzamos el activity
+
+        }else{
+
+            Toast toastUsuarioValido = Toast.makeText(this, "El usuario no existe!", Toast.LENGTH_LONG);
+            toastUsuarioValido.show();
+        }
+
+
+
+
+/*        pat = Pattern.compile("[A-Z]{1}[a-zA-Z0-9]{5}$");
         mat = pat.matcher(usuario);
 
         //Si es correcto continua la ejecución, si no, vuelve a pedirlo.
@@ -61,13 +92,13 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
             toastUsuarioValido.show();
 
         } else {
-            Toast toast = Toast.makeText(this, "PRUEBAS!", Toast.LENGTH_LONG);
-            toast.show();
+
             while (valido == false) {
-                btAcceso.setSelected(false);
+
                 usuario = etUsuario.getText().toString();
                 Toast toastUsuarioNoValido = Toast.makeText(this, "Usuario no válido!", Toast.LENGTH_LONG);
                 toastUsuarioNoValido.show();
+
                 pat = Pattern.compile("[A-Z]{1}[a-zA-Z0-9]{5}$");
                 mat = pat.matcher(usuario);
                 if (mat.find()) {
@@ -76,7 +107,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
             }
         }
 
-/*        //Comprobamos patrón
+        //Comprobamos patrón
         pat = Pattern.compile("(([A-Z]{0,1}){1}[a-z]){2}[0-9]{3}$");
         mat = pat.matcher(password);
 
@@ -101,20 +132,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
             }
         }*/
 
-        //Instanciamos Shared, abrimos fichero "usuarios" con acceso en modo privado y abrimos editor
 
-        shared = getApplicationContext().getSharedPreferences("usuarios", Context.MODE_PRIVATE);
-        editor = shared.edit();
-
-        //Utilizamos el editor para guardar la variable dato recogida del EditText Usuario en la clave "Usuario" de nuestro archivo Shared que hemos llamado "Datos"
-        editor.putString("usuario", usuario);
-        //editor.putString("password", password);
-        editor.commit();
-
-
-        //Instanciamos un objeto Intent, pasandole con this el Activity actual, y como segundo parametro el Activity que vamos a cargar
-        Intent intent = new Intent(this, MainActivity.class);
-        startActivity(intent); // Lanzamos el activity
 
 
     }
