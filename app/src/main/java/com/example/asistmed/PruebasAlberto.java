@@ -34,8 +34,12 @@ public class PruebasAlberto extends AppCompatActivity {
 
         try{
             b = new BBDD(st, cn, rs, url, user, password, driver);
+            Tratamiento t;
+            //t = b.insertarTratamiento("Gripe", "3", 2, 1);
+            //txtPanel.setText(t.getNombre() + "\n");
+
             listaTratamientos = b.consultaTablaTratamiento();
-            txtPanel.setText(listaTratamientos.size());
+            txtPanel.setText(txtPanel.getText() + "Numero de tratamientos: " + listaTratamientos.size());
         } catch (IOException e){
 
         }

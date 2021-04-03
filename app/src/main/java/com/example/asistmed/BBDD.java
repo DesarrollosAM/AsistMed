@@ -2,6 +2,7 @@ package com.example.asistmed;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -36,13 +37,13 @@ public class BBDD extends AppCompatActivity {
     private Statement st;
     private Connection cn;
     private ResultSet rs;
-    private String driver = "com.mysql.jdbc.Driver";
-    private String url = "jdbc:mysql://remotemysql.com:3306/AgZCNnxy2b";
-    private String user = "AgZCNnxy2b";
-    private String password = "LezDBm5oos";
-    private SharedPreferences sp = getApplicationContext().getSharedPreferences("bbdd", Context.MODE_PRIVATE);
+    private String driver;
+    private String url;
+    private String user;
+    private String password;
+    //private SharedPreferences sp = getApplicationContext().getSharedPreferences("bbdd", Context.MODE_PRIVATE);
     //private SharedPreferences shared = getApplicationContext().getSharedPreferences("usuarios",Context.MODE_PRIVATE);
-    private SharedPreferences.Editor editor = sp.edit();
+    //private SharedPreferences.Editor editor = sp.edit();
 
 
     /**
@@ -80,11 +81,15 @@ public class BBDD extends AppCompatActivity {
      */
     public void conectar() {
         try {
-            creacionLogger();
+            //creacionLogger();
+            driver = "com.mysql.jdbc.Driver";
+            url = "jdbc:mysql://remotemysql.com:3306/AgZCNnxy2b";
+            user = "AgZCNnxy2b";
+            password = "LezDBm5oos";
             Class.forName(driver);
             cn = DriverManager.getConnection(url, user, password);
-        } catch (SQLException | ClassNotFoundException | IOException sce) {
-            LOGGER.log(Level.INFO, sce.getMessage());
+        } catch (SQLException | ClassNotFoundException sce) {
+            //LOGGER.log(Level.INFO, sce.getMessage());
         }
     }
 
@@ -93,12 +98,12 @@ public class BBDD extends AppCompatActivity {
      */
     public void desconectarTrasConsulta() {
         try {
-            creacionLogger();
+            //creacionLogger();
             cn.close();
             st.close();
             rs.close();
-        } catch (SQLException | IOException e) {
-            LOGGER.log(Level.INFO, e.getMessage());
+        } catch (SQLException e) {
+            //LOGGER.log(Level.INFO, e.getMessage());
         }
     }
 
@@ -107,11 +112,11 @@ public class BBDD extends AppCompatActivity {
      */
     public void desconectarTrasModificacion() {
         try {
-            creacionLogger();
+            //creacionLogger();
             cn.close();
             st.close();
-        } catch (SQLException | IOException e) {
-            LOGGER.log(Level.INFO, e.getMessage());
+        } catch (SQLException e) {
+            //LOGGER.log(Level.INFO, e.getMessage());
         }
     }
 
@@ -129,16 +134,25 @@ public class BBDD extends AppCompatActivity {
         LinkedList<Tratamiento> listaTr = new LinkedList<>();
 
         try {
-            creacionLogger();
+            //creacionLogger();
             //Realizamos una consulta para obtener el total de registros.
-            conectar();
+            //conectar();
+            driver = "com.mysql.jdbc.Driver";
+            url = "jdbc:mysql://remotemysql.com:3306/AgZCNnxy2b";
+            user = "AgZCNnxy2b";
+            password = "LezDBm5oos";
+            Class.forName(driver);
+            cn = DriverManager.getConnection(url, user, password);
             st = cn.createStatement();
             rs = st.executeQuery("SELECT COUNT(*) FROM TRATAMIENTO;");
             while (rs.next()) {
                 total = rs.getInt(1);
             }
-            desconectarTrasConsulta();
-
+            cn.close();
+            st.close();
+            rs.close();
+            //desconectarTrasConsulta();
+            System.out.println("TOTI = " + total);
             //Si existen registros, continuamos con la ejecución.
             if (total != 0) {
                 //Realizamos la consulta a la tabla.
@@ -156,14 +170,14 @@ public class BBDD extends AppCompatActivity {
                         duracionTrat = rs.getString(3);
                         cantidadMed = rs.getInt(4);
                         id_usuario = rs.getInt(5);
-                        Tratamiento t = new Tratamiento(id_trat, nombreTrat, duracionTrat, cantidadMed, id_usuario);
+                        Tratamiento t = new Tratamiento(nombreTrat, duracionTrat, cantidadMed, id_usuario);
                         listaTr.add(i, t);
                     }
                 }
                 desconectarTrasConsulta();
             }
-        } catch (SQLException | IOException e) {
-            LOGGER.log(Level.INFO, e.getMessage());
+        } catch (SQLException | ClassNotFoundException e) {
+            //LOGGER.log(Level.INFO, e.getMessage());
         }
         return listaTr;
     }
@@ -177,16 +191,23 @@ public class BBDD extends AppCompatActivity {
      * @param cantidad   Variable de tipo entero.
      * @param id_usuario Variable de tipo entero.
      */
-    public void insertarTratamiento(String nombre, int duracion, int cantidad, int id_usuario) {
+    public Tratamiento insertarTratamiento(String nombre, String duracion, int cantidad, int id_usuario) {
 
+        Tratamiento t = new Tratamiento(nombre, duracion, cantidad, id_usuario);
         //Declaramos las variables necesarias.
         String nombreTratamiento;
         boolean existe = false;
 
         try {
             //Realizamos una consulta para comprobar el nombre de los tratamientos.
-            creacionLogger();
-            conectar();
+            //creacionLogger();
+            //conectar();
+            driver = "com.mysql.jdbc.Driver";
+            url = "jdbc:mysql://remotemysql.com:3306/AgZCNnxy2b";
+            user = "AgZCNnxy2b";
+            password = "LezDBm5oos";
+            Class.forName(driver);
+            cn = DriverManager.getConnection(url, user, password);
             st = cn.createStatement();
             rs = st.executeQuery("SELECT nombre_tratamiento FROM TRATAMIENTO;");
             while (rs.next()) {
@@ -196,20 +217,34 @@ public class BBDD extends AppCompatActivity {
                     break;
                 }
             }
-            desconectarTrasConsulta();
+            cn.close();
+            st.close();
+            rs.close();
+            //desconectarTrasConsulta();
 
             //Si no existe el nombre, insertamos el nuevo tratamiento.
             if (!existe) {
-                conectar();
+                //conectar();
+                driver = "com.mysql.jdbc.Driver";
+                url = "jdbc:mysql://remotemysql.com:3306/AgZCNnxy2b";
+                user = "AgZCNnxy2b";
+                password = "LezDBm5oos";
+                Class.forName(driver);
+                cn = DriverManager.getConnection(url, user, password);
                 st = cn.createStatement();
-                st.executeUpdate("INSERT INTO TRATAMIENTO (nombre_tratamiento, duracion, cantidad, id_usuario) VALUES ('" + nombre + "'," + duracion + "," + cantidad + "," + id_usuario + ");");
-                desconectarTrasModificacion();
+                st.executeUpdate("INSERT INTO TRATAMIENTO (nombre_tratamiento, duracion, cantidad_med, id_usuario) VALUES ('" + nombre + "','" + duracion + "'," + cantidad + "," + id_usuario + ");");
+                //desconectarTrasModificacion();
+                cn.close();
+                st.close();
             } else {
                 //Lo que sea. Enviar mensaje informativo o actualizar tratamiento.
+                Toast toast = Toast.makeText(this, "Inserción no realizada.", Toast.LENGTH_LONG);
+                toast.show();
             }
-        } catch (SQLException | IOException e) {
-            LOGGER.log(Level.INFO, e.getMessage());
+        } catch (SQLException | ClassNotFoundException e) {
+            //LOGGER.log(Level.INFO, e.getMessage());
         }
+        return t;
     }
 
     //**TABLA MEDICAMENTO**
@@ -223,7 +258,13 @@ public class BBDD extends AppCompatActivity {
         boolean existeUsuario = false;
 
         try{
-            conectar();
+            //conectar();
+            driver = "com.mysql.jdbc.Driver";
+            url = "jdbc:mysql://remotemysql.com:3306/AgZCNnxy2b";
+            user = "AgZCNnxy2b";
+            password = "LezDBm5oos";
+            Class.forName(driver);
+            cn = DriverManager.getConnection(url, user, password);
             st = cn.createStatement();
             rs = st.executeQuery("SELECT nombre_usuario FROM USUARIO;");
 
@@ -232,6 +273,7 @@ public class BBDD extends AppCompatActivity {
                 existeUsuario = usuario.equalsIgnoreCase(compruebaUsuario);
                 if (existeUsuario) {
                     existeUsuario = true;
+                    break;
                 }else {
                     existeUsuario = false;
                 }
@@ -239,7 +281,7 @@ public class BBDD extends AppCompatActivity {
             desconectarTrasConsulta();
 
 
-        } catch (SQLException exception) {
+        } catch (SQLException | ClassNotFoundException exception) {
 
         }
 
@@ -263,6 +305,7 @@ public class BBDD extends AppCompatActivity {
         try {
             creacionLogger();
             //Realizamos una consulta para comprobar el nombre de los usuarios.
+
             conectar();
             st = cn.createStatement();
             rs = st.executeQuery("SELECT nombre_usuario FROM USUARIO;");
@@ -297,6 +340,7 @@ public class BBDD extends AppCompatActivity {
 
         try {
             creacionLogger();
+
             conectar();
             st = cn.createStatement();
             st.executeUpdate("DELETE FROM USUARIO WHERE nombre_usuario = '" + nombre + "';");
