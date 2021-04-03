@@ -23,6 +23,8 @@ public class MainActivity extends AppCompatActivity {
         url="https://sms.carm.es/cmap/";
 
         btnlink.setOnClickListener(new View.OnClickListener() {
+
+
             @Override
             public void onClick(View view) {
                 Uri uri = Uri.parse(url);
