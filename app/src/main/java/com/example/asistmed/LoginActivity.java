@@ -55,7 +55,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         password = etPassword.getText().toString();
 
 
-        if (bbdd.compruebaUsuario(usuario)){
+        //if (bbdd.compruebaUsuario(usuario)){
 
             //Instanciamos Shared, abrimos fichero "usuarios" con acceso en modo privado y abrimos editor
 
@@ -72,11 +72,11 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
             Intent intent = new Intent(this, MainActivity.class);
             startActivity(intent); // Lanzamos el activity
 
-        }else{
+        //}else{
 
             Toast toastUsuarioValido = Toast.makeText(this, "El usuario no existe!", Toast.LENGTH_LONG);
             toastUsuarioValido.show();
-        }
+       // }
 
 
 
