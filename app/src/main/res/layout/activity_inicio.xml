@@ -8,16 +8,14 @@
     tools:context=".InicioActivity">
 
     <pl.droidsonroids.gif.GifImageView
-        android:layout_width="75dp"
-        android:layout_height="80dp"
-        android:layout_marginStart="164dp"
-        android:layout_marginLeft="164dp"
-        android:layout_marginTop="304dp"
+        android:id="@+id/ivLoading"
+        android:layout_width="102dp"
+        android:layout_height="148dp"
+        android:layout_marginStart="152dp"
+        android:layout_marginLeft="152dp"
         android:layout_marginBottom="10dp"
-        android:src="@drawable/cargando"
+        android:src="@drawable/loading_verde"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="1.0" />
+        app:layout_constraintStart_toStartOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
