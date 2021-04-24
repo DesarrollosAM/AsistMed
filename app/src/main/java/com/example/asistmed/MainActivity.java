@@ -18,7 +18,7 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        btnlink = findViewById(R.id.btnlink);
+        btnlink = (Button)findViewById(R.id.btnlink);
 
         url="https://sms.carm.es/cmap/";
 

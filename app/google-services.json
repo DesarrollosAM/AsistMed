@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "37962955967",
+    "project_id": "asistmed-38586",
+    "storage_bucket": "asistmed-38586.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:37962955967:android:ee1b6c2700dd9d6da7da0a",
+        "android_client_info": {
+          "package_name": "com.example.asistmed"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "37962955967-bcg43f84ge3e5ierp4k8gdvsrirdgm19.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCeHZHbaHcfMwbntgK5021zenZ7bqNgZPw"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "37962955967-bcg43f84ge3e5ierp4k8gdvsrirdgm19.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

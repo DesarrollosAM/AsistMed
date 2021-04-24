@@ -1,5 +1,6 @@
 package com.example.asistmed;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Context;
@@ -10,6 +11,11 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Toast;
+
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.AuthResult;
+import com.google.firebase.auth.FirebaseAuth;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -42,6 +48,8 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         //Asignación del evento click
         btAcceso.setOnClickListener(this);
 
+
+
     }
 
     @Override
@@ -54,8 +62,27 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         usuario = etUsuario.getText().toString();
         password = etPassword.getText().toString();
 
+            if (!etUsuario.toString().isEmpty() && !etPassword.toString().isEmpty()){
 
-        //if (bbdd.compruebaUsuario(usuario)){
+                FirebaseAuth.getInstance().createUserWithEmailAndPassword(etUsuario.getText().toString(),etPassword.getText().toString()).addOnCompleteListener(LoginActivity.this, new OnCompleteListener<AuthResult>() {
+                    @Override
+                    public void onComplete(@NonNull Task<AuthResult> task) {
+                        if(task.isSuccessful()){
+                            //Instanciamos un objeto Intent, pasandole con this el Activity actual, y como segundo parametro el Activity que vamos a cargar
+                            Intent intent = new Intent(getApplicationContext(), BienvenidaActivity.class);
+                            startActivity(intent); // Lanzamos el activity
+                        }else{
+                            Toast toastUsuarioValido = Toast.makeText(getApplicationContext(), "El registro no se ha podido completar", Toast.LENGTH_LONG);
+                            toastUsuarioValido.show();
+
+                        }
+                    }
+                });
+            }
+
+
+
+/*        //if (bbdd.compruebaUsuario(usuario)){
 
             //Instanciamos Shared, abrimos fichero "usuarios" con acceso en modo privado y abrimos editor
 
@@ -76,7 +103,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
 
             Toast toastUsuarioValido = Toast.makeText(this, "El usuario no existe!", Toast.LENGTH_LONG);
             toastUsuarioValido.show();
-       // }
+       // }*/
 
 
 
