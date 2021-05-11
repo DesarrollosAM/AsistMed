@@ -147,6 +147,7 @@ public class TratamientosActivity extends AppCompatActivity implements View.OnCl
 //                                    int total2 = listaTratamientos.size();
 //                                }
 
+
                                 FirebaseFirestore db2 = FirebaseFirestore.getInstance();
                                 db2.collection("tratamientos/" + nombre + "/usuariosTratamientos/").whereEqualTo("email", usuario)
                                         .get()
