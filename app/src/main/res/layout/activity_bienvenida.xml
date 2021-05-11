@@ -95,7 +95,7 @@
         app:srcCompat="@drawable/cita_previa" />
 
     <ImageView
-        android:id="@+id/imageView5"
+        android:id="@+id/ivEliminarUsuario"
         android:layout_width="70dp"
         android:layout_height="57dp"
         android:layout_marginStart="44dp"
@@ -112,7 +112,7 @@
         android:layout_marginStart="188dp"
         android:layout_marginLeft="188dp"
         android:layout_marginTop="84dp"
-        app:layout_constraintStart_toEndOf="@+id/imageView5"
+        app:layout_constraintStart_toEndOf="@+id/ivEliminarUsuario"
         app:layout_constraintTop_toBottomOf="@+id/ivFarmacias"
         app:srcCompat="@drawable/exit" />
 

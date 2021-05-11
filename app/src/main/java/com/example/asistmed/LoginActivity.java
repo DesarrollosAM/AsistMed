@@ -3,7 +3,6 @@ package com.example.asistmed;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
-import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -13,10 +12,21 @@ import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.firestore.QuerySnapshot;
 
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -24,7 +34,8 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
 
     //Declaramos un objeto de la clase BBDD
 
-    BBDD bbdd = new BBDD();
+    //BBDD bbdd = new BBDD();
+    private FirebaseFirestore db = FirebaseFirestore.getInstance();
 
     //Declaramos las variables, tipo Shared, editor e ImageView
     ImageView btAcceso;
@@ -36,6 +47,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     Pattern pat = null;
     Matcher mat = null;
     Boolean valido = false;
+    private int contadorUsuarios = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -49,36 +61,91 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         btAcceso.setOnClickListener(this);
 
 
-
     }
 
     @Override
     public void onClick(View view) {
 
         //Asignamos a una variable tipo EditText el usuario y password introducidos
-        EditText etUsuario= (EditText) findViewById(R.id.etUsuario);
-        EditText etPassword= (EditText) findViewById(R.id.etPassword);
+        EditText etUsuario = (EditText) findViewById(R.id.etUsuario);
+        EditText etPassword = (EditText) findViewById(R.id.etPassword);
         //Rescatamos los valores introducidos por el usuario al pulsar el botón de acceso
         usuario = etUsuario.getText().toString();
         password = etPassword.getText().toString();
 
-            if (!etUsuario.toString().isEmpty() && !etPassword.toString().isEmpty()){
+        //Para ir mas rapido...
+        Intent intent = new Intent(getApplicationContext(), BienvenidaActivity.class);
+        startActivity(intent); // Lanzamos el activity
 
-                FirebaseAuth.getInstance().createUserWithEmailAndPassword(etUsuario.getText().toString(),etPassword.getText().toString()).addOnCompleteListener(LoginActivity.this, new OnCompleteListener<AuthResult>() {
-                    @Override
-                    public void onComplete(@NonNull Task<AuthResult> task) {
-                        if(task.isSuccessful()){
-                            //Instanciamos un objeto Intent, pasandole con this el Activity actual, y como segundo parametro el Activity que vamos a cargar
-                            Intent intent = new Intent(getApplicationContext(), BienvenidaActivity.class);
-                            startActivity(intent); // Lanzamos el activity
-                        }else{
-                            Toast toastUsuarioValido = Toast.makeText(getApplicationContext(), "El registro no se ha podido completar", Toast.LENGTH_LONG);
-                            toastUsuarioValido.show();
 
-                        }
-                    }
-                });
-            }
+
+        if (!etUsuario.toString().isEmpty() && !etPassword.toString().isEmpty()) {
+
+            //String u = "sgfdsfg@sdfsdf.es", p = "d5a428a0b7e71eba746de1052a58c37";
+
+            //Comprobamos que existe el usuario y la contraseña encriptada.
+//            String contraseña = encriptarContraseña(password);
+//            comprobarUsuarioEnBBDD(usuario, contraseña);
+
+//            FirebaseAuth.getInstance().createUserWithEmailAndPassword(usuario, password)
+//                    .addOnCompleteListener(LoginActivity.this, new OnCompleteListener<AuthResult>() {
+//                        @Override
+//                        public void onComplete(@NonNull Task<AuthResult> task) {
+//                            if (task.isSuccessful()) {
+//                                String contraseña = encriptarContraseña(password);
+////                            //md5_result.setText(hexString1.toString());
+//                                CollectionReference usuariosTotales = db.collection("usuarios");
+//                                usuariosTotales.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+//                                    @Override
+//                                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+//                                        if (task.isSuccessful()) {
+//                                            for (QueryDocumentSnapshot document : task.getResult()) {
+//                                                //Log.d(TAG, document.getId() + " => " + document.getData());
+//                                                contadorUsuarios = task.getResult().size();
+//                                            }
+//                                        } else {
+//                                            //Log.d(TAG, "Error getting documents: ", task.getException());
+//                                        }
+//                                    }
+//                                });
+//                                int siguienteUsuario = contadorUsuarios + 1;
+//
+//                                //Inserción en Firestore:
+//                                // Create a new user with a first and last name
+//                                Map<String, Object> user = new HashMap<>();
+//                                user.put("email", usuario);
+//                                user.put("password", contraseña);
+//                                //user.put("born", 1815);
+//
+//                                // Add a new document with a generated ID
+//                                db.collection("usuarios")
+//                                        .add(user)
+//                                        .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
+//                                            @Override
+//                                            public void onSuccess(DocumentReference documentReference) {
+//                                                //Log.d(TAG, "DocumentSnapshot added with ID: " + documentReference.getId());
+//                                                //documentReference.set("usuario" + siguienteUsuario);
+//                                            }
+//                                        })
+//                                        .addOnFailureListener(new OnFailureListener() {
+//                                            @Override
+//                                            public void onFailure(@NonNull Exception e) {
+//                                                //Log.w(TAG, "Error adding document", e);
+//                                            }
+//                                        });
+//
+//
+//                                //Instanciamos un objeto Intent, pasandole con this el Activity actual, y como segundo parametro el Activity que vamos a cargar
+//                                Intent intent = new Intent(getApplicationContext(), BienvenidaActivity.class);
+//                                startActivity(intent); // Lanzamos el activity
+//                            } else {
+//                                Toast toastUsuarioValido = Toast.makeText(getApplicationContext(), "Probando mensaje de error", Toast.LENGTH_LONG);
+//                                toastUsuarioValido.show();
+//
+//                            }
+//                        }
+//                    });
+        }
 
 
 
@@ -160,7 +227,60 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         }*/
 
 
+    }
 
+    public static String encriptarContraseña(String password) {
 
+        String contraseñaFinal = "";
+
+        try {
+            //Encriptar la contraseña:
+            byte[] output1, con = password.getBytes();
+            MessageDigest md5 = null;
+
+            md5 = MessageDigest.getInstance("MD5");
+
+            md5.reset();
+            md5.update(con);
+            output1 = md5.digest();
+            // create hex output
+            StringBuffer hexString1 = new StringBuffer();
+            for (int i = 0; i < output1.length; i++)
+                hexString1.append(Integer.toHexString(0xFF & output1[i]));
+
+            contraseñaFinal = hexString1.toString();
+            //md5_result.setText(hexString1.toString());
+        } catch (NoSuchAlgorithmException e) {
+            e.printStackTrace();
+        }
+
+        return contraseñaFinal;
+
+    }
+
+    public void comprobarUsuarioEnBBDD(String usuario, String password){
+
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+        db.collection("usuarios")
+                .whereEqualTo("email", usuario)
+                .whereEqualTo("password", password)
+                .get()
+                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                        if (task.isSuccessful()) {
+                           for (QueryDocumentSnapshot document : task.getResult()) {
+                                //Log.d(TAG, document.getId() + " => " + document.getData());
+                                //Instanciamos un objeto Intent, pasandole con this el Activity actual, y como segundo parametro el Activity que vamos a cargar
+                                Intent intent = new Intent(getApplicationContext(), BienvenidaActivity.class);
+                                startActivity(intent); // Lanzamos el activity
+                            }
+                        } else {
+                            //Log.d(TAG, "Error getting documents: ", task.getException());
+                            Toast toastUsuarioNoValido = Toast.makeText(getApplicationContext(), "No existe el usuario y/o contraseña.", Toast.LENGTH_LONG);
+                            toastUsuarioNoValido.show();
+                        }
+                    }
+                });
     }
 }

@@ -23,7 +23,7 @@ public class PruebasAlberto extends AppCompatActivity {
     private String url = "jdbc:mysql://remotemysql.com:3306/AgZCNnxy2b";
     private String user = "AgZCNnxy2b";
     private String password = "LezDBm5oos";
-    private BBDD b;
+    //private BBDD b;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -31,18 +31,18 @@ public class PruebasAlberto extends AppCompatActivity {
         setContentView(R.layout.activity_pruebas_alberto);
 
         txtPanel = (TextView)findViewById(R.id.txtPanel);
-
-        try{
-            b = new BBDD(st, cn, rs, url, user, password, driver);
-            Tratamiento t;
-            //t = b.insertarTratamiento("Gripe", "3", 2, 1);
-            //txtPanel.setText(t.getNombre() + "\n");
-
-            listaTratamientos = b.consultaTablaTratamiento();
-            txtPanel.setText(txtPanel.getText() + "Numero de tratamientos: " + listaTratamientos.size());
-        } catch (IOException e){
-
-        }
+//
+//        try{
+//            b = new BBDD(st, cn, rs, url, user, password, driver);
+//            Tratamiento t;
+//            //t = b.insertarTratamiento("Gripe", "3", 2, 1);
+//            //txtPanel.setText(t.getNombre() + "\n");
+//
+//            listaTratamientos = b.consultaTablaTratamiento();
+//            txtPanel.setText(txtPanel.getText() + "Numero de tratamientos: " + listaTratamientos.size());
+//        } catch (IOException e){
+//
+//        }
 
 
     }

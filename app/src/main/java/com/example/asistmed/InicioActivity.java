@@ -25,6 +25,7 @@ public class InicioActivity extends AppCompatActivity {
         ivLoading.setVisibility(View.INVISIBLE);
         mpCanon = MediaPlayer.create(this, R.raw.canon_pachelbel);
         mpCanon.start();
+        ivLoading.setVisibility(View.VISIBLE);
 
 //Hacemos que el proceso se pare durante 5 segundos para dar mas realismo al loading.
         handler = new Handler();
@@ -34,7 +35,7 @@ public class InicioActivity extends AppCompatActivity {
                 Intent intent = new Intent(getApplicationContext(), LoginActivity.class);
                 startActivity(intent);
                 mpCanon.stop();
-                ivLoading.setVisibility(View.VISIBLE);
+
             }
         };
         handler.postDelayed(r, 5000);
