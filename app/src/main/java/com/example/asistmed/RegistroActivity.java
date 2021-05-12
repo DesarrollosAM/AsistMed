@@ -7,8 +7,9 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -20,16 +21,19 @@ import com.google.firebase.auth.FirebaseUser;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public class LoginActivity extends AppCompatActivity implements View.OnClickListener {
+public class RegistroActivity extends AppCompatActivity implements View.OnClickListener{
 
+    //Declaramos las variables
 
-    //Declaramos las variables, tipo Shared, editor e ImageView
-    ImageView btAcceso, btRegistro;
-    SharedPreferences shared;
-    SharedPreferences.Editor editor;
+    private Button btRegistro;
+    private TextView yaEstoyregistrado;
+    private EditText introduceUsuario, introduceEmail, introduceContrasena, repiteContrasena;
+    private SharedPreferences shared;
+    private SharedPreferences.Editor editor;
+
 
     //Usuario y password
-    private String email, password;
+    private String usuario, email, password, confirmaPassword;
     private Pattern pat = null;
     private Matcher mat = null;
     private Boolean valido = false;
@@ -52,22 +56,27 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_login);
+        setContentView(R.layout.activity_registro);
 
-        //Cargamos la referencia de nuestro ImageView
-        btAcceso = findViewById(R.id.btAcceso);
-
-        //Asignación del evento click
-        btAcceso.setOnClickListener(this);
-
-        //Cargamos la referencia de nuestro ImageView
+        //Cargamos la referencia de nuestro botón
         btRegistro = findViewById(R.id.btRegistro);
+        yaEstoyregistrado = findViewById(R.id.yaEstoyRegistrado);
+
+
+        //Cargamos la referencia de nuestros Input
+/*      introduceUsuario = findViewById(R.id.introduceUsuario);
+        introduceContrasena = findViewById(R.id.introduceContrasena);
+        introduceEmail = findViewById(R.id.introduceEmail);
+        repiteContrasena = findViewById(R.id.repiteContrasena);*/
 
         //Asignación del evento click
         btRegistro.setOnClickListener(this);
+        yaEstoyregistrado.setOnClickListener(this);
+
 
         // Initialize Firebase Auth
         mAuth = FirebaseAuth.getInstance();
+
 
     }
 
@@ -75,56 +84,48 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     public void onClick(View view) {
 
         //Asignamos a una variable tipo EditText el usuario y password introducidos
-        EditText etUsuario= (EditText) findViewById(R.id.etUsuario);
-        EditText etPassword= (EditText) findViewById(R.id.etPassword);
-        //Rescatamos los valores introducidos por el usuario al pulsar el botón de acceso
-        email = etUsuario.getText().toString();
+        EditText etMail= (EditText) findViewById(R.id.introduceEmail);
+        EditText etPassword= (EditText) findViewById(R.id.introduceContrasena);
+        EditText etUsuario= (EditText) findViewById(R.id.introduceUsuario);
+        EditText etconfirmaPassword = (EditText) findViewById(R.id.repiteContrasena);
+
+        email = etMail.getText().toString();
+        usuario = etUsuario.getText().toString();
         password = etPassword.getText().toString();
+        confirmaPassword = etconfirmaPassword.getText().toString();
 
-
-        if ((view.getId() == R.id.btRegistro))
-        {
-            //if (!etUsuario.toString().isEmpty() || !etPassword.toString().isEmpty()){
-            if (validaEmail() && validaPassword()){
+        if ((view.getId() == R.id.btRegistro)){
+            if (validaUsuario() && validaEmail() && validaPassword()){
 
                 mAuth.createUserWithEmailAndPassword(email,password).addOnCompleteListener(this,new OnCompleteListener<AuthResult>() {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
+
+
                         if(task.isSuccessful()){
                             //Instanciamos un objeto Intent, pasandole con this el Activity actual, y como segundo parametro el Activity que vamos a cargar
                             Intent intent = new Intent(getApplicationContext(), BienvenidaActivity.class);
                             startActivity(intent); // Lanzamos el activity
                         }else{
-                            //Toast toastUsuarioValido = Toast.makeText(getApplicationContext(), "El registro no se ha podido completar", Toast.LENGTH_LONG);
-                            //toastUsuarioValido.show();
+                            Toast toastUsuarioValido = Toast.makeText(getApplicationContext(), "El registro no se ha podido completar", Toast.LENGTH_LONG);
+                            toastUsuarioValido.show();
                         }
                     }
                 });
+
             }
 
         }else{
 
-            mAuth.signInWithEmailAndPassword(email, password).addOnCompleteListener(this,new OnCompleteListener<AuthResult>() {
-                        @Override
-                        public void onComplete(@NonNull Task<AuthResult> task) {
-                            if (task.isSuccessful()) {
-                                //Instanciamos un objeto Intent, pasandole con this el Activity actual, y como segundo parametro el Activity que vamos a cargar
-                                Intent intent = new Intent(getApplicationContext(), BienvenidaActivity.class);
-                                startActivity(intent); // Lanzamos el activity
-
-                            } else {
-
-                                Toast.makeText(LoginActivity.this, "Authentication failed.",
-                                        Toast.LENGTH_SHORT).show();
-
-                            }
-                        }
-                    });
+            //Instanciamos un objeto Intent, pasandole con this el Activity actual, y como segundo parametro el Activity que vamos a cargar
+            Intent intent = new Intent(getApplicationContext(), LoginActivity2.class);
+            startActivity(intent); // Lanzamos el activity
 
         }
 
 
     }
+
 
     private boolean validaEmail(){
 
@@ -146,15 +147,35 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
 
     private boolean validaPassword(){
         password = password.trim();
+        confirmaPassword = confirmaPassword.trim();
         if (password.isEmpty()){
             Toast toastPasswordVacia = Toast.makeText(this, "Introduzca Password", Toast.LENGTH_SHORT);
             toastPasswordVacia.show();
         } else if (password.length() < 8){
             Toast toastPasswordCorta = Toast.makeText(this, "La Password debe tener al menos 8 caracteres", Toast.LENGTH_SHORT);
             toastPasswordCorta.show();
-        } else {
+
+        }else if (!password.equals(confirmaPassword)){
+
+            Toast toastPasswordDistintas = Toast.makeText(this, "Las Password introducidas no coinciden", Toast.LENGTH_SHORT);
+            toastPasswordDistintas.show();
+        }
+
+        else {
             return true;
         }
         return false;
     }
+
+    private boolean validaUsuario(){
+
+        if(usuario.isEmpty()){
+            Toast toastUsuarioVacio = Toast.makeText(this, "Por favor, introduzca usuario", Toast.LENGTH_SHORT);
+            toastUsuarioVacio.show();
+
+        }
+        return  true;
+    }
+
+
 }
