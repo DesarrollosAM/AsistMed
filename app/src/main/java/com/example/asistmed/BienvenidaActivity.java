@@ -9,6 +9,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.view.View;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.Toast;
 
@@ -31,6 +32,7 @@ public class BienvenidaActivity extends AppCompatActivity implements View.OnClic
     private String urlCitaPrevia, urlFarmacias;
     private MediaPlayer mpCanon;
     private TextView txtUsuario;
+    private ImageView btEliminarUsuario;
 
     private String email;
 
@@ -104,10 +106,10 @@ public class BienvenidaActivity extends AppCompatActivity implements View.OnClic
         } else if (view.getId() == R.id.ivExit){
 
             FirebaseAuth.getInstance().signOut(); //Para cerrar sesión en Firebase
-            finish();
-            finishAffinity();
             startActivity(new Intent(this,LoginActivity2.class));
-            System.exit(0);
+            //finish();
+            //finishAffinity();
+            //System.exit(0);
         } else if (view.getId() == R.id.ivMute) {
             mpCanon.pause();
             btMute.setVisibility(View.INVISIBLE);

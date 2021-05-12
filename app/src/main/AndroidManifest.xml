@@ -19,6 +19,10 @@
         <activity android:name=".LoginActivity" />
         <activity android:name=".BienvenidaActivity" />
         <activity android:name=".PruebasAlberto" />
+        <activity android:name=".MedicamentosActivity" />
+        <activity android:name=".AddTratamientosActivity" />
+        <activity android:name=".AsistentActivity" />
+        <activity android:name=".TratamientosActivity" />
         <activity android:name=".InicioActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
