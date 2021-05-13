@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <array name="listaMedicamentos">
+        <item>Paracetamol</item>
+        <item>Ibuprofeno</item>
+        <item>Ventolín</item>
+        <item>Espidifen</item>
+        <item>Augmentine</item>
+        <item>Omeprazol</item>
+        <item>Omeprazol</item>
+        <item>Omeprazol</item>
+        <item>Omeprazol</item>
+        <item>Omeprazol</item>
+        <item>Omeprazol</item>
+        <item>Omeprazol</item>
+        <item>Omeprazol</item>
+        <item>Omeprazol</item>
+    </array>
+
+    <array name="listaTratamientos">
+        <item>Alergia</item>
+        <item>Artritis</item>
+        <item>Asma</item>
+        <item>Bronquitis</item>
+        <item>Conjuntivitis</item>
+        <item>Fractura</item>
+        <item>Gastroenteritis</item>
+        <item>Gripe</item>
+        <item>Otitis</item>
+        <item>Otitis</item>
+        <item>Otitis</item>
+        <item>Otitis</item>
+        <item>Otitis</item>
+        <item>Otitis</item>
+    </array>
+</resources>

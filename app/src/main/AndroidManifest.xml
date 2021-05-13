@@ -13,7 +13,8 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.AsistMed"
         android:usesCleartextTraffic="true">
-        <activity android:name=".RecuperarContrasenaActivity"></activity>
+        <activity android:name=".AdministradorActivity" />
+        <activity android:name=".RecuperarContrasenaActivity" />
         <activity android:name=".LoginActivity2" />
         <activity android:name=".RegistroActivity" />
         <activity android:name=".LoginActivity" />

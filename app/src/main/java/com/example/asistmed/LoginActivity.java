@@ -74,7 +74,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         password = etPassword.getText().toString();
 
         //Para ir mas rapido...
-        Intent intent = new Intent(getApplicationContext(), BienvenidaActivity.class);
+        Intent intent = new Intent(getApplicationContext(), AdministradorActivity.class);
         startActivity(intent); // Lanzamos el activity
 
 

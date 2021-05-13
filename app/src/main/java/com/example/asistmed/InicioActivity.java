@@ -32,7 +32,7 @@ public class InicioActivity extends AppCompatActivity {
         Runnable r = new Runnable() {
             public void run() {
                 //Cargamos el siguiente activity y paramos la melodía.
-                Intent intent = new Intent(getApplicationContext(), LoginActivity2.class);
+                Intent intent = new Intent(getApplicationContext(), LoginActivity.class);
                 startActivity(intent);
                 mpCanon.stop();
 
