@@ -6,6 +6,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.Gravity;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -42,7 +43,7 @@ public class RecuperarContrasenaActivity extends AppCompatActivity {
 
 
         //Cargamos la referencia de nuestros botones
-        btRecuperarContrasena = findViewById(R.id.btRestablecerContrasena);
+        btRecuperarContrasena = findViewById(R.id.btrestablecer);
         btRegresarLogin = findViewById(R.id.btRegresarLogin);
 
         //Cargamos la referencia de nuestros Input
@@ -68,8 +69,9 @@ public class RecuperarContrasenaActivity extends AppCompatActivity {
 
                 }else{
 
-                    Toast.makeText(RecuperarContrasenaActivity.this, "Debe introducir un email",
-                            Toast.LENGTH_SHORT).show();
+                    Toast toast= Toast.makeText(getApplicationContext(), "Introduzca correo", Toast.LENGTH_SHORT);
+                    toast.setGravity(Gravity.TOP|Gravity.CENTER_HORIZONTAL, 0, 800);
+                    toast.show();
                 }
 
 
@@ -81,7 +83,7 @@ public class RecuperarContrasenaActivity extends AppCompatActivity {
             public void onClick(View v) {
 
                 //Instanciamos un objeto Intent, pasandole con this el Activity actual, y como segundo parametro el Activity que vamos a cargar
-                Intent intent = new Intent(getApplicationContext(), LoginActivity2.class);
+                Intent intent = new Intent(getApplicationContext(), LoginActivity.class);
                 startActivity(intent); // Lanzamos el activity
             }
         });
@@ -99,11 +101,15 @@ public class RecuperarContrasenaActivity extends AppCompatActivity {
 
                     if(task.isSuccessful()){
 
-                        Toast.makeText(RecuperarContrasenaActivity.this, "Se ha enviado el correo de recuperación",Toast.LENGTH_SHORT).show();
+                        Toast toast= Toast.makeText(getApplicationContext(), "Se ha enviado correo de recuperación", Toast.LENGTH_LONG);
+                        toast.setGravity(Gravity.TOP|Gravity.CENTER_HORIZONTAL, 0, 770);
+                        toast.show();
 
                     }else{
 
-                        Toast.makeText(RecuperarContrasenaActivity.this, "No se pudo enviar el correo de recuperación",Toast.LENGTH_SHORT).show();
+                        Toast toast= Toast.makeText(getApplicationContext(), "Correo no registrado. Proceso no completado", Toast.LENGTH_LONG);
+                        toast.setGravity(Gravity.TOP|Gravity.CENTER_HORIZONTAL, 0, 770);
+                        toast.show();
 
 
                     }

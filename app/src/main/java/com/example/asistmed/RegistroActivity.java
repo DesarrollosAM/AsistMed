@@ -118,7 +118,7 @@ public class RegistroActivity extends AppCompatActivity implements View.OnClickL
         }else{
 
             //Instanciamos un objeto Intent, pasandole con this el Activity actual, y como segundo parametro el Activity que vamos a cargar
-            Intent intent = new Intent(getApplicationContext(), LoginActivity2.class);
+            Intent intent = new Intent(getApplicationContext(), LoginActivity.class);
             startActivity(intent); // Lanzamos el activity
 
         }

@@ -50,7 +50,7 @@
         android:background="@drawable/input_background"
         android:text="REGISTRAR"
         android:textColor="@color/black"
-        android:textStyle="bold"
+        android:textStyle="normal"
         app:backgroundTint="@color/white"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"

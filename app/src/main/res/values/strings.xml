@@ -1,3 +1,5 @@
 <resources>
-    <string name="app_name">asistMed</string>
+    <string name="app_name">AsistMed</string>
+    <string name="title_activity_maps">Map</string>
+    <string name="title_activity_maps2">Map</string>
 </resources>
