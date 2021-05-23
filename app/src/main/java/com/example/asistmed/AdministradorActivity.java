@@ -1,7 +1,7 @@
 package com.example.asistmed;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.fragment.app.DialogFragment;
 
 import android.app.AlertDialog;
 import android.content.DialogInterface;
@@ -12,27 +12,30 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.HashMap;
 import java.util.Map;
 
-public class AdministradorActivity extends AppCompatActivity implements View.OnClickListener{
+public class AdministradorActivity extends AppCompatActivity implements View.OnClickListener {
+
+    //TODO: Cambiar diseño y poner botones de salir y volver a login.
 
     private Button btnAddTrat, btnModTrat, btnAddMed, btnModMed;
-    private EditText edtNombreTratamiento, edtDuracionTratamiento;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_administrador);
 
-        btnAddMed = (Button)findViewById(R.id.btnAddMed);
-        btnAddTrat = (Button)findViewById(R.id.btnAddTrat);
-        btnModMed = (Button)findViewById(R.id.btnModMed);
-        btnModTrat = (Button)findViewById(R.id.btnModTrat);
-//        edtDuracionTratamiento = (EditText)findViewById(R.id.edtDuracionTratamiento);
-//        edtNombreTratamiento = (EditText)findViewById(R.id.edtNombreTratamiento);
+        btnAddMed = (Button) findViewById(R.id.btnAddMed);
+        btnAddTrat = (Button) findViewById(R.id.btnAddTrat);
+        btnModMed = (Button) findViewById(R.id.btnModMed);
+        btnModTrat = (Button) findViewById(R.id.btnModTrat);
 
         btnModTrat.setOnClickListener(this);
         btnModMed.setOnClickListener(this);
@@ -43,140 +46,332 @@ public class AdministradorActivity extends AppCompatActivity implements View.OnC
 
     @Override
     public void onClick(View view) {
+        /*
+        Según sea el botón que clickemos se lanza el dialogo correspondiente.
+         */
+        try {
+            switch (view.getId()) {
+                case R.id.btnAddTrat:
+                    dialogoAddTratamientos();
+                    break;
+                case R.id.btnModTrat:
+                    dialogoModificarTratamientos();
+                    break;
 
-        switch (view.getId()){
-            case R.id.btnAddTrat:
-                dialogoAddTratamientos();
-                break;
-            case R.id.btnModTrat:
-                dialogoModificarTratamientos();
-                break;
+                case R.id.btnAddMed:
+                    dialogoAddMedicamentos();
+                    break;
+                case R.id.btnModMed:
+                    dialogoModificarMedicamentos();
+                    break;
+            }
+        }catch (Exception e){
 
-            case R.id.btnAddMed:
-                dialogoAddMedicamentos();
-                break;
-            case R.id.btnModMed:
-                DialogFragment newFragment = new MensajesAlertas();
-                newFragment.show(getSupportFragmentManager(), "PruebaMensajes");
-                break;
         }
     }
 
-    public void dialogoModificarTratamientos(){
-        AlertDialog.Builder builderTratamientos = new AlertDialog.Builder(this);
+    /*
+    Método por el que lanzamos un diálogo para modificar un tratamiento existente en la base de datos.
+     */
+    public void dialogoModificarTratamientos() {
+        try {
+            AlertDialog.Builder builderTratamientos = new AlertDialog.Builder(this);
 
         /*
         //Para mostrar una lista:
          */
-        //Primero creamos en values un nuevo archivo xml llamado array.
-        builderTratamientos.setTitle("Elija el tratamiento a modificar:")
-                .setItems(R.array.listaTratamientos, new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int which) {
-                        switch (which) {
-                            case 0:
-                                Toast ejemplo0 = Toast.makeText(AdministradorActivity.this, "Ha elegido Alergia", Toast.LENGTH_LONG);
-                                ejemplo0.show();
-                                break;
-                            case 1:
-                                Toast ejemplo1 = Toast.makeText(AdministradorActivity.this, "Ha elegido Artritis", Toast.LENGTH_LONG);
-                                ejemplo1.show();
-                                break;
-                            case 2:
-                                Toast ejemplo2 = Toast.makeText(AdministradorActivity.this, "Ha elegido Asma", Toast.LENGTH_LONG);
-                                ejemplo2.show();
-                                break;
-                            case 3:
-                                Toast ejemplo3 = Toast.makeText(AdministradorActivity.this, "Ha elegido Bronquitis", Toast.LENGTH_LONG);
-                                ejemplo3.show();
-                                break;
-                            case 4:
-                                Toast ejemplo4 = Toast.makeText(AdministradorActivity.this, "Ha elegido Conjuntivitis", Toast.LENGTH_LONG);
-                                ejemplo4.show();
-                                break;
-                            case 5:
-                                Toast ejemplo5 = Toast.makeText(AdministradorActivity.this, "Ha elegido Omeprazol", Toast.LENGTH_LONG);
-                                ejemplo5.show();
-                                break;
+            //Primero creamos en values un nuevo archivo xml llamado array.
+            builderTratamientos.setTitle("Elija el tratamiento a modificar:")
+                    .setItems(R.array.listaTratamientos, new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int which) {
+                            switch (which) {
+                                case 0:
+                                    Toast ejemplo0 = Toast.makeText(AdministradorActivity.this, "Ha elegido Alergia", Toast.LENGTH_LONG);
+                                    ejemplo0.show();
+                                    break;
+                                case 1:
+                                    Toast ejemplo1 = Toast.makeText(AdministradorActivity.this, "Ha elegido Artritis", Toast.LENGTH_LONG);
+                                    ejemplo1.show();
+                                    break;
+                                case 2:
+                                    Toast ejemplo2 = Toast.makeText(AdministradorActivity.this, "Ha elegido Asma", Toast.LENGTH_LONG);
+                                    ejemplo2.show();
+                                    break;
+                                case 3:
+                                    Toast ejemplo3 = Toast.makeText(AdministradorActivity.this, "Ha elegido Bronquitis", Toast.LENGTH_LONG);
+                                    ejemplo3.show();
+                                    break;
+                                case 4:
+                                    Toast ejemplo4 = Toast.makeText(AdministradorActivity.this, "Ha elegido Conjuntivitis", Toast.LENGTH_LONG);
+                                    ejemplo4.show();
+                                    break;
+                                case 5:
+                                    Toast ejemplo5 = Toast.makeText(AdministradorActivity.this, "Ha elegido Omeprazol", Toast.LENGTH_LONG);
+                                    ejemplo5.show();
+                                    break;
+                            }
                         }
-                    }
-                });
+                    });
 
-        AlertDialog dialog = builderTratamientos.create();
-        dialog.show();
+            AlertDialog dialog = builderTratamientos.create();
+            dialog.show();
+        }catch (Exception e){
+
+        }
     }
 
-    public void dialogoAddTratamientos(){
+    /*
+    Método por el que lanzamos un diálogo para modificar un medicamento existente en la base de datos.
+     */
+    public void dialogoModificarMedicamentos(){
 
+        try {
+            AlertDialog.Builder builderMedicamentos = new AlertDialog.Builder(this);
+
+        /*
+        //Para mostrar una lista:
+         */
+            //Primero creamos en values un nuevo archivo xml llamado array.
+            builderMedicamentos.setTitle("Elija el medicamento a modificar:")
+                    .setItems(R.array.listaMedicamentos, new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int which) {
+                            switch (which) {
+                                case 0:
+                                    Toast ejemplo0 = Toast.makeText(AdministradorActivity.this, "Ha elegido Paracetamol", Toast.LENGTH_LONG);
+                                    ejemplo0.show();
+                                    break;
+                                case 1:
+                                    Toast ejemplo1 = Toast.makeText(AdministradorActivity.this, "Ha elegido Ibuprofeno", Toast.LENGTH_LONG);
+                                    ejemplo1.show();
+                                    break;
+                                case 2:
+                                    Toast ejemplo2 = Toast.makeText(AdministradorActivity.this, "Ha elegido Ventolín", Toast.LENGTH_LONG);
+                                    ejemplo2.show();
+                                    break;
+                                case 3:
+                                    Toast ejemplo3 = Toast.makeText(AdministradorActivity.this, "Ha elegido Espidifén", Toast.LENGTH_LONG);
+                                    ejemplo3.show();
+                                    break;
+                                case 4:
+                                    Toast ejemplo4 = Toast.makeText(AdministradorActivity.this, "Ha elegido Augmentine", Toast.LENGTH_LONG);
+                                    ejemplo4.show();
+                                    break;
+                                case 5:
+                                    Toast ejemplo5 = Toast.makeText(AdministradorActivity.this, "Ha elegido Omeprazol", Toast.LENGTH_LONG);
+                                    ejemplo5.show();
+                                    break;
+                            }
+                        }
+                    });
+
+            AlertDialog dialog = builderMedicamentos.create();
+            dialog.show();
+        }catch (Exception e){
+
+        }
+    }
+
+    /*
+    Método por el que lanzamos un diálogo para añadir un tratamiento nuevo.
+     */
+    public void dialogoAddTratamientos() {
+        try {
+            //Creamos un constructor de diálogos.
             AlertDialog.Builder builderAddTratamientos = new AlertDialog.Builder(this);
 
+            //Creamos un inflater para poder hacerlo de tipo personalizado.
             LayoutInflater inflater = this.getLayoutInflater();
 
-         View vista = inflater.inflate(R.layout.dialogo_add_tratamientos, null);
-        final EditText duracion = (EditText)vista.findViewById(R.id.edtDuracionTratamiento);
-        final EditText nombre = (EditText)vista.findViewById(R.id.edtNombreTratamiento);
+            //Creamos una vista para poder capturar los valores de los editText y le asociamos el layout correspondiente.
+            View vista = inflater.inflate(R.layout.dialogo_add_tratamientos, null);
+
+            //Asociamos los editText con los del layout.
+            final EditText duracion = (EditText) vista.findViewById(R.id.edtDuracionTratamiento);
+            final EditText nombre = (EditText) vista.findViewById(R.id.edtNombreTratamiento);
+
+            //Agregamos los botones Aceptar/Cancelar.
             builderAddTratamientos.setView(vista)
-                    // Add action buttons
                     .setPositiveButton("ACEPTAR", new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialog, int id) {
-                            insertarTratamiento(nombre.getText().toString(), duracion.getText().toString());
+                            if (nombre.getText().toString().equalsIgnoreCase("") && duracion.getText().toString().equalsIgnoreCase("")) {
+                                Toast camposVacios = Toast.makeText(AdministradorActivity.this, "Debe rellenar todos los campos.", Toast.LENGTH_LONG);
+                                camposVacios.show();
+                            } else {
+                                //Al aceptar, capturamos los valores introducidos y los usamos como parámetros para llamar al método insertar
+                                insertarTratamiento(nombre.getText().toString(), duracion.getText().toString());
+                            }
                         }
                     })
                     .setNegativeButton("CANCELAR", new DialogInterface.OnClickListener() {
                         public void onClick(DialogInterface dialog, int id) {
-                            //AdministradorActivity.this.getDialog().cancel();
+                            //Al cancelar no hacemos nada.
                         }
                     });
-        AlertDialog dialog = builderAddTratamientos.create();
-        dialog.show();
+
+            //Asignamos el dialogo construido a uno nuevo y lo mostramos.
+            AlertDialog dialog = builderAddTratamientos.create();
+            dialog.show();
+        }catch (Exception e){
+
+        }
     }
 
-    public void insertarTratamiento(String nombreTratamiento, String duracion){
-        Map<String, Object> trat = new HashMap<>();
-        trat.put("duracion", duracion);
-        trat.put("nombre", nombreTratamiento);
-        FirebaseFirestore db = FirebaseFirestore.getInstance();
-        db.collection("tratamientos").document(nombreTratamiento).set(trat);
-    }
+    /*
+    Método por el que insertamos un nuevo tratamiento en la base de datos. Usamos como parámetros
+    el nombre del tratamiento y la duración del mismo.
+     */
+    public void insertarTratamiento(String nombreTratamiento, String duracion) {
 
-    public void dialogoAddMedicamentos(){
-        AlertDialog.Builder builderAddMedicamentos = new AlertDialog.Builder(this);
+        try {
+            //Hacemos una consulta en la base de datos para saber si existe el tratamiento o no.
+            FirebaseFirestore db = FirebaseFirestore.getInstance();
+            DocumentReference docRef = db.collection("tratamientos").document(nombreTratamiento);
+            docRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                @Override
+                public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                    if (task.isSuccessful()) {
+                        DocumentSnapshot document = task.getResult();
+                        if (document.exists()) {
 
-        LayoutInflater inflater = this.getLayoutInflater();
+                            //Si existe, lanzamos un mensaje informando de ello.
+                            Toast ExisteTrat = Toast.makeText(AdministradorActivity.this, "El tratamiento introducido ya existe.", Toast.LENGTH_LONG);
+                            ExisteTrat.show();
+                        } else {
 
-        View vista = inflater.inflate(R.layout.dialogo_add_medicamentos, null);
-        final EditText cantidad_diaria = (EditText)vista.findViewById(R.id.edtCantidad_diaria);
-        final EditText nombreTrat = (EditText)vista.findViewById(R.id.edtNombreTratMed);
-        final EditText nombreMed = (EditText)vista.findViewById(R.id.edtNombreMedicamento);
-        final EditText frecuencia = (EditText)vista.findViewById(R.id.edtFrecuencia);
-        final EditText descripcion = (EditText)vista.findViewById(R.id.edtInfo);
-        builderAddMedicamentos.setView(vista)
-                // Add action buttons
-                .setPositiveButton("ACEPTAR", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int id) {
-                        insertarMedicamento(nombreTrat.getText().toString(), nombreMed.getText().toString(),
-                                cantidad_diaria.getText().toString(), frecuencia.getText().toString(), descripcion.getText().toString());
+                            //Si no existe, creamos un hashmap con los valores y los añadimos a la base de datos.
+                            Map<String, Object> trat = new HashMap<>();
+                            trat.put("duracion", duracion);
+                            trat.put("nombre", nombreTratamiento);
+                            FirebaseFirestore dbt = FirebaseFirestore.getInstance();
+                            dbt.collection("tratamientos").document(nombreTratamiento).set(trat);
+                        }
+                    } else {
+
                     }
-                })
-                .setNegativeButton("CANCELAR", new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int id) {
-                        //AdministradorActivity.this.getDialog().cancel();
-                    }
-                });
-        AlertDialog dialog = builderAddMedicamentos.create();
-        dialog.show();
+                }
+            });
+        }catch (Exception e){
+
+        }
     }
 
-    public void insertarMedicamento(String nombreTratMed, String nombreMedicamento, String cantidad_diaria, String frecuencia, String descripcion){
-        Map<String, Object> med = new HashMap<>();
-        med.put("cantidad_diaria", cantidad_diaria);
-        med.put("frecuencia", frecuencia);
-        med.put("info", descripcion);
-        med.put("nombre", nombreMedicamento);
+    /*
+    Método por el que lanzamos un diálogo para añadir un nuevo medicamento a la base de datos.
+     */
+    public void dialogoAddMedicamentos() {
+        try {
+            //Creamos un constructor de diálogos.
+            AlertDialog.Builder builderAddMedicamentos = new AlertDialog.Builder(this);
 
-        FirebaseFirestore db = FirebaseFirestore.getInstance();
-        db.collection("tratamientos").document(nombreTratMed).collection("medicamentos").document(nombreMedicamento).set(med);
+            //Creamos un inflater para poder hacerlo de tipo personalizado.
+            LayoutInflater inflater = this.getLayoutInflater();
+
+            //Creamos una vista para poder capturar los valores de los editText y le asociamos el layout correspondiente.
+            View vista = inflater.inflate(R.layout.dialogo_add_medicamentos, null);
+            final EditText cantidad_diaria = (EditText) vista.findViewById(R.id.edtCantidad_diaria);
+            final EditText nombreTrat = (EditText) vista.findViewById(R.id.edtNombreTratMed);
+            final EditText nombreMed = (EditText) vista.findViewById(R.id.edtNombreMedicamento);
+            final EditText frecuencia = (EditText) vista.findViewById(R.id.edtFrecuencia);
+            final EditText descripcion = (EditText) vista.findViewById(R.id.edtInfo);
+
+            //Agregamos los botones Aceptar/Cancelar.
+            builderAddMedicamentos.setView(vista)
+                    .setPositiveButton("ACEPTAR", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int id) {
+
+                            //Al aceptar, controlamos que todos los campos estén rellenados. Si no lo están, lanzamos un mensaje informando de ello.
+                            if (nombreTrat.getText().toString().equalsIgnoreCase("") || nombreMed.getText().toString().equalsIgnoreCase("") ||
+                                    cantidad_diaria.getText().toString().equalsIgnoreCase("") || frecuencia.getText().toString().equalsIgnoreCase("") ||
+                                    descripcion.getText().toString().equalsIgnoreCase("")) {
+                                Toast camposVacios = Toast.makeText(AdministradorActivity.this, "Debe rellenar todos los campos.", Toast.LENGTH_LONG);
+                                camposVacios.show();
+                            } else {
+
+                                //Si lo están, capturamos los valores introducidos y los usamos como parámetros para llamar al método insertar
+                                insertarMedicamento(nombreTrat.getText().toString(), nombreMed.getText().toString(),
+                                        cantidad_diaria.getText().toString(), frecuencia.getText().toString(), descripcion.getText().toString());
+                            }
+                        }
+                    })
+                    .setNegativeButton("CANCELAR", new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int id) {
+                            //Al cancelar, no hacemos nada.
+                        }
+                    });
+
+            //Asignamos el dialogo construido a uno nuevo y lo mostramos.
+            AlertDialog dialog = builderAddMedicamentos.create();
+            dialog.show();
+        }catch (Exception e){
+
+        }
+    }
+
+    /*
+    Método por el que insertamos un nuevo medicamento en la base de datos. Usamos como parámetros
+    el nombre del tratamiento, el nombre del medicamento, la cantidad en cada dosis, la frecuencia diaria y
+    la descripción del mismo.
+     */
+    public void insertarMedicamento(String nombreTratMed, String nombreMedicamento, String cantidad_diaria, String frecuencia, String descripcion) {
+
+        try {
+            //Hacemos una consulta en la base de datos para saber si existe el tratamiento o no.
+            FirebaseFirestore db = FirebaseFirestore.getInstance();
+            DocumentReference docRef = db.collection("tratamientos").document(nombreTratMed);
+            docRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                @Override
+                public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                    if (task.isSuccessful()) {
+                        DocumentSnapshot document = task.getResult();
+                        if (document.exists()) {
+
+                            //Si existe, volvemos a lanzar otra consulta para comprobar si existe el medicamento o no.
+                            FirebaseFirestore db2 = FirebaseFirestore.getInstance();
+                            DocumentReference docRef = db2.collection("tratamientos").document(nombreTratMed).collection("medicamentos").document(nombreMedicamento);
+                            docRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                                @Override
+                                public void onComplete(@NonNull Task<DocumentSnapshot> taskm) {
+                                    if (taskm.isSuccessful()) {
+                                        DocumentSnapshot document = taskm.getResult();
+                                        if (document.exists()) {
+
+                                            //Si ya existe, lanzamos un mensaje informando de ello.
+                                            Toast noExisteTrat = Toast.makeText(AdministradorActivity.this, "El medicamento introducido ya existe.", Toast.LENGTH_LONG);
+                                            noExisteTrat.show();
+                                        } else {
+
+                                            //Si no existe, capturamos los valores en un hashmap y los insertamos en la base de datos.
+                                            Map<String, Object> med = new HashMap<>();
+                                            med.put("cantidad_diaria", cantidad_diaria);
+                                            med.put("frecuencia", frecuencia);
+                                            med.put("info", descripcion);
+                                            med.put("nombre", nombreMedicamento);
+
+                                            FirebaseFirestore dbt = FirebaseFirestore.getInstance();
+                                            dbt.collection("tratamientos").document(nombreTratMed).collection("medicamentos").document(nombreMedicamento).set(med);
+                                        }
+                                    } else {
+
+                                    }
+                                }
+                            });
+                        } else {
+
+                            //Si no existe el tratamiento lanzamos un mensaje informado de ello.
+                            Toast noExisteTrat = Toast.makeText(AdministradorActivity.this, "El tratamiento introducido no existe.", Toast.LENGTH_LONG);
+                            noExisteTrat.show();
+                        }
+                    } else {
+
+                    }
+                }
+            });
+        } catch (Exception e){
+
+        }
+
     }
 
 }

@@ -13,11 +13,18 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.FirebaseFirestore;
 
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -33,7 +40,7 @@ public class RegistroActivity extends AppCompatActivity implements View.OnClickL
 
 
     //Usuario y password
-    private String usuario, email, password, confirmaPassword;
+    private String usuario, email, password, confirmaPassword, passwordEncriptado;
     private Pattern pat = null;
     private Matcher mat = null;
     private Boolean valido = false;
@@ -103,6 +110,9 @@ public class RegistroActivity extends AppCompatActivity implements View.OnClickL
 
 
                         if(task.isSuccessful()){
+                            passwordEncriptado = encriptarContraseña(password);
+                            insertarUsuarioenRegistroActivity(email, passwordEncriptado);
+
                             //Instanciamos un objeto Intent, pasandole con this el Activity actual, y como segundo parametro el Activity que vamos a cargar
                             Intent intent = new Intent(getApplicationContext(), BienvenidaActivity.class);
                             startActivity(intent); // Lanzamos el activity
@@ -177,5 +187,59 @@ public class RegistroActivity extends AppCompatActivity implements View.OnClickL
         return  true;
     }
 
+    public void insertarUsuarioenRegistroActivity(String usuario, String contraseña){
+        //Inserción en Firestore:
+        FirebaseFirestore dbs = FirebaseFirestore.getInstance();
 
+        // Create a new user with a first and last name
+        Map<String, Object> user = new HashMap<>();
+        user.put("email", usuario);
+        user.put("password", contraseña);
+        user.put("tratamiento", "no");
+
+        dbs.collection("usuarios").document(usuario)
+                .set(user)
+                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void avoid) {
+                        //Log.d(TAG, "DocumentSnapshot added with ID: " + documentReference.getId());
+                        //documentReference.set("usuario" + siguienteUsuario);
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        //Log.w(TAG, "Error adding document", e);
+                    }
+                });
+    }
+
+    public static String encriptarContraseña(String password) {
+
+        String contraseñaFinal = "";
+
+        try {
+            //Encriptar la contraseña:
+            byte[] output1, con = password.getBytes();
+            MessageDigest md5 = null;
+
+            md5 = MessageDigest.getInstance("MD5");
+
+            md5.reset();
+            md5.update(con);
+            output1 = md5.digest();
+            // create hex output
+            StringBuffer hexString1 = new StringBuffer();
+            for (int i = 0; i < output1.length; i++)
+                hexString1.append(Integer.toHexString(0xFF & output1[i]));
+
+            contraseñaFinal = hexString1.toString();
+            //md5_result.setText(hexString1.toString());
+        } catch (NoSuchAlgorithmException e) {
+            e.printStackTrace();
+        }
+
+        return contraseñaFinal;
+
+    }
 }

@@ -47,7 +47,7 @@ public class TratamientosActivity extends AppCompatActivity implements View.OnCl
 //        listaAddTratamientos.add(new Tratamiento("Asma","14 días", R.drawable.tratamiento_por_defecto));
 //        listaAddTratamientos.add(new Tratamiento("Fractura","20 días", R.drawable.tratamiento_por_defecto));
 //        listaAddTratamientos.add(new Tratamiento("Otitis","10 días", R.drawable.tratamiento_por_defecto));
-        cargarTratamientos("albertoman@gmail.com");
+        cargarTratamientos("unapruebamas@gmail.com");
 
 
     }
@@ -119,7 +119,7 @@ public class TratamientosActivity extends AppCompatActivity implements View.OnCl
 
             }
         };
-        handler.postDelayed(r, 1000);
+        handler.postDelayed(r, 2000);
 ///////////////////////////////////
 
     }

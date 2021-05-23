@@ -23,6 +23,8 @@ import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
@@ -31,11 +33,14 @@ import android.widget.TextView;
 
 import com.google.android.gms.auth.api.signin.GoogleSignInClient;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 
 import java.io.File;
+import java.util.HashMap;
+import java.util.Map;
 
 
-public class BienvenidaActivity extends AppCompatActivity implements View.OnClickListener{
+public class BienvenidaActivity extends AppCompatActivity implements View.OnClickListener {
 
     private ImageView btAsistente, btCitaPrevia, btFarmacias, btExit, btMute, btConSonido;
     private String urlCitaPrevia, urlFarmacias;
@@ -57,6 +62,7 @@ public class BienvenidaActivity extends AppCompatActivity implements View.OnClic
         super.onStart();
 
     }
+
     private Handler handler;
 
 
@@ -175,12 +181,12 @@ public class BienvenidaActivity extends AppCompatActivity implements View.OnClic
             //finish();
             //finishAffinity();
             //System.exit(0);
-        } else if (view.getId() == R.id.ivMute){
+        } else if (view.getId() == R.id.ivMute) {
             mpCanon.pause();
             btMute.setVisibility(View.INVISIBLE);
             btConSonido.setVisibility(View.VISIBLE);
 
-        } else  if (view.getId() == R.id.ivConSonido){
+        } else if (view.getId() == R.id.ivConSonido) {
             mpCanon.start();
             btConSonido.setVisibility(View.INVISIBLE);
             btMute.setVisibility(View.VISIBLE);
@@ -249,64 +255,41 @@ public class BienvenidaActivity extends AppCompatActivity implements View.OnClic
 
     public void consultarTratamientosUsuario(String email) {
 
-        FirebaseFirestore db = FirebaseFirestore.getInstance();
-        CollectionReference tratRef = db.collection("tratamientos");
-        tratRef.whereEqualTo("email", email);
-        tratRef.get()
-                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-                    @Override
-                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                        if (task.isSuccessful()) {
-                            for (QueryDocumentSnapshot document : task.getResult()) {
-                                String nombre = document.getString("nombre");
-                                String duracion = document.getString("duracion");
+        try {
+            FirebaseFirestore db = FirebaseFirestore.getInstance();
+            DocumentReference tratRef = db.collection("usuarios").document(email);
+            tratRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
 
-                                FirebaseFirestore db2 = FirebaseFirestore.getInstance();
-                                db2.collection("tratamientos/" + nombre + "/usuariosTratamientos/").whereEqualTo("email", email)
-                                        .get()
-                                        .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-                                            @Override
-                                            public void onComplete(@NonNull Task<QuerySnapshot> task2) {
-                                                int tot = task2.getResult().size();
-                                                if (task2.isSuccessful()) {
-                                                    for (QueryDocumentSnapshot document : task2.getResult()) {
-                                                        if (task2.getResult().size() == 0) {
+                @Override
+                public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                    if (task.isSuccessful()) {
 
-                                                        } else {
-                                                            Intent intent = new Intent(getApplicationContext(), TratamientosActivity.class);
-                                                            startActivity(intent); // Lanzamos el activity
-                                                            finishAffinity();
-                                                        }
-                                                    }
-                                                } else {
+                        DocumentSnapshot document = task.getResult();
+                        String existeTratamiento = document.getString("tratamiento");
 
-                                                }
-
-                                            }
-                                        });
-
-                                Intent intent = new Intent(getApplicationContext(), AddTratamientosActivity.class);
-                                startActivity(intent); // Lanzamos el activity
-                                finishAffinity();
-                            }
-
-
+                        if (existeTratamiento.equalsIgnoreCase("si")) {
+                            Intent intent = new Intent(getApplicationContext(), TratamientosActivity.class);
+                            startActivity(intent);
+                            finishAffinity();
                         } else {
-                            //Log.d(TAG, "Error getting documents: ", task.getException());
-                            Toast toast = Toast.makeText(getApplicationContext(), "Error al ejecutar la tarea.", Toast.LENGTH_LONG);
-                            toast.show();
+                            Intent intent = new Intent(getApplicationContext(), AddTratamientosActivity.class);
+                            startActivity(intent);
+                            finishAffinity();
                         }
+
+                    } else {
+                        //Log.d(TAG, "Error getting documents: ", task.getException());
+                        Toast toast = Toast.makeText(getApplicationContext(), "Error al ejecutar la tarea.", Toast.LENGTH_LONG);
+                        toast.show();
                     }
-                });
-
-
+                }
+            });
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     private void activarAlarma (String mensaje, int hora, int minutos){
-
-/*        Calendar cal = Calendar.getInstance();
-        cal.set(Calendar.DAY_OF_WEEK, 4);*/
-
 
 
         Intent intent = new Intent(AlarmClock.ACTION_SET_ALARM)

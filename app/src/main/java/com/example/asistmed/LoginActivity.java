@@ -156,34 +156,37 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     public void onClick(View view) {
 
         //Asignamos a una variable tipo EditText el usuario y password introducidos
-        EditText etUsuario= (EditText) findViewById(R.id.etUsuario);
-        EditText etPassword= (EditText) findViewById(R.id.etPassword);
+        EditText etUsuario= (EditText) findViewById(R.id.introduceEmail);
+        EditText etPassword= (EditText) findViewById(R.id.introduceContrasena);
         //Rescatamos los valores introducidos por el usuario al pulsar el botón de acceso
         email = etEmail.getText().toString();
         password = etContrasena.getText().toString();
 
         if ((view.getId() == R.id.btrestablecer))
         {
+            Intent intent = new Intent(getApplicationContext(), BienvenidaActivity.class);
+            startActivity(intent);
+
             //if (!etUsuario.toString().isEmpty() || !etPassword.toString().isEmpty()){
             if (validaEmail() && validaPassword()){
 
-                mAuth.signInWithEmailAndPassword(email, password).addOnCompleteListener(this,new OnCompleteListener<AuthResult>() {
-                    @Override
-                    public void onComplete(@NonNull Task<AuthResult> task) {
-                        if (task.isSuccessful()) {
-                            //Instanciamos un objeto Intent, pasandole con this el Activity actual, y como segundo parametro el Activity que vamos a cargar
-                            Intent intent = new Intent(getApplicationContext(), BienvenidaActivity.class);
-                            startActivity(intent); // Lanzamos el activity
-
-                        } else {
-
-                            Toast toast= Toast.makeText(getApplicationContext(), email+password, Toast.LENGTH_SHORT);
-                            toast.setGravity(Gravity.TOP|Gravity.CENTER_HORIZONTAL, 0, 500);
-                            toast.show();
-
-                        }
-                    }
-                });
+//                mAuth.signInWithEmailAndPassword(email, password).addOnCompleteListener(this,new OnCompleteListener<AuthResult>() {
+//                    @Override
+//                    public void onComplete(@NonNull Task<AuthResult> task) {
+//                        if (task.isSuccessful()) {
+//                            //Instanciamos un objeto Intent, pasandole con this el Activity actual, y como segundo parametro el Activity que vamos a cargar
+//                            Intent intent = new Intent(getApplicationContext(), BienvenidaActivity.class);
+//                            startActivity(intent); // Lanzamos el activity
+//
+//                        } else {
+//
+//                            Toast toast= Toast.makeText(getApplicationContext(), email+password, Toast.LENGTH_SHORT);
+//                            toast.setGravity(Gravity.TOP|Gravity.CENTER_HORIZONTAL, 0, 500);
+//                            toast.show();
+//
+//                        }
+//                    }
+//                });
 
             }
 
@@ -314,5 +317,32 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                         }
                     }
                 });
+    }
+
+    public void insertarUsuarioenRegistroActivity(String usuario, String contraseña){
+        //Inserción en Firestore:
+        FirebaseFirestore dbs = FirebaseFirestore.getInstance();
+
+        // Create a new user with a first and last name
+                                Map<String, Object> user = new HashMap<>();
+                                user.put("email", usuario);
+                                user.put("password", contraseña);
+                                user.put("tratamiento", "no");
+
+                                dbs.collection("usuarios").document(usuario)
+                                        .set(user)
+                                        .addOnSuccessListener(new OnSuccessListener<Void>() {
+                                            @Override
+                                            public void onSuccess(Void avoid) {
+                                                //Log.d(TAG, "DocumentSnapshot added with ID: " + documentReference.getId());
+                                                //documentReference.set("usuario" + siguienteUsuario);
+                                            }
+                                        })
+                                        .addOnFailureListener(new OnFailureListener() {
+                                            @Override
+                                            public void onFailure(@NonNull Exception e) {
+                                                //Log.w(TAG, "Error adding document", e);
+                                            }
+                                        });
     }
 }

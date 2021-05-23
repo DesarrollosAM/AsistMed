@@ -3,7 +3,10 @@ package com.example.asistmed;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.app.ProgressDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -15,10 +18,13 @@ import android.widget.Button;
 import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
+import com.google.firebase.firestore.SetOptions;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -29,6 +35,8 @@ public class AddTratamientosActivity extends AppCompatActivity implements View.O
     RecyclerView recyclerAddTratamientos;
     private Handler handler;
     private boolean tratInsertados;
+    private ProgressDialog pDialog;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,6 +53,7 @@ public class AddTratamientosActivity extends AppCompatActivity implements View.O
 //        listaAddTratamientos.add(new Tratamiento("Asma","14 días", R.drawable.tratamiento_por_defecto));
 //        listaAddTratamientos.add(new Tratamiento("Fractura","20 días", R.drawable.tratamiento_por_defecto));
 //        listaAddTratamientos.add(new Tratamiento("Otitis","10 días", R.drawable.tratamiento_por_defecto));
+
         consultarTratamientos();
 
 
@@ -72,7 +81,7 @@ public class AddTratamientosActivity extends AppCompatActivity implements View.O
     }
 
     private void construirRecycler() {
-        listaAddTratamientos =new ArrayList<>();
+        listaAddTratamientos = new ArrayList<>();
         recyclerAddTratamientos = (RecyclerView) findViewById(R.id.RecyclerId);
         llenarAddTratamientos();
 
@@ -81,6 +90,7 @@ public class AddTratamientosActivity extends AppCompatActivity implements View.O
 
 
 ////////////////////
+
         handler = new Handler();
         Runnable r = new Runnable() {
             public void run() {
@@ -93,7 +103,6 @@ public class AddTratamientosActivity extends AppCompatActivity implements View.O
                 //aqui el metodo
 
                 AdaptadorAddTratamientos adapter=new AdaptadorAddTratamientos(listaAddTratamientos);
-
                 adapter.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
@@ -104,6 +113,7 @@ public class AddTratamientosActivity extends AppCompatActivity implements View.O
                         String nombreTratamiento = listaAddTratamientos.get(recyclerAddTratamientos.getChildAdapterPosition(view)).getNombre();
                         tratInsertados = false;
                         tratInsertados = insertarTratamientosElegidos(nombreTratamiento, emailUsuario);
+                        ModificarTratamientosenUsuarios(emailUsuario);
 
                         Toast.makeText(getApplicationContext(),
                                 "Tratamiento añadido",Toast.LENGTH_SHORT).show();
@@ -121,7 +131,7 @@ public class AddTratamientosActivity extends AppCompatActivity implements View.O
 
             }
         };
-        handler.postDelayed(r, 1000);
+        handler.postDelayed(r, 1200);
 ///////////////////////////////////
 
     }
@@ -164,7 +174,6 @@ public class AddTratamientosActivity extends AppCompatActivity implements View.O
                                 // Create a new user with a first and last name
                                 Map<String, Object> trat = new HashMap<>();
                                 trat.put("email", usuario);
-                                //user.put("born", 1815);
 
                                 // Add a new document with a generated ID
         FirebaseFirestore db = FirebaseFirestore.getInstance();
@@ -185,6 +194,33 @@ public class AddTratamientosActivity extends AppCompatActivity implements View.O
 //                                                //Log.w(TAG, "Error adding document", e);
 //                                            }
 //                                        });
+    }
+
+    public void ModificarTratamientosenUsuarios(String usuario){
+
+        FirebaseFirestore dbs = FirebaseFirestore.getInstance();
+
+        // Create a new user with a first and last name
+        Map<String, Object> user = new HashMap<>();
+        user.put("tratamiento", "si");
+
+        // Add a new document with a generated ID
+        dbs.collection("usuarios").document(usuario)
+                .set(user, SetOptions.merge())
+                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void avoid) {
+                        //Log.d(TAG, "DocumentSnapshot added with ID: " + documentReference.getId());
+                        //documentReference.set("usuario" + siguienteUsuario);
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        //Log.w(TAG, "Error adding document", e);
+                    }
+                });
+
     }
 
 
