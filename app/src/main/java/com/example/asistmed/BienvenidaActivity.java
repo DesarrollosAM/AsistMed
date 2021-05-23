@@ -8,8 +8,13 @@ import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.StrictMode;
+import android.provider.AlarmClock;
+import android.provider.MediaStore;
 import android.view.View;
 import android.widget.Button;
+import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Toast;
 
@@ -21,9 +26,13 @@ import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
+import android.widget.Switch;
 import android.widget.TextView;
+
+import com.google.android.gms.auth.api.signin.GoogleSignInClient;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
+
+import java.io.File;
 
 
 public class BienvenidaActivity extends AppCompatActivity implements View.OnClickListener{
@@ -33,8 +42,15 @@ public class BienvenidaActivity extends AppCompatActivity implements View.OnClic
     private MediaPlayer mpCanon;
     private TextView txtUsuario;
     private ImageView btEliminarUsuario;
+    private Button btFoto;
+    private Switch swAlarma;
+
+    private GoogleSignInClient mGoogleSignInClient;
 
     private String email;
+    private TextView etNombreFoto;
+
+    FirebaseAuth mAuth;
 
     @Override
     public void onStart() {
@@ -61,6 +77,46 @@ public class BienvenidaActivity extends AppCompatActivity implements View.OnClic
         btMute       = (ImageView) findViewById(R.id.ivMute);
         btConSonido  = (ImageView) findViewById(R.id.ivConSonido);
         btEliminarUsuario = (ImageView) findViewById(R.id.ivEliminarUsuario);
+        btFoto = (Button) findViewById(R.id.btFoto);
+        etNombreFoto = (TextView) findViewById(R.id.etNombreFoto);
+        swAlarma = (Switch) findViewById(R.id.swAlarma);
+
+        //Se introducen estas líneas para no tener problemas a la hora de utilizar
+        //la sd externa
+        //otra solución es usar FileProvider
+        StrictMode.VmPolicy.Builder builder = new StrictMode.VmPolicy.Builder();
+        StrictMode.setVmPolicy(builder.build());
+
+        btFoto.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intento1 = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+                File foto = new File(getExternalFilesDir(null), etNombreFoto.getText().toString());
+                intento1.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(foto));
+                startActivity(intento1);
+            }
+        });
+
+        swAlarma.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intento1 = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+                File foto = new File(getExternalFilesDir(null), etNombreFoto.getText().toString());
+                intento1.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(foto));
+                startActivity(intento1);
+            }
+        });
+
+        swAlarma.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                activarAlarma("¡Probando alarmas!", 14, 30);
+
+            }
+        });
+
+
 
 
         btConSonido.setVisibility(View.INVISIBLE);
@@ -100,22 +156,31 @@ public class BienvenidaActivity extends AppCompatActivity implements View.OnClic
             Intent intent = new Intent(Intent.ACTION_VIEW, uri);
             startActivity(intent);
         } else if(view.getId() == R.id.ivFarmacias){
-            Uri uri = Uri.parse(urlFarmacias);
-            Intent intent = new Intent(Intent.ACTION_VIEW, uri);
-            startActivity(intent);
+            //Uri uri = Uri.parse(urlFarmacias);
+            //Intent intent = new Intent(Intent.ACTION_VIEW, uri);
+            //startActivity(intent);
+            startActivity(new Intent(this, MapsActivity.class));
         } else if (view.getId() == R.id.ivExit){
+            //TODO: Cerrar sesión del usuario.
 
-            FirebaseAuth.getInstance().signOut(); //Para cerrar sesión en Firebase
-            startActivity(new Intent(this,LoginActivity2.class));
+            //Cerramos sesión si la hubiere con correo y contraseña
+            //FirebaseAuth.getInstance().signOut(); //Para cerrar sesión en Firebase
+
+            // Initialize Firebase Auth
+            mAuth = FirebaseAuth.getInstance();
+            mAuth.signOut();
+            startActivity(new Intent(this, LoginActivity.class));
+            finish();
+            finishAffinity();
             //finish();
             //finishAffinity();
             //System.exit(0);
-        } else if (view.getId() == R.id.ivMute) {
+        } else if (view.getId() == R.id.ivMute){
             mpCanon.pause();
             btMute.setVisibility(View.INVISIBLE);
             btConSonido.setVisibility(View.VISIBLE);
 
-        } else if (view.getId() == R.id.ivConSonido){
+        } else  if (view.getId() == R.id.ivConSonido){
             mpCanon.start();
             btConSonido.setVisibility(View.INVISIBLE);
             btMute.setVisibility(View.VISIBLE);
@@ -235,5 +300,26 @@ public class BienvenidaActivity extends AppCompatActivity implements View.OnClic
                 });
 
 
+    }
+
+    private void activarAlarma (String mensaje, int hora, int minutos){
+
+/*        Calendar cal = Calendar.getInstance();
+        cal.set(Calendar.DAY_OF_WEEK, 4);*/
+
+
+
+        Intent intent = new Intent(AlarmClock.ACTION_SET_ALARM)
+                .putExtra(AlarmClock.EXTRA_MESSAGE, mensaje)
+                .putExtra(AlarmClock.EXTRA_HOUR, hora)
+                .putExtra(AlarmClock.EXTRA_MINUTES, minutos);
+        //.putExtra(AlarmClock.EXTRA_ALARM_SNOOZE_DURATION, 5)
+        //.putExtra(String.valueOf(AlarmManager.ELAPSED_REALTIME), 3);
+
+
+        if (intent.resolveActivity(getPackageManager()) != null){
+
+            startActivity(intent);
+        }
     }
 }

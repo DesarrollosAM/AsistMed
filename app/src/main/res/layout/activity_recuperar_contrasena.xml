@@ -62,14 +62,14 @@
         android:paddingBottom="10dp"
         android:textColor="@color/white"
         android:textColorHint="@color/white"
-        app:layout_constraintBottom_toTopOf="@+id/btRestablecerContrasena"
+        app:layout_constraintBottom_toTopOf="@+id/btrestablecer"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/logo" />
 
     <Button
-        android:id="@+id/btRestablecerContrasena"
+        android:id="@+id/btrestablecer"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="32dp"
@@ -81,7 +81,7 @@
         android:background="@drawable/input_background"
         android:text="RESTABLECER"
         android:textColor="@color/black"
-        android:textStyle="bold"
+        android:textStyle="normal"
         app:backgroundTint="@color/white"
         app:layout_constraintBottom_toTopOf="@+id/btRegresarLogin"
         app:layout_constraintEnd_toEndOf="parent"
@@ -94,7 +94,7 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="32dp"
         android:layout_marginLeft="32dp"
-        android:layout_marginTop="24dp"
+        android:layout_marginTop="32dp"
         android:layout_marginEnd="32dp"
         android:layout_marginRight="32dp"
         android:layout_marginBottom="32dp"
@@ -102,16 +102,18 @@
         android:drawablePadding="10dp"
         android:gravity="start"
         android:paddingLeft="20dp"
+        android:paddingTop="7dp"
+        android:paddingRight="20dp"
         android:text="REGRESAR A LOGIN"
         android:textAlignment="textStart"
         android:textAllCaps="false"
         android:textColor="@color/black"
-        android:textStyle="bold"
+        android:textStyle="normal"
         app:backgroundTint="@color/white"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/btRestablecerContrasena" />
+        app:layout_constraintTop_toBottomOf="@+id/btrestablecer" />
 
 
 
