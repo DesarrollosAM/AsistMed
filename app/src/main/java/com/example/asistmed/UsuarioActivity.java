@@ -11,7 +11,6 @@ import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
-import android.provider.AlarmClock;
 import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
@@ -37,7 +36,7 @@ import com.google.zxing.integration.android.IntentResult;
 public class UsuarioActivity extends AppCompatActivity implements View.OnClickListener {
 
     private Button btAsistente, btCitaPrevia, btFarmacias, btLectorCodigos, btInicio, btSalir;
-    private String urlCitaPrevia, urlFarmacias;
+    private String urlCitaPrevia, urlFarmacias, urlAgenciaMedicamento;
     private MediaPlayer mpCanon;
     private TextView txtUsuario;
     //private ImageView btEliminarUsuario;
@@ -55,7 +54,6 @@ public class UsuarioActivity extends AppCompatActivity implements View.OnClickLi
 
     FirebaseAuth mAuth;
 
-
     private Handler handler;
 
 
@@ -63,10 +61,6 @@ public class UsuarioActivity extends AppCompatActivity implements View.OnClickLi
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_usuario);
-
-//        mpCanon = MediaPlayer.create(this, R.raw.canon_pachelbel);
-//        mpCanon.setLooping(true);
-//        mpCanon.start();
 
         mAuth = FirebaseAuth.getInstance();
 
@@ -121,10 +115,6 @@ public class UsuarioActivity extends AppCompatActivity implements View.OnClickLi
 //            }
 //        });
 
-
-//        btConSonido.setVisibility(View.INVISIBLE);
-//        btMute.setVisibility(View.VISIBLE);
-
         //Asignación del evento click
         btAsistente.setOnClickListener(this);
         btCitaPrevia.setOnClickListener(this);
@@ -137,6 +127,7 @@ public class UsuarioActivity extends AppCompatActivity implements View.OnClickLi
         //Asignamos las direcciones url.
         urlCitaPrevia = "https://sms.carm.es/cmap/";
         urlFarmacias  = "https://www.farmacias.es/";
+        urlAgenciaMedicamento = "https://cima.aemps.es/info/";
 
 
         //Cargamos la referencia a nuestro TextView
@@ -158,6 +149,14 @@ public class UsuarioActivity extends AppCompatActivity implements View.OnClickLi
         String lecturaQr = result.getContents();
 
         //txtUsuario.setText(lecturaQr);
+        String idMedicamento = lecturaQr.substring(10,16);
+
+        //String prueba = "0123456789679605000";
+//        String idMedicamento = prueba.substring(10,16);
+
+        Uri uri = Uri.parse(urlAgenciaMedicamento+idMedicamento);
+        Intent intent = new Intent(Intent.ACTION_VIEW, uri);
+        startActivity(intent);
 
     }
 

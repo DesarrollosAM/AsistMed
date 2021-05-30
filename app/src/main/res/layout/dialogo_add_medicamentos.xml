@@ -7,7 +7,7 @@
     <ImageView
         android:layout_width="match_parent"
         android:layout_height="64dp"
-        android:background="#FFFFBB33"
+        android:background="#FFFFFF"
         android:contentDescription="@string/app_name"
         android:scaleType="center"
         android:src="@drawable/medicamento_por_defecto" />
@@ -20,7 +20,7 @@
         android:layout_marginTop="16dp"
         android:layout_marginRight="4dp"
         android:layout_marginBottom="4dp"
-        android:background="#6A38E680"
+        android:background="@drawable/input_background"
         android:gravity="center_horizontal"
         android:inputType="text"
         android:text="AÑADIR MEDICAMENTO"
@@ -39,6 +39,26 @@
         android:fontFamily="sans-serif"
         android:hint="Inserte el tratamiento..."
         android:inputType="text" />
+
+<!--    <EditText-->
+<!--        android:id="@+id/edtNombreTratMed"-->
+<!--        android:layout_width="match_parent"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:layout_marginStart="32dp"-->
+<!--        android:layout_marginTop="24dp"-->
+<!--        android:layout_marginEnd="32dp"-->
+<!--        android:background="@drawable/input_background"-->
+<!--        android:drawableLeft="@drawable/ic_add_24"-->
+<!--        android:drawablePadding="10dp"-->
+<!--        android:ems="10"-->
+<!--        android:hint="Inserte el tratamiento..."-->
+<!--        android:inputType="text"-->
+<!--        android:paddingLeft="20dp"-->
+<!--        android:paddingTop="10dp"-->
+<!--        android:paddingRight="10dp"-->
+<!--        android:paddingBottom="10dp"-->
+<!--        android:textColor="@color/white"-->
+<!--        android:textColorHint="@color/white" />-->
 
     <EditText
         android:id="@+id/edtNombreMedicamento"
@@ -87,4 +107,8 @@
         android:fontFamily="sans-serif"
         android:hint="Inserte la descripción..."
         android:inputType="text" />
+
+
+
+
 </LinearLayout>
