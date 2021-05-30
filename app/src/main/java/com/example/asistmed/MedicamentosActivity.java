@@ -47,7 +47,7 @@ public class MedicamentosActivity extends AppCompatActivity {
         shared = getSharedPreferences("Datos", Context.MODE_PRIVATE);
         String nombreTratamiento = shared.getString("nombreTratamiento", "");
         String duracionTratamiento = shared.getString("duracionTratamiento", "");
-        txtNombreTratamiento.setText("Tratamiento: " + nombreTratamiento + ". Duración: " + duracionTratamiento + " días.");
+        txtNombreTratamiento.setText("Tratamiento: " + nombreTratamiento + ". Duración: " + duracionTratamiento + ".");
 
         etBuscadorMed = findViewById(R.id.etBuscadorMed);
         etBuscadorMed.addTextChangedListener(new TextWatcher() {
@@ -97,13 +97,11 @@ public class MedicamentosActivity extends AppCompatActivity {
     public void onClick(View view) {
 
         switch (view.getId()) {
-            case R.id.btnList:
-                UtilidadesMedicamentos.visualizacion = UtilidadesMedicamentos.LIST;
-                break;
-            case R.id.btnGrid:
+
+            case R.id.btnGridAddActualizar:
                 UtilidadesMedicamentos.visualizacion = UtilidadesMedicamentos.GRID;
                 break;
-            case R.id.btAtras2:
+            case R.id.btVolverMed:
                 Intent intent = new Intent(getApplicationContext(), TratamientosActivity.class);
                 startActivity(intent); // Lanzamos el activity
                 break;

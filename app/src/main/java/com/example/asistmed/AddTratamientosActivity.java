@@ -83,14 +83,17 @@ public class AddTratamientosActivity extends AppCompatActivity implements View.O
     public void onClick(View view) {
 
         switch (view.getId()){
-            case R.id.btnList: UtilidadesAddTratamientos.visualizacion=UtilidadesAddTratamientos.LIST;
+            case R.id.btnGridAddActualizar: UtilidadesAddTratamientos.visualizacion=UtilidadesAddTratamientos.GRID;
                 break;
-            case R.id.btnGrid: UtilidadesAddTratamientos.visualizacion=UtilidadesAddTratamientos.GRID;
+            case R.id.btVolverMenuAdd:
+                Intent intent = new Intent(getApplicationContext(), UsuarioActivity.class);
+                startActivity(intent);
+                finishAffinity();// Lanzamos el activity
                 break;
             case R.id.btTerminar:
                 if(tratInsertados) {
-                    Intent intent = new Intent(getApplicationContext(), TratamientosActivity.class);
-                    startActivity(intent);
+                    Intent intentTrat = new Intent(getApplicationContext(), TratamientosActivity.class);
+                    startActivity(intentTrat);
                     finishAffinity();// Lanzamos el activity
                 }else {
                     Toast toastUsuarioNoValido = Toast.makeText(this, "Por favor, añada un tratamiento para poder finalizar.", Toast.LENGTH_LONG);

@@ -64,7 +64,7 @@
             app:backgroundTint="@android:color/holo_green_dark" />
 
         <Button
-            android:id="@+id/btnGrid"
+            android:id="@+id/btnGridActualizar"
             android:layout_width="200dp"
             android:layout_height="35dp"
             android:layout_weight="1"

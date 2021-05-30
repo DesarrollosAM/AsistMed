@@ -108,13 +108,11 @@ public class AdaptadorMedicamentos
         TextView etiNombre, etiInformacion;
         ImageView foto;
         Switch activarAlarma;
-        Button btAddFoto;
 
 
         public ViewHolderMedicamentos(View itemView) {
             super(itemView);
             contexto = itemView.getContext();
-            btAddFoto = (Button) itemView.findViewById(R.id.btAddFoto);
             activarAlarma = (Switch) itemView.findViewById(R.id.swActivarAlarma);
             etiNombre = (TextView) itemView.findViewById(R.id.idNombre);
             if (UtilidadesMedicamentos.visualizacion == UtilidadesMedicamentos.LIST) {

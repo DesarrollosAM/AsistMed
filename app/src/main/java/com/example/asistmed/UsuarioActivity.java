@@ -148,21 +148,15 @@ public class UsuarioActivity extends AppCompatActivity implements View.OnClickLi
 
         String lecturaQr = result.getContents();
 
-        //TODO:Crear método para extraer substring y concatenarlo con la URL de la Agencia española del medicamento
-
-        String idMedicamento = lecturaQr.substring(10,16);
-
-        //String prueba = "0123456789679605000";
-//        String idMedicamento = prueba.substring(10,16);
-
-        Uri uri = Uri.parse(urlAgenciaMedicamento+idMedicamento);
-        Intent intent = new Intent(Intent.ACTION_VIEW, uri);
-        startActivity(intent);
-        idMedicamento = lecturaQr.substring(10,16);
-
-        //String prueba = "0123456789679605000";
-//        String idMedicamento = prueba.substring(10,16);
-
+        if(lecturaQr != null){
+            String idMedicamento = lecturaQr.substring(10,16);
+            Uri uri = Uri.parse(urlAgenciaMedicamento+idMedicamento);
+            Intent intent = new Intent(Intent.ACTION_VIEW, uri);
+            startActivity(intent);
+        } else{
+            Toast lecturaCancelada = Toast.makeText(getApplicationContext(), "Lectura cancelada.", Toast.LENGTH_LONG);
+            lecturaCancelada.show();
+        }
 
 
     }

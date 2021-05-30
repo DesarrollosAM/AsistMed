@@ -13,9 +13,9 @@
             android:id="@+id/idImagen"
             android:layout_width="60dp"
             android:layout_height="60dp"
-            android:src="@mipmap/ic_launcher"
             android:layout_marginTop="15dp"
-            android:layout_marginRight="10dp"/>
+            android:layout_marginRight="10dp"
+            android:src="@mipmap/ic_launcher" />
 
         <LinearLayout
             android:layout_width="wrap_content"
@@ -24,9 +24,9 @@
 
             <TextView
                 android:id="@+id/idNombre"
-                android:layout_marginTop="10dp"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
                 android:text="Nombre"
                 android:textSize="25sp"
                 android:textStyle="bold" />
@@ -35,33 +35,32 @@
                 android:id="@+id/idInfo"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Descripcion "
+                android:layout_marginRight="10dp"
                 android:layout_marginBottom="15dp"
-                android:layout_marginRight="10dp"/>
-
-            <Switch
-                android:id="@+id/swActivarAlarma"
-                android:layout_width="150dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="Activar Alarma" />
-
-            <Button
-                android:id="@+id/btAddFoto"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="Añadir Foto" />
+                android:text="Descripcion " />
 
         </LinearLayout>
 
     </LinearLayout>
 
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="28dp"
+        android:orientation="horizontal">
+
+        <Switch
+            android:id="@+id/swActivarAlarma"
+            android:layout_width="150dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="                                                                              Activar Alarma" />
+    </LinearLayout>
+
     <TextView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="1dp"
         android:layout_below="@+id/idImagen"
-        android:layout_marginTop="11dp"
+        android:layout_marginTop="10dp"
         android:background="@color/teal_700" />
 
 </LinearLayout>

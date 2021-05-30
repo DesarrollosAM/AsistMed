@@ -78,7 +78,7 @@ public class TratamientosActivity extends AppCompatActivity implements View.OnCl
     public void onClick(View view) {
 
         switch (view.getId()) {
-            case R.id.btnGrid:
+            case R.id.btnGridActualizar:
                 UtilidadesAddTratamientos.visualizacion = UtilidadesAddTratamientos.GRID;
                 break;
             case R.id.btVolverMenu:
