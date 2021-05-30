@@ -49,7 +49,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:srcCompat="@drawable/ico_farmacia" />
+        app:srcCompat="@drawable/logo_azul_alas" />
 
     <TextView
         android:id="@+id/logo"
@@ -62,7 +62,7 @@
         android:layout_marginRight="32dp"
         android:text="ACCESO"
         android:textColor="@color/white"
-        android:textSize="34sp"
+        android:textSize="24sp"
         android:textStyle="bold"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"

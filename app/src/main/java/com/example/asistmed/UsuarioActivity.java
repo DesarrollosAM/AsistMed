@@ -148,7 +148,8 @@ public class UsuarioActivity extends AppCompatActivity implements View.OnClickLi
 
         String lecturaQr = result.getContents();
 
-        //txtUsuario.setText(lecturaQr);
+        //TODO:Crear método para extraer substring y concatenarlo con la URL de la Agencia española del medicamento
+
         String idMedicamento = lecturaQr.substring(10,16);
 
         //String prueba = "0123456789679605000";
@@ -157,6 +158,12 @@ public class UsuarioActivity extends AppCompatActivity implements View.OnClickLi
         Uri uri = Uri.parse(urlAgenciaMedicamento+idMedicamento);
         Intent intent = new Intent(Intent.ACTION_VIEW, uri);
         startActivity(intent);
+        idMedicamento = lecturaQr.substring(10,16);
+
+        //String prueba = "0123456789679605000";
+//        String idMedicamento = prueba.substring(10,16);
+
+
 
     }
 
@@ -172,8 +179,10 @@ public class UsuarioActivity extends AppCompatActivity implements View.OnClickLi
             Uri uri = Uri.parse(urlCitaPrevia);
             Intent intent = new Intent(Intent.ACTION_VIEW, uri);
             startActivity(intent);
+
         } else if (view.getId() == R.id.btFarmacias) {
             startActivity(new Intent(this, MapsActivity.class));
+
         } else if (view.getId() == R.id.btSalir) {
 
             //Cerramos sesión en Firebase Auth
