@@ -62,6 +62,28 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
         mMap = googleMap;
 
+        //Comprobamos con el if si los permisos para la Geolocalización están revocados, y si es así, dentro del if se solicitan
+
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED
+                && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+
+            //En el caso de que los permisos estén revocados, los solicitamos.
+            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION,}, 1000);
+            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_COARSE_LOCATION,}, 1000);
+
+        }else {
+
+
+            //Habilitamos nuestro posicionamiento GPS
+            mMap.setMyLocationEnabled(true);
+
+            //Mostrmos el botón que nos posicionará en el mapa en nuestra ubicación
+            mMap.getUiSettings().setMyLocationButtonEnabled(true);
+        }
+
+
+
+
         // Definimos una imagen para el marcador
         @SuppressLint("UseCompatLoadingForDrawables") BitmapDrawable bitmapdraw = (BitmapDrawable) getResources().getDrawable(R.drawable.carlosiii_png); // Añadimos la imagen del nuevo marcador
         Bitmap b = bitmapdraw.getBitmap();
@@ -105,22 +127,9 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                     Toast.LENGTH_SHORT).show();
         }
 
-        //Comprobamos con el if si los permisos para la Geolocalización están revocados, y si es así, dentro del if se solicitan
 
-        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED
-                && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
 
-            //En el caso de que los permisos esténrevocados, los solicitamos.
-            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION,}, 1000);
-            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_COARSE_LOCATION,}, 1000);
 
-        }
-
-        //Habilitamos nuestro posicionamiento GPS
-        mMap.setMyLocationEnabled(true);
-
-        //Mostrmos el botón que nos posicionará en el mapa en nuestra ubicación
-        mMap.getUiSettings().setMyLocationButtonEnabled(true);
 
 
     }//Fin onMapReady

@@ -12,6 +12,7 @@ import android.view.Gravity;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -59,7 +60,8 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     private TextView tvRegistro, tvRecuperarContrasena, tvContacto;
     private EditText etEmail, etContrasena;
 
-    //ImageView btAcceso;
+    //ImageView ivSalir;
+    private ImageView ivSalir;
 
     //Usuario y password
     private String email, password;
@@ -109,11 +111,14 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         //Cargamos la referencia de nuestro botón
         btAccederGoogle = findViewById(R.id.btAccederGoogle);
 
+        //Cargamos la referencia de nuestro botón
+        ivSalir = findViewById(R.id.ivSalir);
+
 
         //Asignación del evento click
         btAcceso.setOnClickListener(this);
         btAccederGoogle.setOnClickListener(this);
-
+        ivSalir.setOnClickListener(this);
 
 
         //Cargamos la referencia de nuestros Input
@@ -177,7 +182,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
 //                            }
                         } else {
 
-                            Toast toast= Toast.makeText(getApplicationContext(), "El email " + email + " no está registrado o la password es errónea", Toast.LENGTH_SHORT);
+                            Toast toast= Toast.makeText(getApplicationContext(), "El email " + email + " no está registrado o la contraseña es incorrecta", Toast.LENGTH_LONG);
                             toast.setGravity(Gravity.TOP|Gravity.CENTER_HORIZONTAL, 0, 500);
                             toast.show();
 
@@ -199,12 +204,17 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
             Intent intent = new Intent(getApplicationContext(), RecuperarContrasenaActivity.class);
             startActivity(intent); // Lanzamos el activity
 
-        }else if ((view.getId() == R.id.tvContacto)){
+        }else if ((view.getId() == R.id.tvContacto)) {
 
             //Instanciamos un objeto Intent, pasandole con this el Activity actual, y como segundo parametro el Activity que vamos a cargar
             Intent intent = new Intent(getApplicationContext(), CorreoActivity.class);
             startActivity(intent); // Lanzamos el activity
 
+        }else if ((view.getId() == R.id.ivSalir)) {
+
+            finish();
+            finishAffinity();
+            System.exit(0);
 
         }else   {
 
@@ -267,11 +277,11 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     private boolean validaPassword(){
         password = password.trim();
         if (password.isEmpty()){
-            Toast toast= Toast.makeText(getApplicationContext(), "Introduzca Password", Toast.LENGTH_SHORT);
+            Toast toast= Toast.makeText(getApplicationContext(), "Introduzca Contraseña", Toast.LENGTH_SHORT);
             toast.setGravity(Gravity.TOP|Gravity.CENTER_HORIZONTAL, 0, 500);
             toast.show();
         } else if (password.length() < 8){
-            Toast toast= Toast.makeText(getApplicationContext(), "La Password debe tener al menos 8 caracteeres", Toast.LENGTH_SHORT);
+            Toast toast= Toast.makeText(getApplicationContext(), "La Contraseña debe tener al menos 8 caracteres", Toast.LENGTH_SHORT);
             toast.setGravity(Gravity.TOP|Gravity.CENTER_HORIZONTAL, 0, 500);
             toast.show();
         } else {

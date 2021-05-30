@@ -41,7 +41,7 @@ public class RegistroActivity extends AppCompatActivity implements View.OnClickL
 
 
     //Usuario y password
-    private String usuario, email, password, confirmaPassword, passwordEncriptado;
+    private String usuario, nick, email, password, confirmaPassword, passwordEncriptado;
     private Pattern pat = null;
     private Matcher mat = null;
     private Boolean valido = false;
@@ -105,7 +105,7 @@ public class RegistroActivity extends AppCompatActivity implements View.OnClickL
         EditText etconfirmaPassword = (EditText) findViewById(R.id.repiteContrasena);
 
         email = etMail.getText().toString();
-        usuario = etUsuario.getText().toString();
+        nick = etUsuario.getText().toString();
         password = etPassword.getText().toString();
         confirmaPassword = etconfirmaPassword.getText().toString();
 
@@ -128,6 +128,7 @@ public class RegistroActivity extends AppCompatActivity implements View.OnClickL
 
                             //Utilizamos el editor para guardar la variable dato recogida del EditText Usuario en la clave "Usuario" de nuestro archivo Shared que hemos llamado "Datos"
                             editor.putString("Usuario", email);
+                            editor.putString("nick", nick);
                             editor.commit();
 
                             //Instanciamos un objeto Intent, pasandole con this el Activity actual, y como segundo parametro el Activity que vamos a cargar
@@ -176,15 +177,15 @@ public class RegistroActivity extends AppCompatActivity implements View.OnClickL
         password = password.trim();
         confirmaPassword = confirmaPassword.trim();
         if (password.isEmpty()){
-            Toast toastPasswordVacia = Toast.makeText(this, "Introduzca Password", Toast.LENGTH_SHORT);
+            Toast toastPasswordVacia = Toast.makeText(this, "Introduzca contraseña", Toast.LENGTH_SHORT);
             toastPasswordVacia.show();
         } else if (password.length() < 8){
-            Toast toastPasswordCorta = Toast.makeText(this, "La Password debe tener al menos 8 caracteres", Toast.LENGTH_SHORT);
+            Toast toastPasswordCorta = Toast.makeText(this, "La contraseña debe tener al menos 8 caracteres", Toast.LENGTH_SHORT);
             toastPasswordCorta.show();
 
         }else if (!password.equals(confirmaPassword)){
 
-            Toast toastPasswordDistintas = Toast.makeText(this, "Las Password introducidas no coinciden", Toast.LENGTH_SHORT);
+            Toast toastPasswordDistintas = Toast.makeText(this, "Las contraseñas introducidas no coinciden", Toast.LENGTH_SHORT);
             toastPasswordDistintas.show();
         }
 
