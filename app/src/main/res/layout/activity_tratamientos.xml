@@ -55,7 +55,7 @@
             android:layout_width="200dp"
             android:layout_height="35dp"
             android:background="@drawable/input_background"
-            android:drawableLeft="@drawable/ic_login_24"
+            android:drawableLeft="@drawable/ic_back_24"
             android:elevation="5dp"
             android:onClick="onClick"
             android:text="VOLVER"

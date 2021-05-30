@@ -3,6 +3,9 @@ package com.example.asistmed;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.app.AlarmManager;
+import android.app.PendingIntent;
+import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.drawable.Drawable;
@@ -10,6 +13,7 @@ import android.net.Uri;
 import android.os.Environment;
 import android.provider.AlarmClock;
 import android.provider.MediaStore;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -22,6 +26,7 @@ import android.widget.Toast;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Calendar;
 
 import static androidx.core.content.ContextCompat.getExternalFilesDirs;
 import static androidx.core.content.ContextCompat.startActivity;
@@ -30,9 +35,9 @@ public class AdaptadorMedicamentos
         extends RecyclerView.Adapter<AdaptadorMedicamentos.ViewHolderMedicamentos>
         implements View.OnClickListener {
 
+    //Declaramos las variables necesarias.
     private Context contexto;
-    private Switch activarAlarma;
-    ArrayList<Medicamentos> listaMedicamentos;
+    private ArrayList<Medicamentos> listaMedicamentos;
     private View.OnClickListener listener;
 
     public AdaptadorMedicamentos(ArrayList<Medicamentos> listaMedicamentos) {
@@ -41,7 +46,12 @@ public class AdaptadorMedicamentos
 
     @Override
     public ViewHolderMedicamentos onCreateViewHolder(ViewGroup parent, int viewType) {
+
+        //Declaramos las variables necesarias.
         int layout = 0;
+        View view = null;
+
+        try{
         if (UtilidadesMedicamentos.visualizacion == UtilidadesMedicamentos.LIST) {
             layout = R.layout.item_list_medicamentos;
 
@@ -49,38 +59,42 @@ public class AdaptadorMedicamentos
             layout = R.layout.item_grid_medicamentos;
         }
 
-        View view = LayoutInflater.from(parent.getContext()).inflate(layout, null, false);
+        view = LayoutInflater.from(parent.getContext()).inflate(layout, null, false);
 
         view.setOnClickListener(this);
-
+            //Capturamos e insertamos en el log, cualquier posible excepción.
+        } catch (Exception e) {
+            Log.w("Excepción: ", e.getMessage());
+        }
+        //Devolvemos el viewHolder con la vista configurada como parametro.
         return new ViewHolderMedicamentos(view);
     }
 
+    /*
+    Método por el que realizamos binding en los items de la lista.
+     */
     @Override
     public void onBindViewHolder(ViewHolderMedicamentos holder, int position) {
         holder.etiNombre.setText(listaMedicamentos.get(position).getNombre());
 
+        //Insertamos la info del medicamento y activamos la alarma si pulsamos el spinner
         if (UtilidadesMedicamentos.visualizacion == UtilidadesMedicamentos.LIST) {
             holder.etiInformacion.setText(listaMedicamentos.get(position).getInfo());
 
             holder.activarAlarma.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
                 public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                     if (isChecked) {
+                        //TODO: cargar un diálogo que pregunte la hora a la que poner la alarma. Y ponerla con la frecuencia necesaria
+                        int hora = 14;
+                        int minutos = 00;
                         String mensaje = "Le toca tomar la dosis de " + listaMedicamentos.get(position).getNombre() + ". ";
-                        activarAlarma(mensaje, 14, 35, contexto, position);
+                        int frecuencia = listaMedicamentos.get(position).getFrecuencia();
+                        activarAlarma(mensaje, hora, minutos, contexto, position, frecuencia);
                     } else {
 
                     }
                 }
             });
-
-//                if (holder.activarAlarma.isSelected()){
-//                    Toast toastUsuarioValido = Toast.makeText(holder.itemView.getContext(), "Alarma activada", Toast.LENGTH_LONG);
-//                    toastUsuarioValido.show();
-//                } else {
-//                    //Toast toastUsuarioValido = Toast.makeText(itemView.getContext(), "Alarma desactivada", Toast.LENGTH_LONG);
-//                    //toastUsuarioValido.show();
-//                }
             }
 
             holder.foto.setImageResource(listaMedicamentos.get(position).getFotoInicial());
@@ -143,21 +157,63 @@ public class AdaptadorMedicamentos
 //        return foto;
 //    }
 
-    private void activarAlarma(String mensaje, int hora, int minutos, Context contexto, int position) {
+    private void activarAlarma(String mensaje, int hora, int minutos, Context contexto, int position, int frecuencia) {
 
 
         Intent intent = new Intent(AlarmClock.ACTION_SET_ALARM)
                 .putExtra(AlarmClock.EXTRA_MESSAGE, mensaje)
                 .putExtra(AlarmClock.EXTRA_HOUR, hora)
-                .putExtra(AlarmClock.EXTRA_MINUTES, minutos);
-        //.putExtra(AlarmClock.EXTRA_ALARM_SNOOZE_DURATION, 5)
+                .putExtra(AlarmClock.EXTRA_MINUTES, minutos)
+        .putExtra(AlarmClock.EXTRA_ALARM_SNOOZE_DURATION, frecuencia * 60);
         //.putExtra(String.valueOf(AlarmManager.ELAPSED_REALTIME), 3);
-
-
         if (intent.resolveActivity(contexto.getPackageManager()) != null) {
 
             startActivity(contexto, intent, null);
         }
+
+
+
+        ///////////////////////////////////////////////
+//        AlarmManager alarmMgr;
+//        PendingIntent alarmIntent;
+//
+//        alarmMgr = (AlarmManager)contexto.getSystemService(Context.ALARM_SERVICE);
+//        Intent intent = new Intent(contexto, AlarmReceiver.class);
+//        alarmIntent = PendingIntent.getBroadcast(contexto, 0, intent, 0);
+//
+//        // Set the alarm to start at 8:30 a.m.
+//        Calendar calendar = Calendar.getInstance();
+//        calendar.setTimeInMillis(System.currentTimeMillis());
+//        calendar.set(Calendar.HOUR_OF_DAY, hora);
+//        calendar.set(Calendar.MINUTE, minutos);
+//
+//        // setRepeating() lets you specify a precise custom interval--in this case,
+//        // 20 minutes.
+//        alarmMgr.setRepeating(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(),
+//                1000 * 60 * 20, alarmIntent);
+
+//        int intervalo = 1000 * 60 * (frecuencia * 60);
+//
+//        Calendar calendar=Calendar.getInstance();
+//        calendar.add(Calendar.HOUR_OF_DAY, (24+hora)-(calendar.get(Calendar.HOUR_OF_DAY))); // <-- changes this
+//        calendar.add(Calendar.MINUTE, (60+minutos)-(calendar.get(Calendar.HOUR_OF_DAY)));
+//        AlarmManager alarmManager=(AlarmManager)contexto.getSystemService(Context.ALARM_SERVICE);
+//        Intent intent=new Intent(contexto.getApplicationContext(),AlarmReceiver.class);
+//        PendingIntent pendingIntent=PendingIntent.getActivity(contexto.getApplicationContext(),1,intent,0);
+//        //alarmManager.setRepeating(AlarmManager.RTC_WAKEUP,calendar.getTimeInMillis(),AlarmManager.INTERVAL_DAY,pendingIntent);
+//        alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(),intervalo, pendingIntent);
+
     }
+
+//    private class AlarmReceiver extends BroadcastReceiver{
+//
+//        private static final String TAG = "alarm_test_check";
+//
+//        @Override
+//        public void onReceive(Context context, Intent intent) {
+//            Toast.makeText(context,"AlarmReceiver called",Toast.LENGTH_SHORT).show();
+//            Log.d(TAG, "onReceive: called ");
+//        }
+//    }
 }
 

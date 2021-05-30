@@ -68,9 +68,10 @@ public class TratamientosActivity extends AppCompatActivity implements View.OnCl
     }
 
     private void llenarTratamientos() {
-
+        shared = getSharedPreferences("Datos", Context.MODE_PRIVATE);
+        String email = shared.getString("Usuario", "");
         //Aquí rellenamos la lista con los tratamientos
-        cargarTratamientos("albertomaneiros@gmail.com");
+        cargarTratamientos(email);
 
 
     }
