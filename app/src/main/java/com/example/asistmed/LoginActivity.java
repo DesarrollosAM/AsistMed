@@ -29,8 +29,14 @@ import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.GoogleAuthProvider;
+import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.firestore.QuerySnapshot;
 
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.regex.Matcher;
@@ -61,9 +67,12 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     private Matcher mat = null;
     private Boolean valido = false;
 
+    //Declaramos el patrón para validar el correo electrónico
     public static final Pattern VALID_EMAIL_ADDRESS_REGEX =
             Pattern.compile("^[A-Z0-9._%+-]+@[A-Z0-9.-]+\\.[A-Z]{2,6}$", Pattern.CASE_INSENSITIVE);
 
+
+    //Declaramos variables para autenticación
     FirebaseAuth mAuth;
 
     private GoogleSignInClient mGoogleSignInClient;
@@ -199,6 +208,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
 
         }else   {
 
+            //Accdemos con el usuario de Google al pulsar el botón
             signIn();
         }
     }
@@ -354,30 +364,5 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                 });
     }
 
-    public void insertarUsuarioenRegistroActivity(String usuario, String contraseña){
-        //Inserción en Firestore:
-        FirebaseFirestore dbs = FirebaseFirestore.getInstance();
 
-        // Create a new user with a first and last name
-                                Map<String, Object> user = new HashMap<>();
-                                user.put("email", usuario);
-                                user.put("password", contraseña);
-                                user.put("tratamiento", "no");
-
-                                dbs.collection("usuarios").document(usuario)
-                                        .set(user)
-                                        .addOnSuccessListener(new OnSuccessListener<Void>() {
-                                            @Override
-                                            public void onSuccess(Void avoid) {
-                                                //Log.d(TAG, "DocumentSnapshot added with ID: " + documentReference.getId());
-                                                //documentReference.set("usuario" + siguienteUsuario);
-                                            }
-                                        })
-                                        .addOnFailureListener(new OnFailureListener() {
-                                            @Override
-                                            public void onFailure(@NonNull Exception e) {
-                                                //Log.w(TAG, "Error adding document", e);
-                                            }
-                                        });
-    }
 }

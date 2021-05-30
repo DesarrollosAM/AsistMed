@@ -14,7 +14,7 @@ import android.widget.Toast;
 public class InicioActivity extends AppCompatActivity {
 
     private Handler handler;
-    private MediaPlayer mpCanon;
+    private MediaPlayer mpHouse;
     private ImageView ivLoading;
 
     @Override
@@ -25,11 +25,11 @@ public class InicioActivity extends AppCompatActivity {
 
         ivLoading = (ImageView) findViewById(R.id.ivLoading);
         ivLoading.setVisibility(View.INVISIBLE);
-        mpCanon = MediaPlayer.create(this, R.raw.canon_pachelbel);
-        mpCanon.start();
+        mpHouse = MediaPlayer.create(this, R.raw.house_final_nueve_con_once_seg);
+        mpHouse.start();
         ivLoading.setVisibility(View.VISIBLE);
 
-//Hacemos que el proceso se pare durante 5 segundos para dar mas realismo al loading.
+//Hacemos que el proceso se pare durante 8 segundos para dar mas realismo al loading.
         handler = new Handler();
         Runnable r = new Runnable() {
             public void run() {
@@ -40,11 +40,11 @@ public class InicioActivity extends AppCompatActivity {
                 //finish();
                 //finishAffinity();
 
-                mpCanon.stop();
+                mpHouse.stop();
 
             }
         };
-        handler.postDelayed(r, 5000);
+        handler.postDelayed(r, 8000);
     }
 
     @Override
@@ -58,27 +58,27 @@ public class InicioActivity extends AppCompatActivity {
 //    public void onResume() {
 //        super.onResume();
 
-        //Toast toast= Toast.makeText(getApplicationContext(), "onResume", Toast.LENGTH_LONG);
-        //toast.setGravity(Gravity.TOP|Gravity.CENTER_HORIZONTAL, 0, 500);
-        //toast.show();
-
-
-/*        //Hacemos que el proceso se pare durante 5 segundos para dar mas realismo al loading.
-        handler = new Handler();
-        Runnable r = new Runnable() {
-            public void run() {
-                //Cargamos el siguiente activity y paramos la melodía.
-                Intent intent = new Intent(getApplicationContext(), LoginActivity.class);
-                startActivity(intent);
-
-                //finish();
-                //finishAffinity();
-
-                mpCanon.stop();
-                ivLoading.setVisibility(View.VISIBLE);
-            }
-        };
-        handler.postDelayed(r, 5000);*/
+//        //Toast toast= Toast.makeText(getApplicationContext(), "onResume", Toast.LENGTH_LONG);
+//        //toast.setGravity(Gravity.TOP|Gravity.CENTER_HORIZONTAL, 0, 500);
+//        //toast.show();
+//
+//
+//        //Hacemos que el proceso se pare durante 5 segundos para dar mas realismo al loading.
+//        handler = new Handler();
+//        Runnable r = new Runnable() {
+//            public void run() {
+//                //Cargamos el siguiente activity y paramos la melodía.
+//                Intent intent = new Intent(getApplicationContext(), LoginActivity.class);
+//                startActivity(intent);
+//
+//                //finish();
+//                //finishAffinity();
+//
+//                mpCanon.stop();
+//                ivLoading.setVisibility(View.VISIBLE);
+//            }
+//        };
+//        handler.postDelayed(r, 5000);
 
         //Cargamos el siguiente activity y paramos la melodía.
         //Intent intent = new Intent(getApplicationContext(), LoginActivity.class);

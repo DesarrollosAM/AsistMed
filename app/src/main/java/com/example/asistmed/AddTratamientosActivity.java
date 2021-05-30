@@ -4,8 +4,10 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import androidx.recyclerview.widget.GridLayoutManager;
@@ -13,8 +15,11 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.os.Handler;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -36,6 +41,9 @@ public class AddTratamientosActivity extends AppCompatActivity implements View.O
     private Handler handler;
     private boolean tratInsertados;
     private ProgressDialog pDialog;
+    SharedPreferences shared;
+    SharedPreferences.Editor editor;
+    private EditText etBuscadorAddTrat;
 
 
     @Override
@@ -43,17 +51,30 @@ public class AddTratamientosActivity extends AppCompatActivity implements View.O
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_tratamientos);
 
+        etBuscadorAddTrat = findViewById(R.id.etBuscadorAddTrat);
+        etBuscadorAddTrat.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                filtrar(s.toString());
+            }
+        });
+
         construirRecycler();
 
     }
     private void llenarAddTratamientos() {
 
         //Aquí rellenamos la lista con los tratamientos
-//        listaAddTratamientos.add(new Tratamiento("Gripe","7 días", R.drawable.tratamiento_por_defecto));
-//        listaAddTratamientos.add(new Tratamiento("Asma","14 días", R.drawable.tratamiento_por_defecto));
-//        listaAddTratamientos.add(new Tratamiento("Fractura","20 días", R.drawable.tratamiento_por_defecto));
-//        listaAddTratamientos.add(new Tratamiento("Otitis","10 días", R.drawable.tratamiento_por_defecto));
-
         consultarTratamientos();
 
 
@@ -108,8 +129,8 @@ public class AddTratamientosActivity extends AppCompatActivity implements View.O
                     public void onClick(View view) {
                         //Cuando hacemos click en un item de la lista.
 
-
-                        String emailUsuario = "albertoman@gmail.com";
+                        shared = getSharedPreferences("Datos", Context.MODE_PRIVATE);
+                        String emailUsuario = shared.getString("Usuario", "");
                         String nombreTratamiento = listaAddTratamientos.get(recyclerAddTratamientos.getChildAdapterPosition(view)).getNombre();
                         tratInsertados = false;
                         tratInsertados = insertarTratamientosElegidos(nombreTratamiento, emailUsuario);
@@ -227,6 +248,55 @@ public class AddTratamientosActivity extends AppCompatActivity implements View.O
                     }
                 });
 
+    }
+
+    public void filtrar(String texto) {
+        ArrayList<Tratamiento> filtrarLista = new ArrayList<>();
+        AdaptadorTratamientos adaptador = new AdaptadorTratamientos(listaAddTratamientos);
+        for (Tratamiento trat : listaAddTratamientos) {
+            if (trat.getNombre().toLowerCase().contains(texto.toLowerCase())) {
+                filtrarLista.add(trat);
+            }
+        }
+        adaptador.filtrar(filtrarLista);
+        construirRecyclerFiltrado(filtrarLista);
+    }
+
+    private void construirRecyclerFiltrado(ArrayList<Tratamiento> lista) {
+
+        handler = new Handler();
+        Runnable r = new Runnable() {
+            public void run() {
+                if (UtilidadesAddTratamientos.visualizacion==UtilidadesAddTratamientos.LIST){
+                    recyclerAddTratamientos.setLayoutManager(new LinearLayoutManager(getApplicationContext()));
+                }else {
+                    recyclerAddTratamientos.setLayoutManager(new GridLayoutManager(getApplicationContext(),3));
+                }
+
+                //aqui el metodo
+
+                AdaptadorAddTratamientos adapter=new AdaptadorAddTratamientos(lista);
+                adapter.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        //Cuando hacemos click en un item de la lista.
+                        shared = getSharedPreferences("Datos", Context.MODE_PRIVATE);
+                        String emailUsuario = shared.getString("Usuario", "");
+                        String nombreTratamiento = listaAddTratamientos.get(recyclerAddTratamientos.getChildAdapterPosition(view)).getNombre();
+                        tratInsertados = false;
+                        tratInsertados = insertarTratamientosElegidos(nombreTratamiento, emailUsuario);
+                        ModificarTratamientosenUsuarios(emailUsuario);
+
+                        Toast.makeText(getApplicationContext(),
+                                "Tratamiento añadido",Toast.LENGTH_SHORT).show();
+                    }
+                });
+
+                recyclerAddTratamientos.setAdapter(adapter);
+
+            }
+        };
+        handler.postDelayed(r, 1200);
     }
 
 

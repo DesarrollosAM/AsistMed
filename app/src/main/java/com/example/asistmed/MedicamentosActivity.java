@@ -3,7 +3,9 @@ package com.example.asistmed;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 
 import androidx.recyclerview.widget.GridLayoutManager;
@@ -11,7 +13,11 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.os.Handler;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.View;
+import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -26,12 +32,42 @@ public class MedicamentosActivity extends AppCompatActivity {
 
     ArrayList<Medicamentos> listaMedicamentos;
     RecyclerView recyclerMedicamentos;
+    SharedPreferences shared;
+    SharedPreferences.Editor editor;
+    private TextView txtNombreTratamiento;
     private Handler handler;
+    private EditText etBuscadorMed;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_medicamentos);
+
+        txtNombreTratamiento = (TextView)findViewById(R.id.txtNombreTratamiento);
+        shared = getSharedPreferences("Datos", Context.MODE_PRIVATE);
+        String nombreTratamiento = shared.getString("nombreTratamiento", "");
+        String duracionTratamiento = shared.getString("duracionTratamiento", "");
+        txtNombreTratamiento.setText("Tratamiento: " + nombreTratamiento + ". Duración: " + duracionTratamiento + " días.");
+
+        etBuscadorMed = findViewById(R.id.etBuscadorMed);
+        etBuscadorMed.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                filtrar(s.toString());
+            }
+        });
+
+
 
         construirRecycler();
 
@@ -39,8 +75,11 @@ public class MedicamentosActivity extends AppCompatActivity {
 
     private void llenarMedicamentos() {
         //Traemos con shared preferences el nombre del tratamiento.
-        String nombreTratamiento = "Gripe";
-        String usuario = "albertomaneiros@gmail.com";
+        shared = getSharedPreferences("Datos", Context.MODE_PRIVATE);
+        String nombreTratamiento = shared.getString("nombreTratamiento", "");
+        //String usuario = shared.getString("Usuario", "");
+        String usuario = "unapruebamas@gmail.com";
+
         //Aquí rellenamos la lista con los medicamentos
         rellenarMedicamentos(nombreTratamiento, usuario);
 //        listaMedicamentos.add(new Medicamentos("Gripe","direccion@email.es", "Paracetamol", R.drawable.medicamento_por_defecto, 1, 8, 7,  "Esto es una descripción del medicamento en la que se informa de lo que hace. También podemos poner la frecuencia en la que se toma y la cantidad fijada."));
@@ -68,6 +107,10 @@ public class MedicamentosActivity extends AppCompatActivity {
                 Intent intent = new Intent(getApplicationContext(), TratamientosActivity.class);
                 startActivity(intent); // Lanzamos el activity
                 break;
+            case R.id.etBuscadorMed:
+
+                break;
+
         }
         construirRecycler();
     }
@@ -87,8 +130,8 @@ public class MedicamentosActivity extends AppCompatActivity {
                 }
 
 
-
                 AdaptadorMedicamentos adapter = new AdaptadorMedicamentos(listaMedicamentos);
+
 
                 adapter.setOnClickListener(new View.OnClickListener() {
                     @Override
@@ -105,6 +148,7 @@ public class MedicamentosActivity extends AppCompatActivity {
             }
         };
         handler.postDelayed(r, 1000);
+
     }
 
 
@@ -130,7 +174,7 @@ public class MedicamentosActivity extends AppCompatActivity {
                                 String info = document.getString("info");
                                 String nombreMed = document.getString("nombre");
                                 listaMedicamentos.add(new Medicamentos(nombreTratamiento + "", usuario + "", nombreMed + "", R.drawable.medicamento_por_defecto, Integer.parseInt(cantidad),
-                                        Integer.parseInt(frecuencia), 7, info + "\nHay que tomarlo " + cantidad + " vez cada " + frecuencia + " horas."));
+                                        Integer.parseInt(frecuencia), 7, info + "\nHay que tomarlo " + cantidad + " vez cada " + frecuencia + " horas.", ""));
                                 //listaTratamientos.add(new Tratamiento(nombre ,duracion + " días", R.drawable.tratamiento_por_defecto));
                                 //handleQuerysnapshot(task.getResult(), nombre, duracion);
                                 int total2 = listaMedicamentos.size();
@@ -147,4 +191,49 @@ public class MedicamentosActivity extends AppCompatActivity {
 
 
     }
+
+    public void filtrar(String texto) {
+        ArrayList<Medicamentos> filtrarLista = new ArrayList<>();
+        AdaptadorMedicamentos adaptador = new AdaptadorMedicamentos(listaMedicamentos);
+        for(Medicamentos med : listaMedicamentos) {
+            if(med.getNombre().toLowerCase().contains(texto.toLowerCase())) {
+                filtrarLista.add(med);
+            }
+        }
+        adaptador.filtrar(filtrarLista);
+        construirRecyclerFiltrado(filtrarLista);
+    }
+
+    private void construirRecyclerFiltrado(ArrayList<Medicamentos> lista) {
+
+        handler = new Handler();
+        Runnable r = new Runnable() {
+            public void run() {
+                if (UtilidadesMedicamentos.visualizacion == UtilidadesMedicamentos.LIST) {
+                    recyclerMedicamentos.setLayoutManager(new LinearLayoutManager(getApplicationContext()));
+                } else {
+                    recyclerMedicamentos.setLayoutManager(new GridLayoutManager(getApplicationContext(), 3));
+                }
+
+
+                AdaptadorMedicamentos adapter = new AdaptadorMedicamentos(lista);
+
+
+                adapter.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        //Cuando hacemos click en un item de la lista.
+                        Toast.makeText(getApplicationContext(),
+                                "Selección: " + listaMedicamentos.get
+                                        (recyclerMedicamentos.getChildAdapterPosition(view))
+                                        .getNombre(), Toast.LENGTH_SHORT).show();
+                    }
+                });
+
+                recyclerMedicamentos.setAdapter(adapter);
+            }
+        };
+        handler.postDelayed(r, 1000);
+    }
+
 }

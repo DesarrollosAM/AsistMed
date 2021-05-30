@@ -29,6 +29,7 @@ import com.google.firebase.firestore.QuerySnapshot;
 import android.widget.TextView;
 
 import com.google.firebase.auth.FirebaseAuth;
+
 import com.google.zxing.integration.android.IntentIntegrator;
 import com.google.zxing.integration.android.IntentResult;
 
@@ -164,7 +165,8 @@ public class UsuarioActivity extends AppCompatActivity implements View.OnClickLi
     public void onClick(View view) {
 
         if (view.getId() == R.id.btAsistente) {
-            String email = "albertoman@gmail.com";
+            shared = getSharedPreferences("Datos", Context.MODE_PRIVATE);
+            email = shared.getString("Usuario", "");
             consultarTratamientosUsuario(email);
 
         } else if (view.getId() == R.id.btCitaPrevia) {
@@ -172,9 +174,6 @@ public class UsuarioActivity extends AppCompatActivity implements View.OnClickLi
             Intent intent = new Intent(Intent.ACTION_VIEW, uri);
             startActivity(intent);
         } else if (view.getId() == R.id.btFarmacias) {
-            //Uri uri = Uri.parse(urlFarmacias);
-            //Intent intent = new Intent(Intent.ACTION_VIEW, uri);
-            //startActivity(intent);
             startActivity(new Intent(this, MapsActivity.class));
         } else if (view.getId() == R.id.btSalir) {
 
@@ -182,8 +181,6 @@ public class UsuarioActivity extends AppCompatActivity implements View.OnClickLi
 
             //shared.edit().remove("Usuario").commit();//Eliminamos de las Shared la key de usuario para que vuelva a coger su valor al volver de nuevo al Activity
             mAuth.signOut();
-//            editor = shared.edit();
-//            editor.clear().apply();
 
             FirebaseAuth.getInstance().signOut();
 
@@ -353,20 +350,20 @@ public class UsuarioActivity extends AppCompatActivity implements View.OnClickLi
         }
     }
 
-    private void activarAlarma (String mensaje, int hora, int minutos){
-
-
-        Intent intent = new Intent(AlarmClock.ACTION_SET_ALARM)
-                .putExtra(AlarmClock.EXTRA_MESSAGE, mensaje)
-                .putExtra(AlarmClock.EXTRA_HOUR, hora)
-                .putExtra(AlarmClock.EXTRA_MINUTES, minutos);
-        //.putExtra(AlarmClock.EXTRA_ALARM_SNOOZE_DURATION, 5)
-        //.putExtra(String.valueOf(AlarmManager.ELAPSED_REALTIME), 3);
-
-
-        if (intent.resolveActivity(getPackageManager()) != null){
-
-            startActivity(intent);
-        }
-    }
+//    private void activarAlarma (String mensaje, int hora, int minutos){
+//
+//
+//        Intent intent = new Intent(AlarmClock.ACTION_SET_ALARM)
+//                .putExtra(AlarmClock.EXTRA_MESSAGE, mensaje)
+//                .putExtra(AlarmClock.EXTRA_HOUR, hora)
+//                .putExtra(AlarmClock.EXTRA_MINUTES, minutos);
+//        //.putExtra(AlarmClock.EXTRA_ALARM_SNOOZE_DURATION, 5)
+//        //.putExtra(String.valueOf(AlarmManager.ELAPSED_REALTIME), 3);
+//
+//
+//        if (intent.resolveActivity(getPackageManager()) != null){
+//
+//            startActivity(intent);
+//        }
+//    }
 }

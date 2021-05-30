@@ -1,28 +1,32 @@
 package com.example.asistmed;
 
+import java.io.File;
+
 public class Medicamentos {
 
     private String nombreTratamiento;
     private String usuario;
     private String nombre;
-    private int foto;
+    private int fotoInicial;
     private int cantidad;
     private int frecuencia;
     private int duracion;
     private String info;
+    private String addFoto;
 
     public Medicamentos() {
     }
 
-    public Medicamentos(String nombreTratamiento, String usuario, String nombre, int foto, int cantidad, int frecuencia, int duracion, String info) {
+    public Medicamentos(String nombreTratamiento, String usuario, String nombre, int fotoInicial, int cantidad, int frecuencia, int duracion, String info, String addFoto) {
         this.nombreTratamiento = nombreTratamiento;
         this.usuario = usuario;
         this.nombre = nombre;
-        this.foto = foto;
+        this.fotoInicial = fotoInicial;
         this.cantidad = cantidad;
         this.frecuencia = frecuencia;
         this.duracion = duracion;
         this.info = info;
+        this.addFoto = addFoto;
     }
 
     public String getNombreTratamiento() {
@@ -49,12 +53,12 @@ public class Medicamentos {
         this.nombre = nombre;
     }
 
-    public int getFoto() {
-        return foto;
+    public int getFotoInicial() {
+        return fotoInicial;
     }
 
-    public void setFoto(int foto) {
-        this.foto = foto;
+    public void setFotoInicial(int fotoInicial) {
+        this.fotoInicial = fotoInicial;
     }
 
     public int getCantidad() {
@@ -87,5 +91,13 @@ public class Medicamentos {
 
     public void setInfo(String info) {
         this.info = info;
+    }
+
+    public String getAddFoto() {
+        return addFoto;
+    }
+
+    public void setAddFoto(String addFoto) {
+        this.addFoto = addFoto;
     }
 }

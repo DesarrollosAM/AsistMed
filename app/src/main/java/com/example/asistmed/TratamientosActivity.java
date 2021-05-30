@@ -7,11 +7,16 @@ import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -24,71 +29,92 @@ import com.google.firebase.firestore.QuerySnapshot;
 import java.util.ArrayList;
 
 
-public class TratamientosActivity extends AppCompatActivity implements View.OnClickListener{
+public class TratamientosActivity extends AppCompatActivity implements View.OnClickListener {
 
     ArrayList<Tratamiento> listaTratamientos;
     RecyclerView recyclerTratamientos;
     private Button btnFinalizar;
     private Handler handler;
+    SharedPreferences shared;
+    SharedPreferences.Editor editor;
+    private EditText etBuscadorTrat;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_tratamientos);
 
+        etBuscadorTrat = findViewById(R.id.etBuscadorTrat);
+        etBuscadorTrat.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                filtrar(s.toString());
+            }
+        });
 
         construirRecycler();
 
     }
+
     private void llenarTratamientos() {
 
         //Aquí rellenamos la lista con los tratamientos
-//        listaAddTratamientos.add(new Tratamiento("Gripe","7 días", R.drawable.tratamiento_por_defecto));
-//        listaAddTratamientos.add(new Tratamiento("Asma","14 días", R.drawable.tratamiento_por_defecto));
-//        listaAddTratamientos.add(new Tratamiento("Fractura","20 días", R.drawable.tratamiento_por_defecto));
-//        listaAddTratamientos.add(new Tratamiento("Otitis","10 días", R.drawable.tratamiento_por_defecto));
-        cargarTratamientos("unapruebamas@gmail.com");
+        cargarTratamientos("albertomaneiros@gmail.com");
 
 
     }
 
     public void onClick(View view) {
 
-        switch (view.getId()){
-            case R.id.btnList: UtilidadesAddTratamientos.visualizacion=UtilidadesAddTratamientos.LIST;
+        switch (view.getId()) {
+            case R.id.btnList:
+                UtilidadesAddTratamientos.visualizacion = UtilidadesAddTratamientos.LIST;
                 break;
-            case R.id.btnGrid: UtilidadesAddTratamientos.visualizacion=UtilidadesAddTratamientos.GRID;
+            case R.id.btnGrid:
+                UtilidadesAddTratamientos.visualizacion = UtilidadesAddTratamientos.GRID;
                 break;
             case R.id.btAtras3:
-                    Intent intent = new Intent(getApplicationContext(), UsuarioActivity.class);
-                    startActivity(intent); // Lanzamos el activity
+                Intent intent = new Intent(getApplicationContext(), UsuarioActivity.class);
+                startActivity(intent); // Lanzamos el activity
                 break;
+            case R.id.etBuscadorTrat:
+
+                break;
+
         }
         construirRecycler();
     }
 
     private void construirRecycler() {
-        listaTratamientos =new ArrayList<>();
+        listaTratamientos = new ArrayList<>();
         recyclerTratamientos = (RecyclerView) findViewById(R.id.RecyclerId);
         llenarTratamientos();
-
-
-
 
 
 ////////////////////
         handler = new Handler();
         Runnable r = new Runnable() {
             public void run() {
-                if (UtilidadesAddTratamientos.visualizacion==UtilidadesAddTratamientos.LIST){
+                if (UtilidadesAddTratamientos.visualizacion == UtilidadesAddTratamientos.LIST) {
                     recyclerTratamientos.setLayoutManager(new LinearLayoutManager(getApplicationContext()));
-                }else {
-                    recyclerTratamientos.setLayoutManager(new GridLayoutManager(getApplicationContext(),3));
+                } else {
+                    recyclerTratamientos.setLayoutManager(new GridLayoutManager(getApplicationContext(), 3));
                 }
 
                 //aqui el metodo
 
-                AdaptadorAddTratamientos adapter=new AdaptadorAddTratamientos(listaTratamientos);
+                AdaptadorAddTratamientos adapter = new AdaptadorAddTratamientos(listaTratamientos);
 
                 adapter.setOnClickListener(new View.OnClickListener() {
                     @Override
@@ -106,10 +132,21 @@ public class TratamientosActivity extends AppCompatActivity implements View.OnCl
 
                         //Capturamos con shared prederences el nombre del tratamiento:
                         String nombreTrat = listaTratamientos.get(recyclerTratamientos.getChildAdapterPosition(view)).getNombre();
+                        String duracionTrat = listaTratamientos.get(recyclerTratamientos.getChildAdapterPosition(view)).getDuracion();
 //                        Toast.makeText(getApplicationContext(),
 //                                "Selección: "+ listaMedicamentos.get
 //                                        (recyclerMedicamentos.getChildAdapterPosition(view))
 //                                        .getNombre(),Toast.LENGTH_SHORT).show();
+
+                        //Instanciamos Shared, abrimos fichero "Datos" con acceso en modo privado y abrimos editor
+
+                        shared = getApplicationContext().getSharedPreferences("Datos", Context.MODE_PRIVATE);
+                        editor = shared.edit();
+
+                        //Utilizamos el editor para guardar la variable dato recogida del EditText Usuario en la clave "Usuario" de nuestro archivo Shared que hemos llamado "Datos"
+                        editor.putString("nombreTratamiento", nombreTrat);
+                        editor.putString("duracionTratamiento", duracionTrat);
+                        editor.commit();
 
 
                     }
@@ -123,7 +160,6 @@ public class TratamientosActivity extends AppCompatActivity implements View.OnCl
 ///////////////////////////////////
 
     }
-
     @Override
     public void onBackPressed() {
 
@@ -162,7 +198,7 @@ public class TratamientosActivity extends AppCompatActivity implements View.OnCl
                                             public void onComplete(@NonNull Task<QuerySnapshot> task2) {
                                                 if (task2.isSuccessful()) {
                                                     for (QueryDocumentSnapshot document : task2.getResult()) {
-                                                        listaTratamientos.add(new Tratamiento(nombre ,duracion + " días", R.drawable.tratamiento_por_defecto));
+                                                        listaTratamientos.add(new Tratamiento(nombre, duracion + " días", R.drawable.tratamiento_por_defecto));
                                                         //handleQuerysnapshot(task.getResult(), nombre, duracion);
                                                         int total2 = listaTratamientos.size();
                                                     }
@@ -188,37 +224,64 @@ public class TratamientosActivity extends AppCompatActivity implements View.OnCl
                 });
     }
 
-//    public void handleQuerysnapshot (QuerySnapshot task, String nombre, String duracion){
-//        listaTratamientos.add(new Tratamiento(nombre + "", duracion + "", R.drawable.tratamiento_por_defecto));
-//    }
-//
-//    public void insertarTratamientosElegidos(String nombreTratamiento, String usuario){
-//        //Inserción en Firestore:
-//        // Create a new user with a first and last name
-//        Map<String, Object> trat = new HashMap<>();
-//        trat.put("email", usuario);
-//        //user.put("born", 1815);
-//
-//        // Add a new document with a generated ID
-//        FirebaseFirestore db = FirebaseFirestore.getInstance();
-//        db.collection("tratamientos").document(nombreTratamiento).collection("usuarios").document(usuario).set(trat);
-//
+    public void filtrar(String texto) {
+        ArrayList<Tratamiento> filtrarLista = new ArrayList<>();
+        AdaptadorTratamientos adaptador = new AdaptadorTratamientos(listaTratamientos);
+        for (Tratamiento trat : listaTratamientos) {
+            if (trat.getNombre().toLowerCase().contains(texto.toLowerCase())) {
+                filtrarLista.add(trat);
+            }
+        }
+        adaptador.filtrar(filtrarLista);
+        construirRecyclerFiltrado(filtrarLista);
+    }
 
-//                                        .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
-//                                            @Override
-//                                            public void onSuccess(DocumentReference documentReference) {
-//                                                //Log.d(TAG, "DocumentSnapshot added with ID: " + documentReference.getId());
-//                                                //documentReference.set("usuario" + siguienteUsuario);
-//                                            }
-//                                        })
-//                                        .addOnFailureListener(new OnFailureListener() {
-//                                            @Override
-//                                            public void onFailure(@NonNull Exception e) {
-//                                                //Log.w(TAG, "Error adding document", e);
-//                                            }
-//                                        });
-//    }
+    private void construirRecyclerFiltrado(ArrayList<Tratamiento> lista) {
 
+        handler = new Handler();
+        Runnable r = new Runnable() {
+            public void run() {
+                if (UtilidadesAddTratamientos.visualizacion == UtilidadesAddTratamientos.LIST) {
+                    recyclerTratamientos.setLayoutManager(new LinearLayoutManager(getApplicationContext()));
+                } else {
+                    recyclerTratamientos.setLayoutManager(new GridLayoutManager(getApplicationContext(), 3));
+                }
+
+                //aqui el metodo
+
+                AdaptadorAddTratamientos adapter = new AdaptadorAddTratamientos(lista);
+
+                adapter.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        //Cuando hacemos click en un item de la lista:
+
+                        Intent intent = new Intent(getApplicationContext(), MedicamentosActivity.class);
+                        startActivity(intent); // Lanzamos el activity
+
+                        //Capturamos con shared preferences el nombre y duracion del tratamiento:
+                        String nombreTrat = listaTratamientos.get(recyclerTratamientos.getChildAdapterPosition(view)).getNombre();
+                        String duracionTrat = listaTratamientos.get(recyclerTratamientos.getChildAdapterPosition(view)).getDuracion();
+
+                        //Instanciamos Shared, abrimos fichero "Datos" con acceso en modo privado y abrimos editor
+                        shared = getApplicationContext().getSharedPreferences("Datos", Context.MODE_PRIVATE);
+                        editor = shared.edit();
+
+                        //Utilizamos el editor para guardar la variable dato recogida del EditText Usuario en la clave "Usuario" de nuestro archivo Shared que hemos llamado "Datos"
+                        editor.putString("nombreTratamiento", nombreTrat);
+                        editor.putString("duracionTratamiento", duracionTrat);
+                        editor.commit();
+
+
+                    }
+                });
+
+                recyclerTratamientos.setAdapter(adapter);
+
+            }
+        };
+        handler.postDelayed(r, 2000);
+    }
 
 }
 

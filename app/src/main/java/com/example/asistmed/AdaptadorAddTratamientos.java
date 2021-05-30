@@ -81,5 +81,10 @@ public class AdaptadorAddTratamientos
                 foto = (ImageView) itemView.findViewById(R.id.idImagen);
             }
         }
+
+    public void filtrar(ArrayList<Tratamiento> filtroTratamiento) {
+        this.listaAddTratamientos = filtroTratamiento;
+        notifyDataSetChanged();
+    }
     }
 

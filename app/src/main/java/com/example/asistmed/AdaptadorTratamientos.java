@@ -66,8 +66,6 @@ public class AdaptadorTratamientos
         }
     }
 
-
-
     public class ViewHolderTratamientos extends RecyclerView.ViewHolder {
 
         TextView etiNombre,etiInformacion;
@@ -83,7 +81,10 @@ public class AdaptadorTratamientos
         }
     }
 
-
+    public void filtrar(ArrayList<Tratamiento> filtroTratamiento) {
+        this.listaTratamientos = filtroTratamiento;
+        notifyDataSetChanged();
+    }
 }
 
 
