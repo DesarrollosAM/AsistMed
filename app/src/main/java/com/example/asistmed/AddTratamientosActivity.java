@@ -136,6 +136,12 @@ public class AddTratamientosActivity extends AppCompatActivity implements View.O
 
     }
 
+    @Override
+    public void onBackPressed() {
+
+        //Creamos este método para anular el botón atrás en el dispositivo
+    }
+
     public void consultarTratamientos(){
 
 

@@ -47,19 +47,23 @@ public class InicioActivity extends AppCompatActivity {
         handler.postDelayed(r, 5000);
     }
 
-
-
-
     @Override
-    public void onResume() {
-        super.onResume();
+    public void onBackPressed() {
+
+        //Creamos este método para anular el botón atrás en el dispositivo
+    }
+
+
+//    @Override
+//    public void onResume() {
+//        super.onResume();
 
         //Toast toast= Toast.makeText(getApplicationContext(), "onResume", Toast.LENGTH_LONG);
         //toast.setGravity(Gravity.TOP|Gravity.CENTER_HORIZONTAL, 0, 500);
         //toast.show();
 
 
-        //Hacemos que el proceso se pare durante 5 segundos para dar mas realismo al loading.
+/*        //Hacemos que el proceso se pare durante 5 segundos para dar mas realismo al loading.
         handler = new Handler();
         Runnable r = new Runnable() {
             public void run() {
@@ -74,7 +78,7 @@ public class InicioActivity extends AppCompatActivity {
                 ivLoading.setVisibility(View.VISIBLE);
             }
         };
-        handler.postDelayed(r, 5000);
+        handler.postDelayed(r, 5000);*/
 
         //Cargamos el siguiente activity y paramos la melodía.
         //Intent intent = new Intent(getApplicationContext(), LoginActivity.class);
@@ -90,4 +94,4 @@ public class InicioActivity extends AppCompatActivity {
     }*/
 
 
-}
+//}

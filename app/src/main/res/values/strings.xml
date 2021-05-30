@@ -2,4 +2,10 @@
     <string name="app_name">AsistMed</string>
     <string name="title_activity_maps">Map</string>
     <string name="title_activity_maps2">Map</string>
+    <string name="texto_main">Nube Colectiva</string>
+    <string name="texto_ec">Asistencia Técnica ASISTMED</string>
+    <string name="texto_correo">Enviar a:</string>
+    <string name="texto_asunto">Asunto:</string>
+    <string name="texto_mensaje">Mensaje:</string>
+    <string name="texto_btn_enviar">Enviar</string>
 </resources>

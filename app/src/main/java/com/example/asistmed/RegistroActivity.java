@@ -3,6 +3,7 @@ package com.example.asistmed;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -88,6 +89,13 @@ public class RegistroActivity extends AppCompatActivity implements View.OnClickL
     }
 
     @Override
+    public void onBackPressed() {
+
+        //Creamos este método para anular el botón atrás en el dispositivo
+    }
+
+
+    @Override
     public void onClick(View view) {
 
         //Asignamos a una variable tipo EditText el usuario y password introducidos
@@ -113,8 +121,17 @@ public class RegistroActivity extends AppCompatActivity implements View.OnClickL
                             passwordEncriptado = encriptarContraseña(password);
                             insertarUsuarioenRegistroActivity(email, passwordEncriptado);
 
+                            //Instanciamos Shared, abrimos fichero "Datos" con acceso en modo privado y abrimos editor
+
+                            shared = getApplicationContext().getSharedPreferences("Datos", Context.MODE_PRIVATE);
+                            editor = shared.edit();
+
+                            //Utilizamos el editor para guardar la variable dato recogida del EditText Usuario en la clave "Usuario" de nuestro archivo Shared que hemos llamado "Datos"
+                            editor.putString("Usuario", email);
+                            editor.commit();
+
                             //Instanciamos un objeto Intent, pasandole con this el Activity actual, y como segundo parametro el Activity que vamos a cargar
-                            Intent intent = new Intent(getApplicationContext(), BienvenidaActivity.class);
+                            Intent intent = new Intent(getApplicationContext(), UsuarioActivity.class);
                             startActivity(intent); // Lanzamos el activity
                         }else{
                             Toast toastUsuarioValido = Toast.makeText(getApplicationContext(), "El registro no se ha podido completar", Toast.LENGTH_LONG);

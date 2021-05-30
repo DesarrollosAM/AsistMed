@@ -62,14 +62,14 @@
         android:paddingBottom="10dp"
         android:textColor="@color/white"
         android:textColorHint="@color/white"
-        app:layout_constraintBottom_toTopOf="@+id/btrestablecer"
+        app:layout_constraintBottom_toTopOf="@+id/btRestablecer"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/logo" />
 
     <Button
-        android:id="@+id/btrestablecer"
+        android:id="@+id/btRestablecer"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="32dp"
@@ -79,17 +79,18 @@
         android:layout_marginRight="32dp"
         android:layout_marginBottom="111dp"
         android:background="@drawable/input_background"
+        android:drawableLeft="@drawable/ic_restart_alt_24"
         android:text="RESTABLECER"
         android:textColor="@color/black"
         android:textStyle="normal"
         app:backgroundTint="@color/white"
-        app:layout_constraintBottom_toTopOf="@+id/btRegresarLogin"
+        app:layout_constraintBottom_toTopOf="@+id/btBackInicio"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/introduceEmail" />
 
     <Button
-        android:id="@+id/btRegresarLogin"
+        android:id="@+id/btBackInicio"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="32dp"
@@ -99,12 +100,13 @@
         android:layout_marginRight="32dp"
         android:layout_marginBottom="32dp"
         android:background="@drawable/botones_background"
+        android:drawableLeft="@drawable/ic_home_24"
         android:drawablePadding="10dp"
         android:gravity="start"
         android:paddingLeft="20dp"
         android:paddingTop="7dp"
         android:paddingRight="20dp"
-        android:text="REGRESAR A LOGIN"
+        android:text="INICIO"
         android:textAlignment="textStart"
         android:textAllCaps="false"
         android:textColor="@color/black"
@@ -113,7 +115,7 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/btrestablecer" />
+        app:layout_constraintTop_toBottomOf="@+id/btRestablecer" />
 
 
 

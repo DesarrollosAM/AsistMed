@@ -4,16 +4,22 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.app.AlertDialog;
+import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.os.Handler;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -25,7 +31,16 @@ public class AdministradorActivity extends AppCompatActivity implements View.OnC
 
     //TODO: Cambiar diseño y poner botones de salir y volver a login.
 
-    private Button btnAddTrat, btnModTrat, btnAddMed, btnModMed;
+    private Button btnAddTrat, btnModTrat, btnAddMed, btnModMed, btnRegresarLogin, btnSalir;
+    private Handler handler;
+    private TextView txtUsuario;
+
+    FirebaseAuth mAuth;
+
+    //Declaramos las variables, tipo Shared
+
+    private SharedPreferences shared;
+    private SharedPreferences.Editor editor;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -36,11 +51,29 @@ public class AdministradorActivity extends AppCompatActivity implements View.OnC
         btnAddTrat = (Button) findViewById(R.id.btnAddTrat);
         btnModMed = (Button) findViewById(R.id.btnModMed);
         btnModTrat = (Button) findViewById(R.id.btnModTrat);
+        btnRegresarLogin = (Button) findViewById(R.id.btAdminSalir);
+        btnSalir = (Button) findViewById(R.id.btInicio);
 
         btnModTrat.setOnClickListener(this);
         btnModMed.setOnClickListener(this);
         btnAddTrat.setOnClickListener(this);
         btnAddMed.setOnClickListener(this);
+        btnRegresarLogin.setOnClickListener(this);
+        btnSalir.setOnClickListener(this);
+
+
+        mAuth = FirebaseAuth.getInstance();
+
+        //Recogemos el usuario que hemos guardado en nuestro fichero de Shared llamado "Datos"
+
+
+        shared = getSharedPreferences("Datos", Context.MODE_PRIVATE);
+        String emailRecogido = shared.getString("Usuario", "");
+
+        txtUsuario = (TextView) findViewById(R.id.txtUsuarioActivo);
+
+
+        txtUsuario.setText(emailRecogido);
 
     }
 
@@ -64,10 +97,52 @@ public class AdministradorActivity extends AppCompatActivity implements View.OnC
                 case R.id.btnModMed:
                     dialogoModificarMedicamentos();
                     break;
+
+                case R.id.btInicio:
+
+                    FirebaseAuth.getInstance().signOut();
+                    /////////////////////////////////////
+                    handler = new Handler();
+                    Runnable ru = new Runnable() {
+                        public void run() {
+
+                            startActivity(new Intent(getApplicationContext(), LoginActivity.class));
+                        }
+                    };
+                    handler.postDelayed(ru, 2000);
+///////////////////////////////////
+
+
+                    break;
+                case R.id.btAdminSalir:
+
+                    FirebaseAuth.getInstance().signOut();
+                    /////////////////////////////////////
+                    handler = new Handler();
+                    Runnable r = new Runnable() {
+                        public void run() {
+
+                            finish();
+                            finishAffinity();
+                            System.exit(0);
+                        }
+                    };
+                    handler.postDelayed(r, 2000);
+///////////////////////////////////
+
+
+                    break;
             }
         }catch (Exception e){
 
         }
+    }
+
+
+    @Override
+    public void onBackPressed() {
+
+        //Creamos este método para anular el botón atrás en el dispositivo
     }
 
     /*

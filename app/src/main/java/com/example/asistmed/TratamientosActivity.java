@@ -60,7 +60,7 @@ public class TratamientosActivity extends AppCompatActivity implements View.OnCl
             case R.id.btnGrid: UtilidadesAddTratamientos.visualizacion=UtilidadesAddTratamientos.GRID;
                 break;
             case R.id.btAtras3:
-                    Intent intent = new Intent(getApplicationContext(), BienvenidaActivity.class);
+                    Intent intent = new Intent(getApplicationContext(), UsuarioActivity.class);
                     startActivity(intent); // Lanzamos el activity
                 break;
         }
@@ -122,6 +122,12 @@ public class TratamientosActivity extends AppCompatActivity implements View.OnCl
         handler.postDelayed(r, 2000);
 ///////////////////////////////////
 
+    }
+
+    @Override
+    public void onBackPressed() {
+
+        //Creamos este método para anular el botón atrás en el dispositivo
     }
 
     public void cargarTratamientos(String usuario){

@@ -12,14 +12,14 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
-        android:layout_marginEnd="167dp"
-        android:layout_marginRight="167dp"
+        android:layout_marginEnd="150dp"
+        android:layout_marginRight="150dp"
         android:text="Registrarme"
         android:textColor="@color/design_default_color_error"
         android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@+id/textView3"
-        app:layout_constraintTop_toBottomOf="@+id/btrestablecer" />
+        app:layout_constraintTop_toBottomOf="@+id/btAcceder" />
 
     <TextView
         android:id="@+id/textView3"
@@ -28,11 +28,12 @@
         android:layout_marginStart="111dp"
         android:layout_marginLeft="111dp"
         android:layout_marginTop="16dp"
+        android:drawableLeft="@drawable/ic_mode_edit_24"
         android:text="No tengo cuenta. "
         android:textColor="@color/white"
         app:layout_constraintEnd_toStartOf="@+id/tvRegistrarme"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/btrestablecer" />
+        app:layout_constraintTop_toBottomOf="@+id/btAcceder" />
 
     <ImageView
         android:id="@+id/imageView2"
@@ -61,7 +62,7 @@
         android:layout_marginRight="32dp"
         android:text="ACCESO"
         android:textColor="@color/white"
-        android:textSize="24sp"
+        android:textSize="34sp"
         android:textStyle="bold"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
@@ -96,10 +97,10 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="32dp"
-        android:layout_marginTop="64dp"
+        android:layout_marginTop="24dp"
         android:layout_marginEnd="32dp"
         android:background="@drawable/input_background"
-        android:drawableLeft="@drawable/ic_email"
+        android:drawableLeft="@drawable/ic_person"
         android:drawablePadding="10dp"
         android:ems="10"
         android:hint="Email"
@@ -120,34 +121,39 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
+        android:drawableLeft="@drawable/ic_restart_alt_24"
         android:text="He olvidado la contraseña"
-        android:textColor="@color/white"
+        android:textColor="?android:attr/colorPressedHighlight"
         android:textSize="14sp"
         android:textStyle="normal|bold"
         app:layout_constraintEnd_toEndOf="@+id/introduceContrasena"
         app:layout_constraintTop_toBottomOf="@+id/introduceContrasena" />
 
     <Button
-        android:id="@+id/btrestablecer"
+        android:id="@+id/btAcceder"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="24dp"
+        android:layout_marginBottom="16dp"
         android:background="@drawable/input_background"
+        android:drawableLeft="@drawable/ic_login_24"
+        android:elevation="5dp"
         android:text="ACCEDER"
         android:textColor="@color/black"
         android:textStyle="normal"
         app:backgroundTint="@color/white"
+        app:layout_constraintBottom_toTopOf="@+id/tvRegistrarme"
         app:layout_constraintEnd_toEndOf="@+id/introduceContrasena"
         app:layout_constraintStart_toStartOf="@+id/introduceContrasena"
         app:layout_constraintTop_toBottomOf="@+id/tvContrasenaOlvidada" />
 
     <Button
-        android:id="@+id/btRegresarLogin"
+        android:id="@+id/btAccederGoogle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="32dp"
         android:layout_marginLeft="32dp"
-        android:layout_marginTop="24dp"
+        android:layout_marginTop="8dp"
         android:layout_marginEnd="32dp"
         android:layout_marginRight="32dp"
         android:layout_marginBottom="32dp"
@@ -166,10 +172,32 @@
         app:backgroundTint="@color/white"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.496"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/tvRegistrarme" />
+        app:layout_constraintTop_toBottomOf="@+id/tvContacto" />
 
-
+    <TextView
+        android:id="@+id/tvContacto"
+        android:layout_width="156dp"
+        android:layout_height="24dp"
+        android:layout_marginStart="100dp"
+        android:layout_marginLeft="100dp"
+        android:layout_marginTop="32dp"
+        android:layout_marginEnd="100dp"
+        android:layout_marginRight="100dp"
+        android:layout_marginBottom="16dp"
+        android:autoLink="all|none"
+        android:drawableLeft="@drawable/ic_email"
+        android:text="Contacto AsistMed"
+        android:textAllCaps="false"
+        android:textColor="@color/white"
+        android:textIsSelectable="true"
+        android:textSize="14sp"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toTopOf="@+id/btAccederGoogle"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textView3" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

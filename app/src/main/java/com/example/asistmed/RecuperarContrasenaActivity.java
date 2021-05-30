@@ -43,8 +43,8 @@ public class RecuperarContrasenaActivity extends AppCompatActivity {
 
 
         //Cargamos la referencia de nuestros botones
-        btRecuperarContrasena = findViewById(R.id.btrestablecer);
-        btRegresarLogin = findViewById(R.id.btRegresarLogin);
+        btRecuperarContrasena = findViewById(R.id.btRestablecer);
+        btRegresarLogin = findViewById(R.id.btBackInicio);
 
         //Cargamos la referencia de nuestros Input
         mailRecuperaContrasena = findViewById(R.id.introduceEmail);
@@ -87,6 +87,12 @@ public class RecuperarContrasenaActivity extends AppCompatActivity {
                 startActivity(intent); // Lanzamos el activity
             }
         });
+    }
+
+    @Override
+    public void onBackPressed() {
+
+        //Creamos este método para anular el botón atrás en el dispositivo
     }
 
     private void restablecerPassword(){

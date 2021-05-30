@@ -82,7 +82,7 @@ public class AdaptadorMedicamentos
 
         @Override
         public void onClick(View view) {
-            if (listener!=null){
+                if (listener!=null){
                 listener.onClick(view);
             }
         }

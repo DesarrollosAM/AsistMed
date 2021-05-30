@@ -44,7 +44,7 @@
         app:layout_constraintStart_toStartOf="parent" />
 
     <Button
-        android:id="@+id/btAdminSalir"
+        android:id="@+id/btSalir"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginEnd="32dp"
@@ -60,7 +60,7 @@
         app:layout_constraintEnd_toEndOf="parent" />
 
     <Button
-        android:id="@+id/btnAddTrat"
+        android:id="@+id/btAsistente"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginStart="32dp"
@@ -69,18 +69,18 @@
         android:layout_marginEnd="32dp"
         android:layout_marginBottom="16dp"
         android:background="@drawable/bt_background"
-        android:drawableLeft="@drawable/ic_add_24"
+        android:drawableLeft="@drawable/ic_medical_services_24"
         android:elevation="15dp"
-        android:text="Añadir Tratamiento"
+        android:text="Asistente"
         android:textColor="@color/black"
-        app:backgroundTint="@android:color/darker_gray"
-        app:layout_constraintBottom_toTopOf="@+id/btnModTrat"
+        app:backgroundTint="@android:color/holo_green_dark"
+        app:layout_constraintBottom_toTopOf="@+id/btCitaPrevia"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textView5" />
 
     <Button
-        android:id="@+id/btnModTrat"
+        android:id="@+id/btCitaPrevia"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginStart="32dp"
@@ -90,38 +90,38 @@
         android:layout_marginRight="32dp"
         android:layout_marginBottom="16dp"
         android:background="@drawable/bt_background"
-        android:drawableLeft="@drawable/ic_mode_edit_24"
-        android:text="Modificar Tratamiento"
-        android:textColor="@color/black"
-        app:backgroundTint="@android:color/darker_gray"
-        app:layout_constraintBottom_toTopOf="@+id/btnAddMed"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/btnAddTrat" />
-
-    <Button
-        android:id="@+id/btnAddMed"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="32dp"
-        android:layout_marginLeft="32dp"
-        android:layout_marginTop="16dp"
-        android:layout_marginEnd="32dp"
-        android:layout_marginRight="32dp"
-        android:layout_marginBottom="16dp"
-        android:background="@drawable/bt_background"
-        android:drawableLeft="@drawable/ic_add_24"
-        android:text="Añadir Medicamento"
+        android:drawableLeft="@drawable/ic_calendar_24"
+        android:text="CITA PREVIA"
         android:textColor="@color/black"
         app:backgroundTint="@android:color/holo_green_dark"
-        app:layout_constraintBottom_toTopOf="@+id/btnModMed"
+        app:layout_constraintBottom_toTopOf="@+id/btFarmacias"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/btAsistente" />
+
+    <Button
+        android:id="@+id/btFarmacias"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="32dp"
+        android:layout_marginLeft="32dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginEnd="32dp"
+        android:layout_marginRight="32dp"
+        android:layout_marginBottom="16dp"
+        android:background="@drawable/bt_background"
+        android:drawableLeft="@drawable/ic_local_pharmacy_24"
+        android:text="FARMACIAS cercanas"
+        android:textColor="@color/black"
+        app:backgroundTint="@android:color/holo_green_dark"
+        app:layout_constraintBottom_toTopOf="@+id/btLectorCodigos"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/btnModTrat" />
+        app:layout_constraintTop_toBottomOf="@+id/btCitaPrevia" />
 
     <Button
-        android:id="@+id/btnModMed"
+        android:id="@+id/btLectorCodigos"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginStart="32dp"
@@ -131,15 +131,15 @@
         android:layout_marginRight="32dp"
         android:layout_marginBottom="32dp"
         android:background="@drawable/bt_background"
-        android:drawableLeft="@drawable/ic_mode_edit_24"
-        android:text="Modificar Medicamento"
+        android:drawableLeft="@drawable/ic_baseline_qr_code_scanner_24"
+        android:text="LECTOR CÓDIGOS"
         android:textColor="@color/black"
         app:backgroundTint="@android:color/holo_green_dark"
-        app:layout_constraintBottom_toTopOf="@+id/btAdminSalir"
+        app:layout_constraintBottom_toTopOf="@+id/btSalir"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/btnAddMed" />
+        app:layout_constraintTop_toBottomOf="@+id/btFarmacias" />
 
     <TextView
         android:id="@+id/textView5"
@@ -152,11 +152,11 @@
         android:layout_marginRight="32dp"
         android:layout_marginBottom="8dp"
         android:gravity="center"
-        android:text="MENÚ ADMINISTRADOR"
+        android:text="MENÚ PRINCIPAL"
         android:textColor="#FFFFFF"
         android:textSize="24sp"
         android:textStyle="bold"
-        app:layout_constraintBottom_toTopOf="@+id/btnAddTrat"
+        app:layout_constraintBottom_toTopOf="@+id/btAsistente"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/txtUsuarioActivo" />

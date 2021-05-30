@@ -107,6 +107,13 @@ public class MedicamentosActivity extends AppCompatActivity {
         handler.postDelayed(r, 1000);
     }
 
+
+    @Override
+    public void onBackPressed() {
+
+        //Creamos este método para anular el botón atrás en el dispositivo
+    }
+
     public void rellenarMedicamentos(String nombreTratamiento, String usuario) {
 
 

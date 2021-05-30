@@ -66,6 +66,8 @@ public class AdaptadorTratamientos
         }
     }
 
+
+
     public class ViewHolderTratamientos extends RecyclerView.ViewHolder {
 
         TextView etiNombre,etiInformacion;
@@ -80,6 +82,8 @@ public class AdaptadorTratamientos
             foto = (ImageView) itemView.findViewById(R.id.idImagen);
         }
     }
+
+
 }
 
 
