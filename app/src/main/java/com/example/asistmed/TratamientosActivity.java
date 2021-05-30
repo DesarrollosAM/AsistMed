@@ -78,13 +78,10 @@ public class TratamientosActivity extends AppCompatActivity implements View.OnCl
     public void onClick(View view) {
 
         switch (view.getId()) {
-            case R.id.btnList:
-                UtilidadesAddTratamientos.visualizacion = UtilidadesAddTratamientos.LIST;
-                break;
             case R.id.btnGrid:
                 UtilidadesAddTratamientos.visualizacion = UtilidadesAddTratamientos.GRID;
                 break;
-            case R.id.btAtras3:
+            case R.id.btVolverMenu:
                 Intent intent = new Intent(getApplicationContext(), UsuarioActivity.class);
                 startActivity(intent); // Lanzamos el activity
                 break;
