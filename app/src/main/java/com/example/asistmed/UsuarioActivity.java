@@ -62,6 +62,10 @@ public class UsuarioActivity extends AppCompatActivity implements View.OnClickLi
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_usuario);
 
+        View decorView = getWindow().getDecorView();
+        int uiOptions = View.SYSTEM_UI_FLAG_IMMERSIVE | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION | View.SYSTEM_UI_FLAG_FULLSCREEN;
+        decorView.setSystemUiVisibility(uiOptions);
+
         mAuth = FirebaseAuth.getInstance();
 
         //Recogemos el usuario que hemos guardado en nuestro fichero de Shared llamado "Datos"

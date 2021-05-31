@@ -11,7 +11,7 @@
 
 
     <TextView
-        android:id="@+id/textView4"
+        android:id="@+id/txtCabeceraTratamientos"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@drawable/input_background"
@@ -84,6 +84,18 @@
         android:layout_height="wrap_content" >
 
     </androidx.recyclerview.widget.RecyclerView>
+
+    <Button
+        android:id="@+id/btAddNuevoT"
+        android:layout_width="match_parent"
+        android:layout_height="35dp"
+        android:background="@drawable/input_background"
+        android:elevation="5dp"
+        android:textColor="#FFFFFF"
+        android:textStyle="normal"
+        app:backgroundTint="@android:color/holo_green_dark"
+        android:onClick="onClick"
+        android:text="añadir nuevo tratamiento" />
 
     <Space
         android:layout_width="wrap_content"

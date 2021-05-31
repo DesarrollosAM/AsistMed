@@ -66,6 +66,10 @@ public class RegistroActivity extends AppCompatActivity implements View.OnClickL
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_registro);
 
+        View decorView = getWindow().getDecorView();
+        int uiOptions = View.SYSTEM_UI_FLAG_IMMERSIVE | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION | View.SYSTEM_UI_FLAG_FULLSCREEN;
+        decorView.setSystemUiVisibility(uiOptions);
+
         //Cargamos la referencia de nuestro botón
         btRegistro = findViewById(R.id.btRegistro);
         yaEstoyregistrado = findViewById(R.id.yaEstoyRegistrado);
@@ -119,7 +123,7 @@ public class RegistroActivity extends AppCompatActivity implements View.OnClickL
 
                         if(task.isSuccessful()){
                             passwordEncriptado = encriptarContraseña(password);
-                            insertarUsuarioenRegistroActivity(email, passwordEncriptado);
+                            insertarUsuarioenRegistroActivity(email, passwordEncriptado, nick);
 
                             //Instanciamos Shared, abrimos fichero "Datos" con acceso en modo privado y abrimos editor
 
@@ -204,7 +208,7 @@ public class RegistroActivity extends AppCompatActivity implements View.OnClickL
         return  true;
     }
 
-    public void insertarUsuarioenRegistroActivity(String usuario, String contraseña){
+    public void insertarUsuarioenRegistroActivity(String usuario, String contraseña, String nick){
         //Inserción en Firestore:
         FirebaseFirestore dbs = FirebaseFirestore.getInstance();
 
@@ -212,6 +216,7 @@ public class RegistroActivity extends AppCompatActivity implements View.OnClickL
         Map<String, Object> user = new HashMap<>();
         user.put("email", usuario);
         user.put("password", contraseña);
+        user.put("nick", nick);
         user.put("tratamiento", "no");
 
         dbs.collection("usuarios").document(usuario)

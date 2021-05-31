@@ -80,9 +80,21 @@
         android:layout_height="35dp"
         android:background="@drawable/input_background"
         android:elevation="5dp"
-        android:onClick="onClick"
-        android:text="Finalizar"
         android:textColor="#882B16"
         android:textStyle="normal"
-        app:backgroundTint="@android:color/holo_green_dark" />
+        app:backgroundTint="@android:color/holo_green_dark"
+        android:onClick="onClick"
+        android:text="Finalizar" />
+
+    <Space
+        android:layout_width="wrap_content"
+        android:layout_height="30dp" />
+
+    <ImageView
+        android:id="@+id/imageView"
+        android:layout_gravity="center"
+        android:layout_width="304dp"
+        android:layout_height="234dp"
+        android:alpha="0.5"
+        app:srcCompat="@drawable/logo_azul_alas" />
 </LinearLayout>

@@ -17,11 +17,14 @@ import android.text.TextWatcher;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
@@ -33,8 +36,8 @@ public class TratamientosActivity extends AppCompatActivity implements View.OnCl
 
     ArrayList<Tratamiento> listaTratamientos;
     RecyclerView recyclerTratamientos;
-    private Button btnFinalizar;
     private Handler handler;
+    private TextView txtCabecera;
     SharedPreferences shared;
     SharedPreferences.Editor editor;
     private EditText etBuscadorTrat;
@@ -44,6 +47,16 @@ public class TratamientosActivity extends AppCompatActivity implements View.OnCl
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_tratamientos);
+
+        View decorView = getWindow().getDecorView();
+        int uiOptions = View.SYSTEM_UI_FLAG_IMMERSIVE | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION | View.SYSTEM_UI_FLAG_FULLSCREEN;
+        decorView.setSystemUiVisibility(uiOptions);
+
+        txtCabecera = (TextView)findViewById(R.id.txtCabeceraTratamientos);
+        shared = getSharedPreferences("Datos", Context.MODE_PRIVATE);
+        String email = shared.getString("Usuario", "");
+        insertarNickEnCabecera(email, txtCabecera);
+
 
         etBuscadorTrat = findViewById(R.id.etBuscadorTrat);
         etBuscadorTrat.addTextChangedListener(new TextWatcher() {
@@ -88,6 +101,10 @@ public class TratamientosActivity extends AppCompatActivity implements View.OnCl
                 break;
             case R.id.etBuscadorTrat:
 
+                break;
+            case R.id.btAddNuevoT:
+                Intent intentNewT = new Intent(getApplicationContext(), AddTratamientosActivity.class);
+                startActivity(intentNewT);
                 break;
 
         }
@@ -279,6 +296,28 @@ public class TratamientosActivity extends AppCompatActivity implements View.OnCl
             }
         };
         handler.postDelayed(r, 2000);
+    }
+
+    public void insertarNickEnCabecera(String email, TextView txtCab){
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+        DocumentReference docRef = db.collection("usuarios").document(email);
+        docRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                if (task.isSuccessful()) {
+                    DocumentSnapshot document = task.getResult();
+                    if (document.exists()) {
+                        String nick = document.getString("nick").toUpperCase();
+                        txtCabecera.setText(txtCabecera.getText() + " DE " + nick);
+                        //Log.d(TAG, "DocumentSnapshot data: " + document.getData());
+                    } else {
+                        //og.d(TAG, "No such document");
+                    }
+                } else {
+                    //Log.d(TAG, "get failed with ", task.getException());
+                }
+            }
+        });
     }
 
 }

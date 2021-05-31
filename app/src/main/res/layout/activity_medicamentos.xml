@@ -7,8 +7,12 @@
     android:layout_height="match_parent"
     android:background="@drawable/blue_gradient"
     android:orientation="vertical"
-    tools:context=".MedicamentosActivity">
+    tools:context=".MedicamentosActivity"><![CDATA[
 
+
+    android:layout_height="wrap_content" />
+
+    ]]>
 
     <TextView
         android:id="@+id/txtNombreTratamiento"
@@ -20,7 +24,6 @@
         android:textColor="#FFFFFF"
         android:textSize="20sp"
         android:textStyle="bold" />
-        android:layout_height="wrap_content" />
 
     <EditText
         android:id="@+id/etBuscadorMed"

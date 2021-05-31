@@ -43,11 +43,15 @@ public class MedicamentosActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_medicamentos);
 
+        View decorView = getWindow().getDecorView();
+        int uiOptions = View.SYSTEM_UI_FLAG_IMMERSIVE | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION | View.SYSTEM_UI_FLAG_FULLSCREEN;
+        decorView.setSystemUiVisibility(uiOptions);
+
         txtNombreTratamiento = (TextView)findViewById(R.id.txtNombreTratamiento);
         shared = getSharedPreferences("Datos", Context.MODE_PRIVATE);
         String nombreTratamiento = shared.getString("nombreTratamiento", "");
         String duracionTratamiento = shared.getString("duracionTratamiento", "");
-        txtNombreTratamiento.setText("Tratamiento: " + nombreTratamiento + ". Duración: " + duracionTratamiento + ".");
+        txtNombreTratamiento.setText(nombreTratamiento + " - " + duracionTratamiento);
 
         etBuscadorMed = findViewById(R.id.etBuscadorMed);
         etBuscadorMed.addTextChangedListener(new TextWatcher() {
@@ -77,8 +81,8 @@ public class MedicamentosActivity extends AppCompatActivity {
         //Traemos con shared preferences el nombre del tratamiento.
         shared = getSharedPreferences("Datos", Context.MODE_PRIVATE);
         String nombreTratamiento = shared.getString("nombreTratamiento", "");
-        //String usuario = shared.getString("Usuario", "");
-        String usuario = "unapruebamas@gmail.com";
+        String usuario = shared.getString("Usuario", "");
+        //String usuario = "unapruebamas@gmail.com";
 
         //Aquí rellenamos la lista con los medicamentos
         rellenarMedicamentos(nombreTratamiento, usuario);

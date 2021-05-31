@@ -49,6 +49,10 @@ public class AdministradorActivity extends AppCompatActivity implements View.OnC
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_administrador);
 
+        View decorView = getWindow().getDecorView();
+        int uiOptions = View.SYSTEM_UI_FLAG_IMMERSIVE | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION | View.SYSTEM_UI_FLAG_FULLSCREEN;
+        decorView.setSystemUiVisibility(uiOptions);
+
         btnAddMed = (Button) findViewById(R.id.btnAddMed);
         btnAddTrat = (Button) findViewById(R.id.btnAddTrat);
         btnModMed = (Button) findViewById(R.id.btnModMed);
@@ -445,7 +449,6 @@ public class AdministradorActivity extends AppCompatActivity implements View.OnC
                                 }
                             });
                         } else {
-
                             //Si no existe el tratamiento lanzamos un mensaje informado de ello.
                             Toast noExisteTrat = Toast.makeText(AdministradorActivity.this, "El tratamiento introducido no existe.", Toast.LENGTH_LONG);
                             noExisteTrat.show();
@@ -460,6 +463,10 @@ public class AdministradorActivity extends AppCompatActivity implements View.OnC
         }
     }
 
+
+    /*
+    Método por el que creamos la coleccion medicamentos añadiendo un medicamento, si no está creada aún.
+     */
     public void ponerColMedicamentos(String cantidad_diaria, String frecuencia, String nombreMedicamento, String descripcion, String nombreTratMed){
         Map<String, Object> medi = new HashMap<>();
         medi.put("cantidad_diaria", cantidad_diaria);

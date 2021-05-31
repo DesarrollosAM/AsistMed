@@ -26,6 +26,8 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
@@ -50,6 +52,10 @@ public class AddTratamientosActivity extends AppCompatActivity implements View.O
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_tratamientos);
+
+        View decorView = getWindow().getDecorView();
+        int uiOptions = View.SYSTEM_UI_FLAG_IMMERSIVE | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION | View.SYSTEM_UI_FLAG_FULLSCREEN;
+        decorView.setSystemUiVisibility(uiOptions);
 
         etBuscadorAddTrat = findViewById(R.id.etBuscadorAddTrat);
         etBuscadorAddTrat.addTextChangedListener(new TextWatcher() {
@@ -96,8 +102,9 @@ public class AddTratamientosActivity extends AppCompatActivity implements View.O
                     startActivity(intentTrat);
                     finishAffinity();// Lanzamos el activity
                 }else {
-                    Toast toastUsuarioNoValido = Toast.makeText(this, "Por favor, añada un tratamiento para poder finalizar.", Toast.LENGTH_LONG);
-                    toastUsuarioNoValido.show();
+                    shared = getSharedPreferences("Datos", Context.MODE_PRIVATE);
+                    String emailUsuario = shared.getString("Usuario", "");
+                    comprobarTratUsuario(emailUsuario);
                 }
                 break;
         }
@@ -300,6 +307,37 @@ public class AddTratamientosActivity extends AppCompatActivity implements View.O
             }
         };
         handler.postDelayed(r, 1200);
+    }
+
+    public void comprobarTratUsuario(String email){
+
+        FirebaseFirestore dbc = FirebaseFirestore.getInstance();
+        DocumentReference docRef = dbc.collection("usuarios").document(email);
+        docRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                if (task.isSuccessful()) {
+                    DocumentSnapshot document = task.getResult();
+                    if (document.exists()) {
+                        String tiene = document.getString("tratamiento");
+                        if(tiene.equalsIgnoreCase("no")){
+                            Toast toastUsuarioNoValido = Toast.makeText(getApplicationContext(), "Por favor, añada un tratamiento para poder finalizar.", Toast.LENGTH_LONG);
+                            toastUsuarioNoValido.show();
+                        }else{
+                            Intent intentTrat = new Intent(getApplicationContext(), TratamientosActivity.class);
+                            startActivity(intentTrat);
+                            finishAffinity();// Lanzamos el activity
+                        }
+                        //Log.d(TAG, "DocumentSnapshot data: " + document.getData());
+                    } else {
+                        //Log.d(TAG, "No such document");
+
+                    }
+                } else {
+                    //Log.d(TAG, "get failed with ", task.getException());
+                }
+            }
+        });
     }
 
 
