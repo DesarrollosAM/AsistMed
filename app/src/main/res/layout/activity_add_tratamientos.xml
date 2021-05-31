@@ -80,9 +80,9 @@
         android:layout_height="35dp"
         android:background="@drawable/input_background"
         android:elevation="5dp"
+        android:onClick="onClick"
+        android:text="Finalizar"
         android:textColor="#882B16"
         android:textStyle="normal"
-        app:backgroundTint="@android:color/holo_green_dark"
-        android:onClick="onClick"
-        android:text="Finalizar" />
+        app:backgroundTint="@android:color/holo_green_dark" />
 </LinearLayout>

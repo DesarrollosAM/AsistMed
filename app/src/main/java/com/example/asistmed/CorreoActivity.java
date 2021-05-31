@@ -8,6 +8,8 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 
+//Comentarios terminados
+
 public class CorreoActivity extends AppCompatActivity implements View.OnClickListener{
 
     // Defino los objetos de la interface
@@ -61,9 +63,6 @@ public class CorreoActivity extends AppCompatActivity implements View.OnClickLis
                             .createChooser(intent,
                                     "Elije un cliente de Correo:"));
         }else if ((view.getId() == R.id.btInicioCorreo)) {
-
-            //finish();
-            //finishAffinity();
 
             //Instanciamos un objeto Intent, pasandole con this el Activity actual, y como segundo parametro el Activity que vamos a cargar
             Intent intent = new Intent(getApplicationContext(), LoginActivity.class);

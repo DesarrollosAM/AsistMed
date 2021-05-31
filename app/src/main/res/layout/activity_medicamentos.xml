@@ -40,8 +40,9 @@
 
         <Button
             android:id="@+id/btVolverMed"
-            android:layout_width="200dp"
+            android:layout_width="wrap_content"
             android:layout_height="35dp"
+            android:layout_weight="0.5"
             android:background="@drawable/input_background"
             android:drawableLeft="@drawable/ic_back_24"
             android:elevation="5dp"
@@ -53,9 +54,9 @@
 
         <Button
             android:id="@+id/btnActualizarMed"
-            android:layout_width="200dp"
+            android:layout_width="wrap_content"
             android:layout_height="35dp"
-            android:layout_weight="1"
+            android:layout_weight="0.5"
             android:background="@drawable/input_background"
             android:drawableLeft="@drawable/ic_baseline_autorenew_24"
             android:elevation="5dp"
