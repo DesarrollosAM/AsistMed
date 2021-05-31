@@ -197,10 +197,9 @@ public class RegistroActivity extends AppCompatActivity implements View.OnClickL
 
     private boolean validaUsuario(){
 
-        if(usuario.isEmpty()){
+        if(nick.isEmpty()){
             Toast toastUsuarioVacio = Toast.makeText(this, "Por favor, introduzca usuario", Toast.LENGTH_SHORT);
             toastUsuarioVacio.show();
-
         }
         return  true;
     }

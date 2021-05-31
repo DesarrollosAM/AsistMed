@@ -277,6 +277,7 @@ public class AdministradorActivity extends AppCompatActivity implements View.OnC
                             } else {
                                 //Al aceptar, capturamos los valores introducidos y los usamos como parámetros para llamar al método insertar
                                 insertarTratamiento(nombre.getText().toString(), duracion.getText().toString());
+                                colocarUsuariosTratamientos(nombre.getText().toString());
                             }
                         }
                     })
@@ -292,6 +293,13 @@ public class AdministradorActivity extends AppCompatActivity implements View.OnC
         }catch (Exception e){
 
         }
+    }
+
+    public void colocarUsuariosTratamientos(String nombreTratamiento){
+        Map<String, Object> userTrat = new HashMap<>();
+        userTrat.put("email", "generico@gmail.com");
+        FirebaseFirestore dbi = FirebaseFirestore.getInstance();
+        dbi.collection("tratamientos").document(nombreTratamiento).collection("usuariosTratamientos").document("generico@gmail.com").set(userTrat);
     }
 
     /*
@@ -430,8 +438,9 @@ public class AdministradorActivity extends AppCompatActivity implements View.OnC
                                             FirebaseFirestore dbt = FirebaseFirestore.getInstance();
                                             dbt.collection("tratamientos").document(nombreTratMed).collection("medicamentos").document(nombreMedicamento).set(med);
                                         }
+                                        //Si no existe la coleccion Medicamentos la creamos y añadimos el medicamento.
                                     } else {
-
+                                            ponerColMedicamentos(cantidad_diaria, frecuencia, nombreMedicamento, descripcion, nombreTratMed);
                                     }
                                 }
                             });
@@ -449,7 +458,16 @@ public class AdministradorActivity extends AppCompatActivity implements View.OnC
         } catch (Exception e){
 
         }
+    }
 
+    public void ponerColMedicamentos(String cantidad_diaria, String frecuencia, String nombreMedicamento, String descripcion, String nombreTratMed){
+        Map<String, Object> medi = new HashMap<>();
+        medi.put("cantidad_diaria", cantidad_diaria);
+        medi.put("frecuencia", frecuencia);
+        medi.put("info", descripcion);
+        medi.put("nombre", nombreMedicamento);
+        FirebaseFirestore dbm = FirebaseFirestore.getInstance();
+        dbm.collection("tratamientos").document(nombreTratMed).collection("usuariosTratamientos").document("medicamentos").set(medi);
     }
 
 }
