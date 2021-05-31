@@ -7,7 +7,7 @@
     <ImageView
         android:layout_width="match_parent"
         android:layout_height="64dp"
-        android:background="#FFFFBB33"
+        android:background="#FFFFFF"
         android:contentDescription="@string/app_name"
         android:scaleType="center"
         android:src="@drawable/tratamiento_por_defecto" />
@@ -20,7 +20,7 @@
         android:layout_marginTop="16dp"
         android:layout_marginRight="4dp"
         android:layout_marginBottom="4dp"
-        android:background="#FFFFBB33"
+        android:background="@drawable/input_background"
         android:gravity="center_horizontal"
         android:inputType="text"
         android:text="AÑADIR TRATAMIENTO"
@@ -37,6 +37,7 @@
         android:layout_marginRight="4dp"
         android:layout_marginBottom="16dp"
         android:fontFamily="sans-serif"
+        android:backgroundTint="@color/white"
         android:hint="Inserte el nombre..."
         android:inputType="text" />
 
@@ -49,6 +50,8 @@
         android:layout_marginRight="4dp"
         android:layout_marginBottom="16dp"
         android:fontFamily="sans-serif"
+        android:backgroundTint="@color/white"
+
         android:hint="Inserte la duración..."
         android:inputType="text" />
 </LinearLayout>

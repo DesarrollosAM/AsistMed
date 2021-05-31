@@ -8,6 +8,8 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.res.ColorStateList;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
 import android.view.LayoutInflater;
@@ -349,6 +351,7 @@ public class AdministradorActivity extends AppCompatActivity implements View.OnC
             final EditText nombreMed = (EditText) vista.findViewById(R.id.edtNombreMedicamento);
             final EditText frecuencia = (EditText) vista.findViewById(R.id.edtFrecuencia);
             final EditText descripcion = (EditText) vista.findViewById(R.id.edtInfo);
+
 
             //Agregamos los botones Aceptar/Cancelar.
             builderAddMedicamentos.setView(vista)
