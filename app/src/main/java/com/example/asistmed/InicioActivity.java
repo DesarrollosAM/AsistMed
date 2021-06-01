@@ -4,6 +4,8 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
 import android.media.MediaPlayer;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.os.Handler;
 import android.view.Gravity;
@@ -13,7 +15,7 @@ import android.widget.Toast;
 
 public class InicioActivity extends AppCompatActivity {
 
-    private Handler handler;
+    private Handler handler, handler2;
     private MediaPlayer mpHouse;
     private ImageView ivLoading;
 
@@ -32,18 +34,37 @@ public class InicioActivity extends AppCompatActivity {
         mpHouse.start();
         ivLoading.setVisibility(View.VISIBLE);
 
-//Hacemos que el proceso se pare durante 8 segundos para dar mas realismo al loading.
+        //Hacemos que el proceso se pare durante 8 segundos para dar mas realismo al loading.
         handler = new Handler();
         Runnable r = new Runnable() {
             public void run() {
-                //Cargamos el siguiente activity y paramos la melodía.
-                Intent intent = new Intent(getApplicationContext(), LoginActivity.class);
-                startActivity(intent);
 
-                //finish();
-                //finishAffinity();
+                //Comprobamos si el dispositivo tiene conexion a Internet
+                ConnectivityManager connectivityManager = (ConnectivityManager) getSystemService(InicioActivity.CONNECTIVITY_SERVICE);
+                NetworkInfo networkInfo = connectivityManager.getActiveNetworkInfo();
 
-                mpHouse.stop();
+                if (networkInfo != null && networkInfo.isConnected()) {
+                    // Si hay conexión a Internet en este momento, cargamos el siguiente activity y paramos la melodía.
+                    Intent intent = new Intent(getApplicationContext(), LoginActivity.class);
+                    startActivity(intent);
+                    mpHouse.stop();
+
+                } else {
+                    // Si no hay conexión a Internet en este momento, lanzamos un mensaje informando de que no hay conexion, esperamos 5 s para observar el mensaje y salimos.
+                    Toast.makeText(getApplicationContext(),
+                            "No se puede conectar a Internet.\nPor favor, revise su conexión.", Toast.LENGTH_LONG).show();
+                    handler2 = new Handler();
+                    Runnable r2 = new Runnable() {
+                        public void run() {
+                            finish();
+                            finishAffinity();
+                            System.exit(0);
+                        }
+                    };
+                    handler2.postDelayed(r2, 5000);
+
+                }
+
 
             }
         };
@@ -55,46 +76,4 @@ public class InicioActivity extends AppCompatActivity {
 
         //Creamos este método para anular el botón atrás en el dispositivo
     }
-
-
-//    @Override
-//    public void onResume() {
-//        super.onResume();
-
-//        //Toast toast= Toast.makeText(getApplicationContext(), "onResume", Toast.LENGTH_LONG);
-//        //toast.setGravity(Gravity.TOP|Gravity.CENTER_HORIZONTAL, 0, 500);
-//        //toast.show();
-//
-//
-//        //Hacemos que el proceso se pare durante 5 segundos para dar mas realismo al loading.
-//        handler = new Handler();
-//        Runnable r = new Runnable() {
-//            public void run() {
-//                //Cargamos el siguiente activity y paramos la melodía.
-//                Intent intent = new Intent(getApplicationContext(), LoginActivity.class);
-//                startActivity(intent);
-//
-//                //finish();
-//                //finishAffinity();
-//
-//                mpCanon.stop();
-//                ivLoading.setVisibility(View.VISIBLE);
-//            }
-//        };
-//        handler.postDelayed(r, 5000);
-
-        //Cargamos el siguiente activity y paramos la melodía.
-        //Intent intent = new Intent(getApplicationContext(), LoginActivity.class);
-        //startActivity(intent);
-    }
-
-/*    @Override
-    public void onPause() {
-        super.onPause();
-        Toast toast= Toast.makeText(getApplicationContext(), "onPause", Toast.LENGTH_SHORT);
-        toast.setGravity(Gravity.TOP|Gravity.CENTER_HORIZONTAL, 0, 500);
-        toast.show();
-    }*/
-
-
-//}
+}
