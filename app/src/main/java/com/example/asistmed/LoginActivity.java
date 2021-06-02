@@ -2,7 +2,6 @@ package com.example.asistmed;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
-
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -15,68 +14,51 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
-
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInClient;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.common.api.ApiException;
 import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthCredential;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.GoogleAuthProvider;
-import com.google.firebase.firestore.CollectionReference;
-import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.QueryDocumentSnapshot;
-import com.google.firebase.firestore.QuerySnapshot;
-
-import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
-import java.util.HashMap;
-import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class LoginActivity extends AppCompatActivity implements View.OnClickListener {
 
-    //Declaramos un objeto de la clase BBDD
-
-    //BBDD bbdd = new BBDD();
+    //Instanciamos objeto FirebaseFirestore
     private FirebaseFirestore db = FirebaseFirestore.getInstance();
 
-    //Declaramos las variables, tipo Shared
+    //Declaramos Shared
 
     private SharedPreferences shared;
     private SharedPreferences.Editor editor;
 
-    //ImageView btAcceso, btRegistro;
+    //Declaramos variables;
     private Button btAcceso, btAccederGoogle, btContactoAsistmed;
     private TextView tvRegistro, tvRecuperarContrasena, tvContacto;
     private EditText etEmail, etContrasena;
-
-    //ImageView ivSalir;
     private ImageView ivSalir;
 
-    //Usuario y password
+    //Variables para Usuario y password
     private String email, password;
     private Pattern pat = null;
     private Matcher mat = null;
     private Boolean valido = false;
 
     //Declaramos el patrón para validar el correo electrónico
-    public static final Pattern VALID_EMAIL_ADDRESS_REGEX =
+    public static final Pattern PATRON_VALIDA_CORREO =
             Pattern.compile("^[A-Z0-9._%+-]+@[A-Z0-9.-]+\\.[A-Z]{2,6}$", Pattern.CASE_INSENSITIVE);
 
 
     //Declaramos variables para autenticación
     FirebaseAuth mAuth;
-
     private GoogleSignInClient mGoogleSignInClient;
     private static final int RC_SIGN_IN = 9001;
     private static final String TAG = "SignInActicity";
@@ -87,35 +69,28 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     public void onStart() {
         super.onStart();
 
-        // Check if user is signed in (non-null) and update UI accordingly.
-
+        //Obtenemos el usuario que está logado en la APP, ya sea nulo o no.
         FirebaseUser currentUser = mAuth.getCurrentUser();
-
-        //mAuth.signOut();
-
-        //mGoogleSignInClient.signOut();
-
+        //Llamamos al método que en función del usuario recogido realizará una acción
         updateUI(currentUser);
 
     }
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
 
+        //Ocultamos botones y barra para disponer de la pantalla completa del dispositivo
         View decorView = getWindow().getDecorView();
         int uiOptions = View.SYSTEM_UI_FLAG_IMMERSIVE | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION | View.SYSTEM_UI_FLAG_FULLSCREEN;
         decorView.setSystemUiVisibility(uiOptions);
 
-        //Cargamos la referencia de nuestro botón
+        //Cargamos la referencia de nuestros botones
         btAcceso = findViewById(R.id.btAcceder);
-
-        //Cargamos la referencia de nuestro botón
         btAccederGoogle = findViewById(R.id.btAccederGoogle);
 
-        //Cargamos la referencia de nuestro botón
+        //Cargamos la referencia de nuestro botón sobre una ImageView
         ivSalir = findViewById(R.id.ivSalir);
 
 
@@ -132,7 +107,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         tvRecuperarContrasena = findViewById(R.id.tvContrasenaOlvidada);
         tvContacto = findViewById(R.id.tvContacto);
 
-        //Asignación del evento click
+        //Asignación del evento click a los textos
         tvRegistro.setOnClickListener(this);
         tvRecuperarContrasena.setOnClickListener(this);
         tvContacto.setOnClickListener(this);
@@ -156,35 +131,23 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     @Override
     public void onClick(View view) {
 
-        //Asignamos a una variable tipo EditText el usuario y password introducidos
-        //EditText etEmail= (EditText) findViewById(R.id.introduceEmail);
-        //EditText etContrasena = (EditText) findViewById(R.id.introduceContrasena);
-        //Rescatamos los valores introducidos por el usuario al pulsar el botón de acceso
         email = etEmail.getText().toString();
         password = etContrasena.getText().toString();
 
-        if ((view.getId() == R.id.btAcceder))
+        if ((view.getId() == R.id.btAcceder)) //Si pulsamos el botón Acceder
         {
-            //if (!etUsuario.toString().isEmpty() || !etPassword.toString().isEmpty()){
-            if (validaEmail() && validaPassword()){
 
+            if (validaEmail() && validaPassword()){ //Llamamos a los métodos que validan email y password y si son true...
+
+                //Con la instancia de FirebaseAuth le pasamos al método de login, email y contraseña
                 mAuth.signInWithEmailAndPassword(email, password).addOnCompleteListener(this,new OnCompleteListener<AuthResult>() {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
-                        if (task.isSuccessful()) {
+                        if (task.isSuccessful()) { //Si la tarea se completa con exito
 
-                                updateUI(mAuth.getCurrentUser());
-//                            if(email.equals("numerocolegiado@asistmed.com")){
-//
-//                            Intent intent = new Intent(getApplicationContext(), AdministradorActivity.class);
-//                            startActivity(intent); // Lanzamos el activity
-//                            }else {
-//
-//                                //Instanciamos un objeto Intent, pasandole con this el Activity actual, y como segundo parametro el Activity que vamos a cargar
-//                                Intent intent = new Intent(getApplicationContext(), UsuarioActivity.class);
-//                                startActivity(intent); // Lanzamos el activity
-//                            }
-                        } else {
+                                updateUI(mAuth.getCurrentUser()); //Llamamos al método para actualizar UI pasando el user correspondiente
+
+                        } else {//Si el proceso de login no se completa, informamos con un Toast al usuario
 
                             Toast toast= Toast.makeText(getApplicationContext(), "El email " + email + " no está registrado o la contraseña es incorrecta", Toast.LENGTH_LONG);
                             toast.setGravity(Gravity.TOP|Gravity.CENTER_HORIZONTAL, 0, 500);
@@ -196,38 +159,39 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
 
             }
 
-        }else if ((view.getId() == R.id.tvRegistrarme)) {
+        }else if ((view.getId() == R.id.tvRegistrarme)) { //Si pulsamos el texto para Registrarse lanzamos intent a RegistroActivity
 
             //Instanciamos un objeto Intent, pasandole con this el Activity actual, y como segundo parametro el Activity que vamos a cargar
             Intent intent = new Intent(getApplicationContext(), RegistroActivity.class);
             startActivity(intent); // Lanzamos el activity
 
-        }else if ((view.getId() == R.id.tvContrasenaOlvidada)) {
+        }else if ((view.getId() == R.id.tvContrasenaOlvidada)) { //Si pulsamos el texto de contraseña olvidada lanzamos intent al Activity correspondiente
 
             //Instanciamos un objeto Intent, pasandole con this el Activity actual, y como segundo parametro el Activity que vamos a cargar
             Intent intent = new Intent(getApplicationContext(), RecuperarContrasenaActivity.class);
             startActivity(intent); // Lanzamos el activity
 
-        }else if ((view.getId() == R.id.tvContacto)) {
+        }else if ((view.getId() == R.id.tvContacto)) { //Si pulsamos en contacto, lanzamos el intent correspondiente
 
             //Instanciamos un objeto Intent, pasandole con this el Activity actual, y como segundo parametro el Activity que vamos a cargar
             Intent intent = new Intent(getApplicationContext(), CorreoActivity.class);
             startActivity(intent); // Lanzamos el activity
 
-        }else if ((view.getId() == R.id.ivSalir)) {
+        }else if ((view.getId() == R.id.ivSalir)) { //Si pulsamos el imageview con el botón de salir, finalizaremos app
 
             finish();
             finishAffinity();
             System.exit(0);
 
-        }else   {
+        }else   { //Recogemos la pulsación en el botón Accceder con Google
 
-            //Accdemos con el usuario de Google al pulsar el botón
-            signIn();
+
+            signIn(); //Llamamos al método que procedera a logar al usuario con la cuenta de google
         }
     }
 
-    private void signIn() {
+    private void signIn() {//Se procesa la petición en el onActivityResult
+
         Intent signInIntent = mGoogleSignInClient.getSignInIntent();
         startActivityForResult(signInIntent, RC_SIGN_IN);
     }
@@ -244,16 +208,16 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
-        // Result returned from launching the Intent from GoogleSignInApi.getSignInIntent(...);
+        // Resultado devuelto por el lanzamiento del intent GoogleSignInApi.getSignInIntent(...);
         if (requestCode == RC_SIGN_IN) {
             Task<GoogleSignInAccount> task = GoogleSignIn.getSignedInAccountFromIntent(data);
             try {
-                // Google Sign In was successful, authenticate with Firebase
+                // Si el login con Google es exitoso, se autentifica con Firebase
                 GoogleSignInAccount account = task.getResult(ApiException.class);
                 Log.d(TAG, "firebaseAuthWithGoogle:" + account.getId());
                 firebaseAuthWithGoogle(account.getIdToken());
             } catch (ApiException e) {
-                // Google Sign In failed, update UI appropriately
+                // En caso de que no se complete el login
                 Log.w(TAG, "Google sign in failed", e);
             }
         }
@@ -262,11 +226,11 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
 
         email = email.trim();
 
-        if (email.isEmpty()){
+        if (email.isEmpty()){//Si el campo de correo está vacío.
             Toast toast= Toast.makeText(getApplicationContext(), "Introduzca correo electrónico", Toast.LENGTH_SHORT);
             toast.setGravity(Gravity.TOP|Gravity.CENTER_HORIZONTAL, 0, 500);
             toast.show();
-        } else if (!VALID_EMAIL_ADDRESS_REGEX.matcher(email).find()){
+        } else if (!PATRON_VALIDA_CORREO.matcher(email).find()){//Si no está vacio, comprobamos con el patrón para validarlo
             Toast toast= Toast.makeText(getApplicationContext(), "Introduzca un correo válido", Toast.LENGTH_SHORT);
             toast.setGravity(Gravity.TOP|Gravity.CENTER_HORIZONTAL, 0, 500);
             toast.show();
@@ -280,15 +244,15 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
 
     private boolean validaPassword(){
         password = password.trim();
-        if (password.isEmpty()){
+        if (password.isEmpty()){//Si el campo de contraseña está vacío
             Toast toast= Toast.makeText(getApplicationContext(), "Introduzca Contraseña", Toast.LENGTH_SHORT);
             toast.setGravity(Gravity.TOP|Gravity.CENTER_HORIZONTAL, 0, 500);
             toast.show();
-        } else if (password.length() < 8){
+        } else if (password.length() < 8){//Si no está vacio, pero tiene menos de 8 caracteres
             Toast toast= Toast.makeText(getApplicationContext(), "La Contraseña debe tener al menos 8 caracteres", Toast.LENGTH_SHORT);
             toast.setGravity(Gravity.TOP|Gravity.CENTER_HORIZONTAL, 0, 500);
             toast.show();
-        } else {
+        } else {//Si no está vacio y tiene más de 8 caratenes, lo validamos retornando true
             return true;
         }
         return false;
