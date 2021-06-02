@@ -14,6 +14,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import android.os.Handler;
 import android.text.Editable;
+import android.text.InputType;
 import android.text.TextWatcher;
 import android.view.View;
 import android.widget.EditText;
@@ -54,6 +55,7 @@ public class MedicamentosActivity extends AppCompatActivity {
         txtNombreTratamiento.setText(nombreTratamiento + " - " + duracionTratamiento);
 
         etBuscadorMed = findViewById(R.id.etBuscadorMed);
+        etBuscadorMed.setFocusableInTouchMode(false);
         etBuscadorMed.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
@@ -110,7 +112,11 @@ public class MedicamentosActivity extends AppCompatActivity {
                 startActivity(intent); // Lanzamos el activity
                 break;
             case R.id.etBuscadorMed:
-
+                etBuscadorMed.setFocusableInTouchMode(true);
+                etBuscadorMed.setFocusable(true);
+                etBuscadorMed.setEnabled(true);
+                etBuscadorMed.setInputType(InputType.TYPE_CLASS_TEXT);
+                etBuscadorMed.setCursorVisible(true);
                 break;
 
         }

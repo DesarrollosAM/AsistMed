@@ -13,8 +13,10 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
 import android.text.Editable;
+import android.text.InputType;
 import android.text.TextWatcher;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -48,8 +50,16 @@ public class TratamientosActivity extends AppCompatActivity implements View.OnCl
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_tratamientos);
 
+
+        etBuscadorTrat = findViewById(R.id.etBuscadorTrat);
+//        etBuscadorTrat.requestFocus();
+        etBuscadorTrat.setFocusableInTouchMode(false);
+//        InputMethodManager inputMethodManager = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
+//        inputMethodManager.hideSoftInputFromWindow(etBuscadorTrat.getWindowToken(), 0);
+
+
         View decorView = getWindow().getDecorView();
-        int uiOptions = View.SYSTEM_UI_FLAG_IMMERSIVE | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION | View.SYSTEM_UI_FLAG_FULLSCREEN;
+        int uiOptions = View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION | View.SYSTEM_UI_FLAG_FULLSCREEN;
         decorView.setSystemUiVisibility(uiOptions);
 
         txtCabecera = (TextView)findViewById(R.id.txtCabeceraTratamientos);
@@ -58,7 +68,7 @@ public class TratamientosActivity extends AppCompatActivity implements View.OnCl
         insertarNickEnCabecera(email, txtCabecera);
 
 
-        etBuscadorTrat = findViewById(R.id.etBuscadorTrat);
+
         etBuscadorTrat.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
@@ -100,13 +110,18 @@ public class TratamientosActivity extends AppCompatActivity implements View.OnCl
                 startActivity(intent); // Lanzamos el activity
                 break;
             case R.id.etBuscadorTrat:
+                etBuscadorTrat.setFocusableInTouchMode(true);
+                etBuscadorTrat.setFocusable(true);
+                etBuscadorTrat.setEnabled(true);
+                etBuscadorTrat.setInputType(InputType.TYPE_CLASS_TEXT);
+                etBuscadorTrat.setCursorVisible(true);
+
 
                 break;
             case R.id.btAddNuevoT:
                 Intent intentNewT = new Intent(getApplicationContext(), AddTratamientosActivity.class);
                 startActivity(intentNewT);
                 break;
-
         }
         construirRecycler();
     }

@@ -16,6 +16,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import android.os.Handler;
 import android.text.Editable;
+import android.text.InputType;
 import android.text.TextWatcher;
 import android.view.View;
 import android.widget.Button;
@@ -58,6 +59,7 @@ public class AddTratamientosActivity extends AppCompatActivity implements View.O
         decorView.setSystemUiVisibility(uiOptions);
 
         etBuscadorAddTrat = findViewById(R.id.etBuscadorAddTrat);
+        etBuscadorAddTrat.setFocusableInTouchMode(false);
         etBuscadorAddTrat.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
@@ -106,6 +108,13 @@ public class AddTratamientosActivity extends AppCompatActivity implements View.O
                     String emailUsuario = shared.getString("Usuario", "");
                     comprobarTratUsuario(emailUsuario);
                 }
+                break;
+            case R.id.etBuscadorAddTrat:
+                etBuscadorAddTrat.setFocusableInTouchMode(true);
+                etBuscadorAddTrat.setFocusable(true);
+                etBuscadorAddTrat.setEnabled(true);
+                etBuscadorAddTrat.setInputType(InputType.TYPE_CLASS_TEXT);
+                etBuscadorAddTrat.setCursorVisible(true);
                 break;
         }
         construirRecycler();
