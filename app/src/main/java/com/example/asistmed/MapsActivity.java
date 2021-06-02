@@ -5,11 +5,13 @@ import androidx.core.app.ActivityCompat;
 import androidx.fragment.app.FragmentActivity;
 import android.Manifest;
 import android.annotation.SuppressLint;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -32,6 +34,9 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
     private GoogleMap mMap;
     private ActivityMapsBinding binding;
+    private ImageView btVistaNormal;
+    private ImageView btSatelite;
+    private ImageView btVolverMap;
     Marker marcadorCarlosIII;
 
 
@@ -50,6 +55,31 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
+
+        btVistaNormal = (ImageView) findViewById(R.id.btVistaNormal);
+        btSatelite = (ImageView)findViewById(R.id.btSatelite);
+        btVolverMap = (ImageView)findViewById(R.id.btVolverMaps);
+
+        btSatelite.setVisibility(View.VISIBLE);
+        btVistaNormal.setVisibility(View.INVISIBLE);
+
+        // Añadimos funcionalidad al botón Vista Satelite
+        btSatelite.setOnClickListener(view -> {
+            mMap.setMapType(GoogleMap.MAP_TYPE_SATELLITE);
+            btSatelite.setVisibility(View.INVISIBLE);
+            btVistaNormal.setVisibility(View.VISIBLE);
+        });
+
+        btVistaNormal.setOnClickListener(view -> {
+            mMap.setMapType(GoogleMap.MAP_TYPE_NORMAL);
+            btSatelite.setVisibility(View.VISIBLE);
+            btVistaNormal.setVisibility(View.INVISIBLE);
+        });
+
+        btVolverMap.setOnClickListener(view -> {
+            finishAffinity();
+            startActivity(new Intent(this, UsuarioActivity.class));
+        });
 
     }
 

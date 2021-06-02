@@ -220,13 +220,16 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
             try {
                 // Si el login con Google es exitoso, se autentifica con Firebase
                 GoogleSignInAccount account = task.getResult(ApiException.class);
+
                 String emailGoogle = account.getEmail();
-                insertarUsuarioenBBDD(emailGoogle);
+                String nick = account.getDisplayName();
+                insertarUsuarioenBBDD(emailGoogle, nick);
+
                 Log.d(TAG, "firebaseAuthWithGoogle:" + account.getId());
                 firebaseAuthWithGoogle(account.getIdToken());
             } catch (ApiException e) {
                 // En caso de que no se complete el login
-                Log.w(TAG, "Google sign in failed", e);
+                Log.w(TAG, "Falló el acceso con Google", e);
             }
         }
     }
@@ -350,7 +353,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                 });
     }
 
-    public void insertarUsuarioenBBDD(String usuario){
+    public void insertarUsuarioenBBDD(String usuario, String nick){
         //Inserción en Firestore:
         FirebaseFirestore dbs = FirebaseFirestore.getInstance();
 
@@ -358,7 +361,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         Map<String, Object> user = new HashMap<>();
         user.put("email", usuario);
         user.put("password", "password automatico de Google");
-        user.put("nick", usuario);
+        user.put("nick", nick);
         user.put("tratamiento", "no");
 
         dbs.collection("usuarios").document(usuario)
