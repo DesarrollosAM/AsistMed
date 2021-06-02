@@ -87,8 +87,9 @@ public class AdaptadorMedicamentos
                         //TODO: cargar un diálogo que pregunte la hora a la que poner la alarma. Y ponerla con la frecuencia necesaria
                         int hora = 14;
                         int minutos = 00;
-                        String mensaje = "Le toca tomar la dosis de " + listaMedicamentos.get(position).getNombre() + ". ";
+                        int cantidad = listaMedicamentos.get(position).getCantidad();
                         int frecuencia = listaMedicamentos.get(position).getFrecuencia();
+                        String mensaje = "Le toca tomar " + cantidad + " dosis de " + listaMedicamentos.get(position).getNombre() + ". ";
                         activarAlarma(mensaje, hora, minutos, contexto, position, frecuencia);
                     } else {
 

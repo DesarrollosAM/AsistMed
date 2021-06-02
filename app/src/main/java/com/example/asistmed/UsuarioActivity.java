@@ -91,7 +91,8 @@ public class UsuarioActivity extends AppCompatActivity implements View.OnClickLi
         txtUsuario = (TextView) findViewById(R.id.txtUsuarioActivo);
 
 
-        txtUsuario.setText(emailRecogido);
+        obtenerNick(emailRecogido, txtUsuario);
+        //txtUsuario.setText(emailRecogido);
 
         //Se introducen estas líneas para no tener problemas a la hora de utilizar
         //la sd externa
@@ -354,6 +355,34 @@ public class UsuarioActivity extends AppCompatActivity implements View.OnClickLi
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+    public void obtenerNick(String email, TextView nick){
+        FirebaseFirestore dbo = FirebaseFirestore.getInstance();
+        DocumentReference docRef = dbo.collection("usuarios").document(email);
+        docRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                if (task.isSuccessful()) {
+                    DocumentSnapshot document = task.getResult();
+                    if (document.exists()) {
+                        String valorNick = document.getString("nick");
+                        if(valorNick != ""){
+                            nick.setText(document.getString("nick").toUpperCase());
+                        } else {
+                            nick.setText("NICK NO INTRODUCIDO");
+                        }
+
+                        //Log.d(TAG, "DocumentSnapshot data: " + document.getData());
+                    } else {
+
+                        //Log.d(TAG, "No such document");
+                    }
+                } else {
+                    //Log.d(TAG, "get failed with ", task.getException());
+                }
+            }
+        });
     }
 
 //    private void activarAlarma (String mensaje, int hora, int minutos){
