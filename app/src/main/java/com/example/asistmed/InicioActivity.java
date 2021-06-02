@@ -49,9 +49,6 @@ public class InicioActivity extends AppCompatActivity {
         Runnable r = new Runnable() {
             public void run() {
 
-                //Cargamos el siguiente activity y paramos la melodía.
-                Intent intent = new Intent(getApplicationContext(), LoginActivity.class);
-                startActivity(intent);
 
                 mpHouse.stop();
 
@@ -61,8 +58,8 @@ public class InicioActivity extends AppCompatActivity {
 
                 if (networkInfo != null && networkInfo.isConnected()) {
                     // Si hay conexión a Internet en este momento, cargamos el siguiente activity y paramos la melodía.
-                    Intent intent2 = new Intent(getApplicationContext(), LoginActivity.class);
-                    startActivity(intent2);
+                    Intent intent = new Intent(getApplicationContext(), LoginActivity.class);
+                    startActivity(intent);
                     mpHouse.stop();
 
                 } else {
@@ -77,7 +74,7 @@ public class InicioActivity extends AppCompatActivity {
                             System.exit(0);
                         }
                     };
-                    handler2.postDelayed(r2, 5000);
+                    handler2.postDelayed(r2, 4000);
 
                 }
 
