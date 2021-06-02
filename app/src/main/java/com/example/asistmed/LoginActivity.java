@@ -20,6 +20,8 @@ import com.google.android.gms.auth.api.signin.GoogleSignInClient;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.common.api.ApiException;
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthCredential;
 import com.google.firebase.auth.AuthResult;
@@ -27,6 +29,9 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.GoogleAuthProvider;
 import com.google.firebase.firestore.FirebaseFirestore;
+
+import java.util.HashMap;
+import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -215,6 +220,8 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
             try {
                 // Si el login con Google es exitoso, se autentifica con Firebase
                 GoogleSignInAccount account = task.getResult(ApiException.class);
+                String emailGoogle = account.getEmail();
+                insertarUsuarioenBBDD(emailGoogle);
                 Log.d(TAG, "firebaseAuthWithGoogle:" + account.getId());
                 firebaseAuthWithGoogle(account.getIdToken());
             } catch (ApiException e) {
@@ -343,5 +350,31 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                 });
     }
 
+    public void insertarUsuarioenBBDD(String usuario){
+        //Inserción en Firestore:
+        FirebaseFirestore dbs = FirebaseFirestore.getInstance();
 
+        // Create a new user with a first and last name
+        Map<String, Object> user = new HashMap<>();
+        user.put("email", usuario);
+        user.put("password", "password automatico de Google");
+        user.put("nick", usuario);
+        user.put("tratamiento", "no");
+
+        dbs.collection("usuarios").document(usuario)
+                .set(user)
+                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void avoid) {
+                        //Log.d(TAG, "DocumentSnapshot added with ID: " + documentReference.getId());
+                        //documentReference.set("usuario" + siguienteUsuario);
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        //Log.w(TAG, "Error adding document", e);
+                    }
+                });
+    }
 }
