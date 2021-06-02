@@ -357,6 +357,9 @@ public class UsuarioActivity extends AppCompatActivity implements View.OnClickLi
         }
     }
 
+    /*
+    Método por el que obtenemos de la BD, el nick del email pasado y se lo aplicamos al Textview correspondiente.
+     */
     public void obtenerNick(String email, TextView nick){
         FirebaseFirestore dbo = FirebaseFirestore.getInstance();
         DocumentReference docRef = dbo.collection("usuarios").document(email);
@@ -368,7 +371,7 @@ public class UsuarioActivity extends AppCompatActivity implements View.OnClickLi
                     if (document.exists()) {
                         String valorNick = document.getString("nick");
                         if(valorNick != ""){
-                            nick.setText(document.getString("nick").toUpperCase());
+                            nick.setText("¡BIENVENIDO " + document.getString("nick").toUpperCase() + "!");
                         } else {
                             nick.setText("NICK NO INTRODUCIDO");
                         }

@@ -75,6 +75,19 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content" />
 
+    <Button
+        android:id="@+id/btDeleteTrat"
+        android:layout_width="match_parent"
+        android:layout_height="35dp"
+        android:background="@drawable/input_background"
+        android:elevation="5dp"
+        android:textColor="#882B16"
+        android:textStyle="normal"
+        app:backgroundTint="@android:color/holo_green_dark"
+        android:onClick="onClick"
+        android:text="Eliminar tratamiento" />
+
+
 
     <Space
         android:layout_width="wrap_content"

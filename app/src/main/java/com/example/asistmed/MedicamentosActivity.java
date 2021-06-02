@@ -22,6 +22,8 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
@@ -36,7 +38,7 @@ public class MedicamentosActivity extends AppCompatActivity {
     SharedPreferences shared;
     SharedPreferences.Editor editor;
     private TextView txtNombreTratamiento;
-    private Handler handler;
+    private Handler handler, handler2;
     private EditText etBuscadorMed;
 
     @Override
@@ -80,7 +82,7 @@ public class MedicamentosActivity extends AppCompatActivity {
     }
 
     private void llenarMedicamentos() {
-        //Traemos con shared preferences el nombre del tratamiento.
+        //Traemos con shared preferences el nombre del tratamiento y el usuario.
         shared = getSharedPreferences("Datos", Context.MODE_PRIVATE);
         String nombreTratamiento = shared.getString("nombreTratamiento", "");
         String usuario = shared.getString("Usuario", "");
@@ -103,6 +105,8 @@ public class MedicamentosActivity extends AppCompatActivity {
     public void onClick(View view) {
 
         switch (view.getId()) {
+            //Traemos con shared preferences el nombre del tratamiento y el usuario.
+
 
             case R.id.btnGridAddActualizar:
                 UtilidadesMedicamentos.visualizacion = UtilidadesMedicamentos.GRID;
@@ -117,6 +121,12 @@ public class MedicamentosActivity extends AppCompatActivity {
                 etBuscadorMed.setEnabled(true);
                 etBuscadorMed.setInputType(InputType.TYPE_CLASS_TEXT);
                 etBuscadorMed.setCursorVisible(true);
+                break;
+            case R.id.btDeleteTrat:
+                shared = getSharedPreferences("Datos", Context.MODE_PRIVATE);
+                String nombre = shared.getString("nombreTratamiento", "");
+                String user = shared.getString("Usuario", "");
+                eliminarTratamiento(nombre, user);
                 break;
 
         }
@@ -242,6 +252,37 @@ public class MedicamentosActivity extends AppCompatActivity {
             }
         };
         handler.postDelayed(r, 1000);
+    }
+
+    public void eliminarTratamiento(String nombreTrat, String email){
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+        db.collection("tratamientos").document(nombreTrat).collection("usuariosTratamientos").document(email)
+                .delete()
+                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void aVoid) {
+                        Toast toastUsuarioValido = Toast.makeText(getApplicationContext(), "Tratamiento eliminado.", Toast.LENGTH_SHORT);
+                        toastUsuarioValido.show();
+
+                        handler2 = new Handler();
+                        Runnable r2 = new Runnable() {
+                            public void run() {
+                                Intent intent = new Intent(getApplicationContext(), TratamientosActivity.class);
+                                startActivity(intent); // Lanzamos el activity
+                            }
+                        };
+                        handler2.postDelayed(r2, 2000);
+
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        //Log.w(TAG, "Error deleting document", e);
+                        Toast toastUsuarioValido = Toast.makeText(getApplicationContext(), "Fallo al eliminar.", Toast.LENGTH_LONG);
+                        toastUsuarioValido.show();
+                    }
+                });
     }
 
 }

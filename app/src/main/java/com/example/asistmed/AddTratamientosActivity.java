@@ -155,8 +155,8 @@ public class AddTratamientosActivity extends AppCompatActivity implements View.O
                         tratInsertados = insertarTratamientosElegidos(nombreTratamiento, emailUsuario);
                         ModificarTratamientosenUsuarios(emailUsuario);
 
-                        Toast.makeText(getApplicationContext(),
-                                "Tratamiento añadido",Toast.LENGTH_SHORT).show();
+                        //comprobarExistenciaTratEnUsuario(nombreTratamiento, emailUsuario);
+                        Toast.makeText(getApplicationContext(),"Tratamiento añadido",Toast.LENGTH_SHORT).show();
 
 //                        Toast.makeText(getApplicationContext(),
 //                                "Selección: "+ listaMedicamentos.get
@@ -267,6 +267,45 @@ public class AddTratamientosActivity extends AppCompatActivity implements View.O
                     }
                 });
 
+    }
+
+    public void comprobarExistenciaTratEnUsuario(String nombre, String email){
+        FirebaseFirestore dbc = FirebaseFirestore.getInstance();
+        DocumentReference docRef = dbc.collection("tratamientos").document(nombre);
+        docRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                if (task.isSuccessful()) {
+                    DocumentSnapshot document = task.getResult();
+                    if (document.exists()) {
+                        FirebaseFirestore dbc2 = FirebaseFirestore.getInstance();
+                        DocumentReference docRef2 = dbc2.collection("usuariosTratamientos").document(email);
+                        docRef2.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                            @Override
+                            public void onComplete(@NonNull Task<DocumentSnapshot> task2) {
+                                if (task2.isSuccessful()) {
+                                    DocumentSnapshot document2 = task2.getResult();
+                                    if (document2.exists()) {
+                                        Toast toastUsuarioNoValido = Toast.makeText(getApplicationContext(), "El usuario tiene el tratamiento.", Toast.LENGTH_LONG);
+                                        toastUsuarioNoValido.show();
+                                        //Log.d(TAG, "DocumentSnapshot data: " + document.getData());
+                                    } else {
+                                        //Log.d(TAG, "No such document");
+                                    }
+                                } else {
+                                    //Log.d(TAG, "get failed with ", task.getException());
+                                }
+                            }
+                        });
+                        //Log.d(TAG, "DocumentSnapshot data: " + document.getData());
+                    } else {
+                        //Log.d(TAG, "No such document");
+                    }
+                } else {
+                    //Log.d(TAG, "get failed with ", task.getException());
+                }
+            }
+        });
     }
 
     public void filtrar(String texto) {

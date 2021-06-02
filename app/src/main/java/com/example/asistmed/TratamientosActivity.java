@@ -7,7 +7,9 @@ import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -15,6 +17,7 @@ import android.os.Handler;
 import android.text.Editable;
 import android.text.InputType;
 import android.text.TextWatcher;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
@@ -115,8 +118,6 @@ public class TratamientosActivity extends AppCompatActivity implements View.OnCl
                 etBuscadorTrat.setEnabled(true);
                 etBuscadorTrat.setInputType(InputType.TYPE_CLASS_TEXT);
                 etBuscadorTrat.setCursorVisible(true);
-
-
                 break;
             case R.id.btAddNuevoT:
                 Intent intentNewT = new Intent(getApplicationContext(), AddTratamientosActivity.class);

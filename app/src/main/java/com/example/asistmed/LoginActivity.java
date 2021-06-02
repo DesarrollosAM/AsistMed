@@ -94,6 +94,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         ivSalir = findViewById(R.id.ivSalir);
 
 
+
         //Asignación del evento click
         btAcceso.setOnClickListener(this);
         btAccederGoogle.setOnClickListener(this);
