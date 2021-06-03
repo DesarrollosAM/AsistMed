@@ -4,10 +4,13 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.app.AlarmManager;
+import android.app.AlertDialog;
 import android.app.PendingIntent;
 import android.content.BroadcastReceiver;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Environment;
@@ -19,6 +22,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.CompoundButton;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Switch;
 import android.widget.TextView;
@@ -36,6 +40,8 @@ public class AdaptadorMedicamentos
         implements View.OnClickListener {
 
     //Declaramos las variables necesarias.
+    private SharedPreferences shared;
+    private SharedPreferences.Editor editor;
     private Context contexto;
     private ArrayList<Medicamentos> listaMedicamentos;
     private View.OnClickListener listener;
@@ -52,12 +58,14 @@ public class AdaptadorMedicamentos
         View view = null;
 
         try{
+
         if (UtilidadesMedicamentos.visualizacion == UtilidadesMedicamentos.LIST) {
             layout = R.layout.item_list_medicamentos;
 
         } else {
             layout = R.layout.item_grid_medicamentos;
         }
+
 
         view = LayoutInflater.from(parent.getContext()).inflate(layout, null, false);
 
@@ -81,21 +89,41 @@ public class AdaptadorMedicamentos
         if (UtilidadesMedicamentos.visualizacion == UtilidadesMedicamentos.LIST) {
             holder.etiInformacion.setText(listaMedicamentos.get(position).getInfo());
 
-            holder.activarAlarma.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-                public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                    if (isChecked) {
-                        //TODO: cargar un diálogo que pregunte la hora a la que poner la alarma. Y ponerla con la frecuencia necesaria
-                        int hora = 14;
-                        int minutos = 00;
-                        int cantidad = listaMedicamentos.get(position).getCantidad();
-                        int frecuencia = listaMedicamentos.get(position).getFrecuencia();
-                        String mensaje = "Le toca tomar " + cantidad + " dosis de " + listaMedicamentos.get(position).getNombre() + ". ";
-                        activarAlarma(mensaje, hora, minutos, contexto, position, frecuencia);
-                    } else {
+            holder.reloj.setOnClickListener(new View.OnClickListener()
+            {
+                @Override
+                public void onClick(View v)
+                {
+                    //TODO: cargar un diálogo que pregunte la hora a la que poner la alarma. Y ponerla con la frecuencia necesaria
+                    int hora = 14;
+                    int minutos = 00;
+                    int cantidad = listaMedicamentos.get(position).getCantidad();
+                    int frecuencia = listaMedicamentos.get(position).getFrecuencia();
+                    String mensaje = "Le toca tomar " + cantidad + " dosis de " + listaMedicamentos.get(position).getNombre() + ". ";
 
-                    }
+                    shared = contexto.getApplicationContext().getSharedPreferences("Datos", Context.MODE_PRIVATE);
+                    editor = shared.edit();
+
+                    //Utilizamos el editor para guardar la variable dato recogida del EditText Usuario en la clave "Usuario" de nuestro archivo Shared que hemos llamado "Datos"
+                    editor.putString("mensaje", mensaje);
+                    editor.putInt("frecuencia", frecuencia);
+                    editor.commit();
+
+                    Intent intentA = new Intent(contexto.getApplicationContext(), AlarmaActivity.class);
+                    startActivity(contexto, intentA, null);
+                    //activarAlarma(mensaje, hora, minutos, contexto, position, frecuencia);
                 }
             });
+
+//            holder.activarAlarma.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+//                public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+//                    if (isChecked) {
+//
+//                    } else {
+//
+//                    }
+//                }
+//            });
             }
 
             holder.foto.setImageResource(listaMedicamentos.get(position).getFotoInicial());
@@ -121,14 +149,15 @@ public class AdaptadorMedicamentos
     public class ViewHolderMedicamentos extends RecyclerView.ViewHolder {
 
         TextView etiNombre, etiInformacion;
-        ImageView foto;
+        ImageView foto, reloj;
         Switch activarAlarma;
-
+        Context contextAlarma;
 
         public ViewHolderMedicamentos(View itemView) {
             super(itemView);
             contexto = itemView.getContext();
-            activarAlarma = (Switch) itemView.findViewById(R.id.swActivarAlarma);
+            //activarAlarma = (Switch) itemView.findViewById(R.id.swActivarAlarma);
+            reloj = (ImageView)itemView.findViewById(R.id.btActivarAlarma);
             etiNombre = (TextView) itemView.findViewById(R.id.idNombre);
             if (UtilidadesMedicamentos.visualizacion == UtilidadesMedicamentos.LIST) {
                 etiInformacion = (TextView) itemView.findViewById(R.id.idInfo);
@@ -142,21 +171,6 @@ public class AdaptadorMedicamentos
         this.listaMedicamentos = filtroMedicamentos;
         notifyDataSetChanged();
     }
-
-//    public File hacerFoto(String nombreMedicamento, Context contexto, int position) {
-//
-//        Intent camera = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-//        File foto = new File("drawable", nombreMedicamento + "Imagen.jpg");
-//        camera.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(foto));
-//        startActivity(contexto, camera, null);
-//
-////        Intent med = new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE);
-////        Uri u = Uri.fromFile(foto);
-////        med.setData(u);
-////        contexto.sendBroadcast(med);
-//
-//        return foto;
-//    }
 
     private void activarAlarma(String mensaje, int hora, int minutos, Context contexto, int position, int frecuencia) {
 
@@ -212,9 +226,11 @@ public class AdaptadorMedicamentos
 //
 //        @Override
 //        public void onReceive(Context context, Intent intent) {
+    //Lanzar nuevo activity
 //            Toast.makeText(context,"AlarmReceiver called",Toast.LENGTH_SHORT).show();
 //            Log.d(TAG, "onReceive: called ");
 //        }
 //    }
+
 }
 
