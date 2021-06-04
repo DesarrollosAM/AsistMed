@@ -229,6 +229,15 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                 String nick = account.getDisplayName();
                 insertarUsuarioenBBDD(emailGoogle, nick);
 
+                //Instanciamos Shared, abrimos fichero "Datos" con acceso en modo privado y abrimos editor
+
+                shared = getApplicationContext().getSharedPreferences("Datos", Context.MODE_PRIVATE);
+                editor = shared.edit();
+
+                //Utilizamos el editor para guardar el email de acceso.
+                editor.putString("Usuario", emailGoogle);
+                editor.commit();
+
                 Log.d(TAG, "firebaseAuthWithGoogle:" + account.getId());
                 firebaseAuthWithGoogle(account.getIdToken());
             } catch (ApiException e) {

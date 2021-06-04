@@ -279,9 +279,13 @@ public class AdministradorActivity extends AppCompatActivity implements View.OnC
                                 Toast camposVacios = Toast.makeText(AdministradorActivity.this, "Debe rellenar todos los campos.", Toast.LENGTH_LONG);
                                 camposVacios.show();
                             } else {
+
+                                //Pasamos a mayúscula la primera letra del tratamiento.
+                                String t = nombre.getText().toString().toLowerCase();
+                                String tratamiento = t.substring(0,1).toUpperCase() + t.substring(1);
                                 //Al aceptar, capturamos los valores introducidos y los usamos como parámetros para llamar al método insertar
-                                insertarTratamiento(nombre.getText().toString(), duracion.getText().toString());
-                                colocarUsuariosTratamientos(nombre.getText().toString());
+                                insertarTratamiento(tratamiento, duracion.getText().toString());
+                                colocarUsuariosTratamientos(tratamiento);
                             }
                         }
                     })
@@ -379,8 +383,12 @@ public class AdministradorActivity extends AppCompatActivity implements View.OnC
                                 camposVacios.show();
                             } else {
 
+                                //Pasamos a mayúscula la primera letra del tratamiento.
+                                String t = nombreTrat.getText().toString().toLowerCase();
+                                String tratamiento = t.substring(0,1).toUpperCase() + t.substring(1);
+
                                 //Si lo están, capturamos los valores introducidos y los usamos como parámetros para llamar al método insertar
-                                insertarMedicamento(nombreTrat.getText().toString(), nombreMed.getText().toString(),
+                                insertarMedicamento(tratamiento, nombreMed.getText().toString(),
                                         cantidad_diaria.getText().toString(), frecuencia.getText().toString(), descripcion.getText().toString());
                             }
                         }
