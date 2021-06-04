@@ -52,7 +52,7 @@
             android:id="@+id/idAlarma"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="200dp"
+            android:layout_marginLeft="150dp"
             android:text="\n\t\tActivar Alarma -->"
             android:textStyle="bold|italic" />
 
