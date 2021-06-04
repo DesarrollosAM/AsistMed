@@ -64,7 +64,7 @@
             android:configChanges="orientation|screenSize"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".PruebasAlberto"
+            android:name=".AlarmaActivity"
             android:configChanges="orientation|screenSize"
             android:screenOrientation="portrait" />
         <activity

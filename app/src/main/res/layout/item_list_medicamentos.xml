@@ -35,8 +35,8 @@
                 android:id="@+id/idInfo"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginRight="10dp"
-                android:layout_marginBottom="15dp"
+                android:layout_marginRight="5dp"
+                android:layout_marginBottom="5dp"
                 android:text="Descripcion " />
 
         </LinearLayout>
@@ -45,15 +45,26 @@
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="28dp"
+        android:layout_height="48dp"
         android:orientation="horizontal">
 
-        <Switch
-            android:id="@+id/swActivarAlarma"
-            android:layout_width="150dp"
+        <TextView
+            android:id="@+id/idAlarma"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="                                                                              Activar Alarma" />
+            android:layout_marginLeft="200dp"
+            android:text="\n\t\tActivar Alarma -->"
+            android:textStyle="bold|italic" />
+
+        <ImageView
+            android:id="@+id/btActivarAlarma"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:layout_gravity="right"
+            android:layout_marginLeft="10dp"
+            android:src="@drawable/icono_alarma_roja" />
+
+
     </LinearLayout>
 
     <TextView
@@ -64,3 +75,5 @@
         android:background="@color/teal_700" />
 
 </LinearLayout>
+
+

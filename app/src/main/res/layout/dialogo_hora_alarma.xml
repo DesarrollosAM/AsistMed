@@ -1,0 +1,56 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="#8698EF"
+    android:orientation="vertical">
+
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="64dp"
+        android:background="#FFFFFF"
+        android:contentDescription="@string/app_name"
+        android:scaleType="center"
+        android:src="@drawable/icono_dialogo_alarma" />
+
+    <TextView
+        android:id="@+id/txtAlarma"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="4dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginRight="4dp"
+        android:layout_marginBottom="4dp"
+        android:background="@drawable/input_background"
+        android:gravity="center_horizontal"
+        android:inputType="text"
+        android:text="FIJAR HORA DE LA ALARMA"
+        android:textAlignment="center"
+        android:textSize="24sp"
+        android:textStyle="bold" />
+
+    <EditText
+        android:id="@+id/edtHora"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="4dp"
+        android:layout_marginTop="4dp"
+        android:layout_marginRight="4dp"
+        android:layout_marginBottom="16dp"
+        android:backgroundTint="@color/white"
+        android:fontFamily="sans-serif"
+        android:hint="Inserte la hora (00-23)"
+        android:inputType="number" />
+
+    <EditText
+        android:id="@+id/edtMinutos"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="4dp"
+        android:layout_marginTop="4dp"
+        android:layout_marginRight="4dp"
+        android:layout_marginBottom="16dp"
+        android:backgroundTint="@color/white"
+        android:fontFamily="sans-serif"
+        android:hint="Inserte los minutos (00-59)"
+        android:inputType="number" />
+</LinearLayout>
