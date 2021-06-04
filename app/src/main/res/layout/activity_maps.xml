@@ -13,7 +13,7 @@
         android:layout_height="match_parent"
         tools:context=".MapsActivity"
         tools:layout_editor_absoluteX="0dp"
-        tools:layout_editor_absoluteY="-91dp" />
+        tools:layout_editor_absoluteY="-81dp" />
 
     <ImageView
         android:id="@+id/btSatelite"
@@ -24,18 +24,23 @@
         android:layout_marginBottom="676dp"
         android:src="@drawable/boton_satelite_transparente"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent" />
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/map"
+        app:layout_constraintVertical_bias="0.878" />
 
     <ImageView
         android:id="@+id/btVistaNormal"
         android:layout_width="82dp"
         android:layout_height="92dp"
+        android:layout_marginTop="80dp"
         android:layout_marginEnd="60dp"
         android:layout_marginRight="60dp"
         android:layout_marginBottom="648dp"
         android:src="@drawable/boton_google_maps"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent" />
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.494" />
 
     <ImageView
         android:id="@+id/btVolverMaps"

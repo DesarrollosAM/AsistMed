@@ -92,33 +92,7 @@ public class UsuarioActivity extends AppCompatActivity implements View.OnClickLi
 
 
         obtenerNick(emailRecogido, txtUsuario);
-        //txtUsuario.setText(emailRecogido);
 
-        //Se introducen estas líneas para no tener problemas a la hora de utilizar
-        //la sd externa
-        //otra solución es usar FileProvider
-//        StrictMode.VmPolicy.Builder builder = new StrictMode.VmPolicy.Builder();
-//        StrictMode.setVmPolicy(builder.build());
-//
-//        btFoto.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                Intent intento1 = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-//                File foto = new File(getExternalFilesDir(null), etNombreFoto.getText().toString());
-//                intento1.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(foto));
-//                startActivity(intento1);
-//            }
-//        });
-
-
-//        swAlarma.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//
-//                activarAlarma("¡Probando alarmas!", 14, 30);
-//
-//            }
-//        });
 
         //Asignación del evento click
         btAsistente.setOnClickListener(this);
@@ -191,7 +165,7 @@ public class UsuarioActivity extends AppCompatActivity implements View.OnClickLi
 
             FirebaseAuth.getInstance().signOut();
 
-/////////////////////////////////////Retrasamos el cierre de la aplicación 2 seg para que se pueda completar el cierre de sesión en FirebaseAucth, ya que es asíncrona.
+            /////////////////////////////////////Retrasamos el cierre de la aplicación 2 seg para que se pueda completar el cierre de sesión en FirebaseAucth, ya que es asíncrona.
             handler = new Handler();
             Runnable r = new Runnable() {
                 public void run() {
@@ -205,16 +179,6 @@ public class UsuarioActivity extends AppCompatActivity implements View.OnClickLi
 ///////////////////////////////////
 
 
-//        } else if (view.getId() == R.id.ivMute) {
-//            mpCanon.pause();
-//            btMute.setVisibility(View.INVISIBLE);
-//            btConSonido.setVisibility(View.VISIBLE);
-//
-//        } else if (view.getId() == R.id.ivConSonido) {
-//            mpCanon.start();
-//            btConSonido.setVisibility(View.INVISIBLE);
-//            btMute.setVisibility(View.VISIBLE);
-//
         } else if (view.getId() == R.id.btLectorCodigos) {
             //String idDocumento = "4V5Lr6e1WJK5ZkHzhUOy";
             ////eliminarUsuarioPorID(idDocumento);
@@ -234,10 +198,7 @@ public class UsuarioActivity extends AppCompatActivity implements View.OnClickLi
 
         }else if (view.getId() == R.id.btInicio) {
 
-            //shared.edit().remove("Usuario").commit();//Eliminamos de las Shared la key de usuario para que vuelva a coger su valor al volver de nuevo al Activity
 
-//            editor = shared.edit();
-//            editor.clear().apply();
               mAuth.signOut();
 
             /////////////////////////////////////Retrasamos el cierre de la aplicación 2 seg para que se pueda completar el cierre de sesión en FirebaseAucth, ya que es asíncrona.
@@ -251,7 +212,7 @@ public class UsuarioActivity extends AppCompatActivity implements View.OnClickLi
                 }
             };
             handler.postDelayed(r, 2000);
-///////////////////////////////////
+            ///////////////////////////////////
 
 
          }

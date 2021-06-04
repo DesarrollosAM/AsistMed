@@ -53,6 +53,8 @@ public class AdministradorActivity extends AppCompatActivity implements View.OnC
         int uiOptions = View.SYSTEM_UI_FLAG_IMMERSIVE | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION | View.SYSTEM_UI_FLAG_FULLSCREEN;
         decorView.setSystemUiVisibility(uiOptions);
 
+
+        //Rescatamos elementos
         btnAddMed = (Button) findViewById(R.id.btnAddMed);
         btnAddTrat = (Button) findViewById(R.id.btnAddTrat);
         btnModMed = (Button) findViewById(R.id.btnModMed);
@@ -60,6 +62,7 @@ public class AdministradorActivity extends AppCompatActivity implements View.OnC
         btnRegresarLogin = (Button) findViewById(R.id.btAdminSalir);
         btnSalir = (Button) findViewById(R.id.btInicio);
 
+        //Asignamos el evento click
         btnModTrat.setOnClickListener(this);
         btnModMed.setOnClickListener(this);
         btnAddTrat.setOnClickListener(this);
@@ -67,18 +70,18 @@ public class AdministradorActivity extends AppCompatActivity implements View.OnC
         btnRegresarLogin.setOnClickListener(this);
         btnSalir.setOnClickListener(this);
 
-
+        //Instanciamos FirebaseAuth
         mAuth = FirebaseAuth.getInstance();
 
         //Recogemos el usuario que hemos guardado en nuestro fichero de Shared llamado "Datos"
 
-
+        //Rescatamos de Sharedpreferences la key usuario
         shared = getSharedPreferences("Datos", Context.MODE_PRIVATE);
         String emailRecogido = shared.getString("Usuario", "");
 
         txtUsuario = (TextView) findViewById(R.id.txtUsuarioActivo);
 
-
+        //Seteamos la key recogida de las Shared en el textview
         txtUsuario.setText(emailRecogido);
 
     }
@@ -106,8 +109,9 @@ public class AdministradorActivity extends AppCompatActivity implements View.OnC
 
                 case R.id.btInicio:
 
+                    //Cerramos sesión
                     FirebaseAuth.getInstance().signOut();
-                    /////////////////////////////////////
+                    /////////////////////////////////////Retrasamos el intent 2 segundos para asegurarnos al pasar al Ac
                     handler = new Handler();
                     Runnable ru = new Runnable() {
                         public void run() {
@@ -116,7 +120,7 @@ public class AdministradorActivity extends AppCompatActivity implements View.OnC
                         }
                     };
                     handler.postDelayed(ru, 2000);
-///////////////////////////////////
+                    ///////////////////////////////////
 
 
                     break;
