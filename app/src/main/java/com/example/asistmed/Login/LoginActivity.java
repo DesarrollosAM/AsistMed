@@ -2,6 +2,7 @@ package com.example.asistmed.Login;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -75,7 +76,6 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     private static final String TAG = "SignInActicity";
 
 
-
     @Override
     public void onStart() {
         super.onStart();
@@ -103,7 +103,6 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
 
         //Cargamos la referencia de nuestro botón sobre una ImageView
         ivSalir = findViewById(R.id.ivSalir);
-
 
 
         //Asignación del evento click
@@ -149,20 +148,20 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         if ((view.getId() == R.id.btAcceder)) //Si pulsamos el botón Acceder
         {
 
-            if (validaEmail() && validaPassword()){ //Llamamos a los métodos que validan email y password y si son true...
+            if (validaEmail() && validaPassword()) { //Llamamos a los métodos que validan email y password y si son true...
 
                 //Con la instancia de FirebaseAuth le pasamos al método de login, email y contraseña
-                mAuth.signInWithEmailAndPassword(email, password).addOnCompleteListener(this,new OnCompleteListener<AuthResult>() {
+                mAuth.signInWithEmailAndPassword(email, password).addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if (task.isSuccessful()) { //Si la tarea se completa con exito
 
-                                updateUI(mAuth.getCurrentUser()); //Llamamos al método para actualizar UI pasando el user correspondiente
+                            updateUI(mAuth.getCurrentUser()); //Llamamos al método para actualizar UI pasando el user correspondiente
 
                         } else {//Si el proceso de login no se completa, informamos con un Toast al usuario
 
-                            Toast toast= Toast.makeText(getApplicationContext(), "El email " + email + " no está registrado o la contraseña es incorrecta", Toast.LENGTH_LONG);
-                            toast.setGravity(Gravity.TOP|Gravity.CENTER_HORIZONTAL, 0, 500);
+                            Toast toast = Toast.makeText(getApplicationContext(), "El email " + email + " no está registrado o la contraseña es incorrecta", Toast.LENGTH_LONG);
+                            toast.setGravity(Gravity.TOP | Gravity.CENTER_HORIZONTAL, 0, 500);
                             toast.show();
 
                         }
@@ -171,31 +170,31 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
 
             }
 
-        }else if ((view.getId() == R.id.tvRegistrarme)) { //Si pulsamos el texto para Registrarse lanzamos intent a RegistroActivity
+        } else if ((view.getId() == R.id.tvRegistrarme)) { //Si pulsamos el texto para Registrarse lanzamos intent a RegistroActivity
 
             //Instanciamos un objeto Intent, pasandole con this el Activity actual, y como segundo parametro el Activity que vamos a cargar
             Intent intent = new Intent(getApplicationContext(), RegistroActivity.class);
             startActivity(intent); // Lanzamos el activity
 
-        }else if ((view.getId() == R.id.tvContrasenaOlvidada)) { //Si pulsamos el texto de contraseña olvidada lanzamos intent al Activity correspondiente
+        } else if ((view.getId() == R.id.tvContrasenaOlvidada)) { //Si pulsamos el texto de contraseña olvidada lanzamos intent al Activity correspondiente
 
             //Instanciamos un objeto Intent, pasandole con this el Activity actual, y como segundo parametro el Activity que vamos a cargar
             Intent intent = new Intent(getApplicationContext(), RecuperarContrasenaActivity.class);
             startActivity(intent); // Lanzamos el activity
 
-        }else if ((view.getId() == R.id.tvContacto)) { //Si pulsamos en contacto, lanzamos el intent correspondiente
+        } else if ((view.getId() == R.id.tvContacto)) { //Si pulsamos en contacto, lanzamos el intent correspondiente
 
             //Instanciamos un objeto Intent, pasandole con this el Activity actual, y como segundo parametro el Activity que vamos a cargar
             Intent intent = new Intent(getApplicationContext(), CorreoActivity.class);
             startActivity(intent); // Lanzamos el activity
 
-        }else if ((view.getId() == R.id.ivSalir)) { //Si pulsamos el imageview con el botón de salir, finalizaremos app
+        } else if ((view.getId() == R.id.ivSalir)) { //Si pulsamos el imageview con el botón de salir, finalizaremos app
 
             finish();
             finishAffinity();
             System.exit(0);
 
-        }else   { //Recogemos la pulsación en el botón Accceder con Google
+        } else { //Recogemos la pulsación en el botón Accceder con Google
 
 
             signIn(); //Llamamos al método que procedera a logar al usuario con la cuenta de google
@@ -246,17 +245,18 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
             }
         }
     }
-    private boolean validaEmail(){
+
+    private boolean validaEmail() {
 
         email = email.trim();
 
-        if (email.isEmpty()){//Si el campo de correo está vacío.
-            Toast toast= Toast.makeText(getApplicationContext(), "Introduzca correo electrónico", Toast.LENGTH_SHORT);
-            toast.setGravity(Gravity.TOP|Gravity.CENTER_HORIZONTAL, 0, 500);
+        if (email.isEmpty()) {//Si el campo de correo está vacío.
+            Toast toast = Toast.makeText(getApplicationContext(), "Introduzca correo electrónico", Toast.LENGTH_SHORT);
+            toast.setGravity(Gravity.TOP | Gravity.CENTER_HORIZONTAL, 0, 500);
             toast.show();
-        } else if (!PATRON_VALIDA_CORREO.matcher(email).find()){//Si no está vacio, comprobamos con el patrón para validarlo
-            Toast toast= Toast.makeText(getApplicationContext(), "Introduzca un correo válido", Toast.LENGTH_SHORT);
-            toast.setGravity(Gravity.TOP|Gravity.CENTER_HORIZONTAL, 0, 500);
+        } else if (!PATRON_VALIDA_CORREO.matcher(email).find()) {//Si no está vacio, comprobamos con el patrón para validarlo
+            Toast toast = Toast.makeText(getApplicationContext(), "Introduzca un correo válido", Toast.LENGTH_SHORT);
+            toast.setGravity(Gravity.TOP | Gravity.CENTER_HORIZONTAL, 0, 500);
             toast.show();
         } else {
 
@@ -266,15 +266,15 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     }
 
 
-    private boolean validaPassword(){
+    private boolean validaPassword() {
         password = password.trim();
-        if (password.isEmpty()){//Si el campo de contraseña está vacío
-            Toast toast= Toast.makeText(getApplicationContext(), "Introduzca Contraseña", Toast.LENGTH_SHORT);
-            toast.setGravity(Gravity.TOP|Gravity.CENTER_HORIZONTAL, 0, 500);
+        if (password.isEmpty()) {//Si el campo de contraseña está vacío
+            Toast toast = Toast.makeText(getApplicationContext(), "Introduzca Contraseña", Toast.LENGTH_SHORT);
+            toast.setGravity(Gravity.TOP | Gravity.CENTER_HORIZONTAL, 0, 500);
             toast.show();
-        } else if (password.length() < 8){//Si no está vacio, pero tiene menos de 8 caracteres
-            Toast toast= Toast.makeText(getApplicationContext(), "La Contraseña debe tener al menos 8 caracteres", Toast.LENGTH_SHORT);
-            toast.setGravity(Gravity.TOP|Gravity.CENTER_HORIZONTAL, 0, 500);
+        } else if (password.length() < 8) {//Si no está vacio, pero tiene menos de 8 caracteres
+            Toast toast = Toast.makeText(getApplicationContext(), "La Contraseña debe tener al menos 8 caracteres", Toast.LENGTH_SHORT);
+            toast.setGravity(Gravity.TOP | Gravity.CENTER_HORIZONTAL, 0, 500);
             toast.show();
         } else {//Si no está vacio y tiene más de 8 caratenes, lo validamos retornando true
             return true;
@@ -283,13 +283,13 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     }
 
     //Change UI according to user data.
-    public void updateUI(FirebaseUser user){
+    public void updateUI(FirebaseUser user) {
 
-        if(user != null) {
+        if (user != null) {
 
             email = user.getEmail();
 
-            if((user != null) && (email.equals("numerocolegiado@asistmed.com"))){
+            if ((user != null) && (email.equals("numerocolegiado@asistmed.com"))) {
 
                 //Instanciamos Shared, abrimos fichero "Datos" con acceso en modo privado y abrimos editor
 
@@ -301,8 +301,6 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                 editor.commit();
 
 
-
-
 //                Toast toast= Toast.makeText(getApplicationContext(), "Sesión inciada como " + email, Toast.LENGTH_LONG);
 //                toast.setGravity(Gravity.TOP|Gravity.CENTER_HORIZONTAL, 0, 500);
 //                toast.show();
@@ -312,8 +310,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                 startActivity(new Intent(this, AdministradorActivity.class));
 
 
-
-            }else if((user != null) && (!email.equals("numerocolegiado@asistmed.com"))){
+            } else if ((user != null) && (!email.equals("numerocolegiado@asistmed.com"))) {
 
                 //Instanciamos Shared, abrimos fichero "Datos" con acceso en modo privado y abrimos editor
 
@@ -337,7 +334,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
 
         }
 
-        if (user == null){
+        if (user == null) {
 
 //            Toast toast= Toast.makeText(getApplicationContext(), "No hay sesión iniciada", Toast.LENGTH_SHORT);
 //            toast.setGravity(Gravity.TOP|Gravity.CENTER_HORIZONTAL, 0, 500);
@@ -366,7 +363,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                 });
     }
 
-    public void insertarUsuarioenBBDD(String usuario, String nick){
+    public void insertarUsuarioenBBDD(String usuario, String nick) {
         //Inserción en Firestore:
         FirebaseFirestore dbs = FirebaseFirestore.getInstance();
 
@@ -376,6 +373,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         user.put("password", "password automatico de Google");
         user.put("nick", nick);
         user.put("tratamiento", "no");
+        user.put("cantidadTratamientos", "0");
 
         dbs.collection("usuarios").document(usuario)
                 .set(user)
@@ -394,7 +392,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                 });
     }
 
-    public void comprobarUsuarioGoogleEnBBDD(String emailGoogle, String nick){
+    public void comprobarUsuarioGoogleEnBBDD(String emailGoogle, String nick) {
         FirebaseFirestore dbcu = FirebaseFirestore.getInstance();
         DocumentReference docRefcu = dbcu.collection("usuarios").document(emailGoogle);
         docRefcu.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {

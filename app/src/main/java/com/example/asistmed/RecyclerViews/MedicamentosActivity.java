@@ -27,11 +27,16 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
+import com.google.firebase.firestore.SetOptions;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 public class MedicamentosActivity extends AppCompatActivity {
 
@@ -52,7 +57,7 @@ public class MedicamentosActivity extends AppCompatActivity {
         int uiOptions = View.SYSTEM_UI_FLAG_IMMERSIVE | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION | View.SYSTEM_UI_FLAG_FULLSCREEN;
         decorView.setSystemUiVisibility(uiOptions);
 
-        txtNombreTratamiento = (TextView)findViewById(R.id.txtNombreTratamiento);
+        txtNombreTratamiento = (TextView) findViewById(R.id.txtNombreTratamiento);
         shared = getSharedPreferences("Datos", Context.MODE_PRIVATE);
         String nombreTratamiento = shared.getString("nombreTratamiento", "");
         String duracionTratamiento = shared.getString("duracionTratamiento", "");
@@ -76,7 +81,6 @@ public class MedicamentosActivity extends AppCompatActivity {
                 filtrar(s.toString());
             }
         });
-
 
 
         construirRecycler();
@@ -215,8 +219,8 @@ public class MedicamentosActivity extends AppCompatActivity {
     public void filtrar(String texto) {
         ArrayList<Medicamentos> filtrarLista = new ArrayList<>();
         AdaptadorMedicamentos adaptador = new AdaptadorMedicamentos(listaMedicamentos);
-        for(Medicamentos med : listaMedicamentos) {
-            if(med.getNombre().toLowerCase().contains(texto.toLowerCase())) {
+        for (Medicamentos med : listaMedicamentos) {
+            if (med.getNombre().toLowerCase().contains(texto.toLowerCase())) {
                 filtrarLista.add(med);
             }
         }
@@ -256,7 +260,7 @@ public class MedicamentosActivity extends AppCompatActivity {
         handler.postDelayed(r, 1000);
     }
 
-    public void eliminarTratamiento(String nombreTrat, String email){
+    public void eliminarTratamiento(String nombreTrat, String email) {
         FirebaseFirestore db = FirebaseFirestore.getInstance();
         db.collection("tratamientos").document(nombreTrat).collection("usuariosTratamientos").document(email)
                 .delete()
@@ -269,6 +273,7 @@ public class MedicamentosActivity extends AppCompatActivity {
                         handler2 = new Handler();
                         Runnable r2 = new Runnable() {
                             public void run() {
+                                restarTratamientoEnBBDD(email);
                                 Intent intent = new Intent(getApplicationContext(), TratamientosActivity.class);
                                 startActivity(intent); // Lanzamos el activity
                             }
@@ -283,6 +288,87 @@ public class MedicamentosActivity extends AppCompatActivity {
                         //Log.w(TAG, "Error deleting document", e);
                         Toast toastUsuarioValido = Toast.makeText(getApplicationContext(), "Fallo al eliminar.", Toast.LENGTH_LONG);
                         toastUsuarioValido.show();
+                    }
+                });
+    }
+
+    public void restarTratamientoEnBBDD(String email) {
+        FirebaseFirestore dbs = FirebaseFirestore.getInstance();
+        DocumentReference docRefs = dbs.collection("usuarios").document(email);
+        docRefs.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                if (task.isSuccessful()) {
+                    DocumentSnapshot document = task.getResult();
+                    if (document.exists()) {
+                        int cantidad = Integer.parseInt(document.getString("cantidadTratamientos"));
+                        if (cantidad > 1) {
+                            int suma = cantidad - 1;
+                            actualizarCantidadTratamientosEnBBDD(email, suma);
+                            //Log.d(TAG, "DocumentSnapshot data: " + document.getData());
+                        } else if (cantidad == 1) {
+                            int suma = cantidad - 1;
+                            actualizarCantidadTratamientosEnBBDD(email, suma);
+                            cambiarTratUsuarioEnNo(email);
+                        }
+
+                    } else {
+                        //Log.d(TAG, "No such document");
+                    }
+                } else {
+                    //Log.d(TAG, "get failed with ", task.getException());
+                }
+            }
+        });
+    }
+
+    public void actualizarCantidadTratamientosEnBBDD(String email, int cantidad) {
+
+        String total = "" + cantidad;
+        FirebaseFirestore dba = FirebaseFirestore.getInstance();
+
+        // Create a new user with a first and last name
+        Map<String, Object> user = new HashMap<>();
+        user.put("cantidadTratamientos", total);
+
+        // Add a new document with a generated ID
+        dba.collection("usuarios").document(email)
+                .set(user, SetOptions.merge())
+                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void avoid) {
+                        //Log.d(TAG, "DocumentSnapshot added with ID: " + documentReference.getId());
+                        //documentReference.set("usuario" + siguienteUsuario);
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        //Log.w(TAG, "Error adding document", e);
+                    }
+                });
+    }
+
+    public void cambiarTratUsuarioEnNo(String email) {
+        FirebaseFirestore dba = FirebaseFirestore.getInstance();
+
+        // Create a new user with a first and last name
+        Map<String, Object> user = new HashMap<>();
+        user.put("tratamiento", "no");
+
+        // Add a new document with a generated ID
+        dba.collection("usuarios").document(email)
+                .set(user, SetOptions.merge())
+                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void avoid) {
+                        //Log.d(TAG, "DocumentSnapshot added with ID: " + documentReference.getId());
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        //Log.w(TAG, "Error adding document", e);
                     }
                 });
     }

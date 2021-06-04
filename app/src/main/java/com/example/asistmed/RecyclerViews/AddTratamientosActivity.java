@@ -225,6 +225,7 @@ public class AddTratamientosActivity extends AppCompatActivity implements View.O
         trat.put("email", usuario);
         FirebaseFirestore db = FirebaseFirestore.getInstance();
         db.collection("tratamientos").document(nombreTratamiento).collection("usuariosTratamientos").document(usuario).set(trat);
+        sumarTratamientoEnBBDD(usuario);
         Toast.makeText(getApplicationContext(), "Tratamiento añadido", Toast.LENGTH_LONG).show();
         return insertado;
     }
@@ -365,6 +366,56 @@ public class AddTratamientosActivity extends AppCompatActivity implements View.O
                 }
             }
         });
+    }
+
+    public void sumarTratamientoEnBBDD(String email) {
+        FirebaseFirestore dbs = FirebaseFirestore.getInstance();
+        DocumentReference docRefs = dbs.collection("usuarios").document(email);
+        docRefs.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                if (task.isSuccessful()) {
+                    DocumentSnapshot document = task.getResult();
+                    if (document.exists()) {
+                        int cantidad = Integer.parseInt(document.getString("cantidadTratamientos"));
+                        int suma = cantidad + 1;
+                        actualizarCantidadTratamientosEnBBDD(email, suma);
+                        //Log.d(TAG, "DocumentSnapshot data: " + document.getData());
+                    } else {
+                        //Log.d(TAG, "No such document");
+                    }
+                } else {
+                    //Log.d(TAG, "get failed with ", task.getException());
+                }
+            }
+        });
+    }
+
+    public void actualizarCantidadTratamientosEnBBDD(String email, int cantidad) {
+
+        String total = "" + cantidad;
+        FirebaseFirestore dba = FirebaseFirestore.getInstance();
+
+        // Create a new user with a first and last name
+        Map<String, Object> user = new HashMap<>();
+        user.put("cantidadTratamientos", total);
+
+        // Add a new document with a generated ID
+        dba.collection("usuarios").document(email)
+                .set(user, SetOptions.merge())
+                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void avoid) {
+                        //Log.d(TAG, "DocumentSnapshot added with ID: " + documentReference.getId());
+                        //documentReference.set("usuario" + siguienteUsuario);
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        //Log.w(TAG, "Error adding document", e);
+                    }
+                });
     }
 
 

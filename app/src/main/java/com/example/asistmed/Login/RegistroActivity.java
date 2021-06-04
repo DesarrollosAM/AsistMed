@@ -220,6 +220,7 @@ public class RegistroActivity extends AppCompatActivity implements View.OnClickL
         user.put("password", contraseña);
         user.put("nick", nick);
         user.put("tratamiento", "no");
+        user.put("cantidadTratamientos", "0");
 
         dbs.collection("usuarios").document(usuario)
                 .set(user)
