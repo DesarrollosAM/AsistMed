@@ -32,6 +32,8 @@ import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.GoogleAuthProvider;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.HashMap;
@@ -227,13 +229,11 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
 
                 String emailGoogle = account.getEmail();
                 String nick = account.getDisplayName();
-                insertarUsuarioenBBDD(emailGoogle, nick);
+                comprobarUsuarioGoogleEnBBDD(emailGoogle, nick);
 
                 //Instanciamos Shared, abrimos fichero "Datos" con acceso en modo privado y abrimos editor
-
                 shared = getApplicationContext().getSharedPreferences("Datos", Context.MODE_PRIVATE);
                 editor = shared.edit();
-
                 //Utilizamos el editor para guardar el email de acceso.
                 editor.putString("Usuario", emailGoogle);
                 editor.commit();
@@ -394,5 +394,24 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                 });
     }
 
-
+    public void comprobarUsuarioGoogleEnBBDD(String emailGoogle, String nick){
+        FirebaseFirestore dbcu = FirebaseFirestore.getInstance();
+        DocumentReference docRefcu = dbcu.collection("usuarios").document(emailGoogle);
+        docRefcu.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                if (task.isSuccessful()) {
+                    DocumentSnapshot document = task.getResult();
+                    if (document.exists()) {
+                        //Log.d(TAG, "DocumentSnapshot data: " + document.getData());
+                    } else {
+                        insertarUsuarioenBBDD(emailGoogle, nick);
+                        //Log.d(TAG, "No such document");
+                    }
+                } else {
+                    //Log.d(TAG, "get failed with ", task.getException());
+                }
+            }
+        });
+    }
 }
