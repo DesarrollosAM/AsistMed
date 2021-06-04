@@ -1,4 +1,4 @@
-package com.example.asistmed;
+package com.example.asistmed.Login;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -11,6 +11,8 @@ import android.os.Handler;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.Toast;
+
+import com.example.asistmed.R;
 
 //Comentarios terminados
 

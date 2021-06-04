@@ -1,4 +1,4 @@
-package com.example.asistmed;
+package com.example.asistmed.RecyclerViews;
 
 public class UtilidadesAddTratamientos {
 

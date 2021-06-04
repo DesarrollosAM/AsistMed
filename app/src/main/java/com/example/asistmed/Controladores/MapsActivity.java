@@ -1,4 +1,4 @@
-package com.example.asistmed;
+package com.example.asistmed.Controladores;
 
 
 import androidx.core.app.ActivityCompat;
@@ -14,6 +14,7 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.Toast;
 
+import com.example.asistmed.R;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;

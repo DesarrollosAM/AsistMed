@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@drawable/fondo_azul_letras_asistmed"
-    tools:context=".InicioActivity">
+    tools:context=".Login.InicioActivity">
 
     <pl.droidsonroids.gif.GifImageView
         android:id="@+id/ivLoading"

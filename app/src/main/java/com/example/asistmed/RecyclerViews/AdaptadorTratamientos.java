@@ -1,4 +1,4 @@
-package com.example.asistmed;
+package com.example.asistmed.RecyclerViews;
 
 
 import androidx.recyclerview.widget.RecyclerView;
@@ -7,6 +7,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+
+import com.example.asistmed.Modelos.Tratamiento;
+import com.example.asistmed.R;
 
 import java.util.ArrayList;
 
@@ -26,7 +29,7 @@ public class AdaptadorTratamientos
     public AdaptadorTratamientos.ViewHolderTratamientos onCreateViewHolder(ViewGroup parent, int viewType) {
         int layout=0;
         if (UtilidadesTratamientos.visualizacion==UtilidadesTratamientos.LIST){
-            layout=R.layout.item_list_tratamientos;
+            layout= R.layout.item_list_tratamientos;
 
         }else {
             layout=R.layout.item_grid_tratamientos;

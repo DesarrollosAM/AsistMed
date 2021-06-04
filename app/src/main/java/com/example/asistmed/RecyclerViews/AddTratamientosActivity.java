@@ -1,15 +1,14 @@
-package com.example.asistmed;
+package com.example.asistmed.RecyclerViews;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.app.ProgressDialog;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.os.AsyncTask;
 import android.os.Bundle;
+
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -19,10 +18,12 @@ import android.text.Editable;
 import android.text.InputType;
 import android.text.TextWatcher;
 import android.view.View;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import com.example.asistmed.Modelos.Tratamiento;
+import com.example.asistmed.R;
+import com.example.asistmed.Controladores.UsuarioActivity;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -80,18 +81,20 @@ public class AddTratamientosActivity extends AppCompatActivity implements View.O
         construirRecycler();
 
     }
+
     private void llenarAddTratamientos() {
 
         //Aquí rellenamos la lista con los tratamientos
-        consultarTratamientos();
+        consultarTratamientosYRellenarRecycler();
 
 
     }
 
     public void onClick(View view) {
 
-        switch (view.getId()){
-            case R.id.btnGridAddActualizar: UtilidadesAddTratamientos.visualizacion=UtilidadesAddTratamientos.GRID;
+        switch (view.getId()) {
+            case R.id.btnGridAddActualizar:
+                UtilidadesAddTratamientos.visualizacion = UtilidadesAddTratamientos.GRID;
                 break;
             case R.id.btVolverMenuAdd:
                 Intent intent = new Intent(getApplicationContext(), UsuarioActivity.class);
@@ -99,11 +102,11 @@ public class AddTratamientosActivity extends AppCompatActivity implements View.O
                 finishAffinity();// Lanzamos el activity
                 break;
             case R.id.btTerminar:
-                if(tratInsertados) {
+                if (tratInsertados) {
                     Intent intentTrat = new Intent(getApplicationContext(), TratamientosActivity.class);
                     startActivity(intentTrat);
                     finishAffinity();// Lanzamos el activity
-                }else {
+                } else {
                     shared = getSharedPreferences("Datos", Context.MODE_PRIVATE);
                     String emailUsuario = shared.getString("Usuario", "");
                     comprobarTratUsuario(emailUsuario);
@@ -126,23 +129,20 @@ public class AddTratamientosActivity extends AppCompatActivity implements View.O
         llenarAddTratamientos();
 
 
-
-
-
 ////////////////////
 
         handler = new Handler();
         Runnable r = new Runnable() {
             public void run() {
-                if (UtilidadesAddTratamientos.visualizacion==UtilidadesAddTratamientos.LIST){
+                if (UtilidadesAddTratamientos.visualizacion == UtilidadesAddTratamientos.LIST) {
                     recyclerAddTratamientos.setLayoutManager(new LinearLayoutManager(getApplicationContext()));
-                }else {
-                    recyclerAddTratamientos.setLayoutManager(new GridLayoutManager(getApplicationContext(),3));
+                } else {
+                    recyclerAddTratamientos.setLayoutManager(new GridLayoutManager(getApplicationContext(), 3));
                 }
 
                 //aqui el metodo
 
-                AdaptadorAddTratamientos adapter=new AdaptadorAddTratamientos(listaAddTratamientos);
+                AdaptadorAddTratamientos adapter = new AdaptadorAddTratamientos(listaAddTratamientos);
                 adapter.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
@@ -151,12 +151,15 @@ public class AddTratamientosActivity extends AppCompatActivity implements View.O
                         shared = getSharedPreferences("Datos", Context.MODE_PRIVATE);
                         String emailUsuario = shared.getString("Usuario", "");
                         String nombreTratamiento = listaAddTratamientos.get(recyclerAddTratamientos.getChildAdapterPosition(view)).getNombre();
-                        tratInsertados = false;
-                        tratInsertados = insertarTratamientosElegidos(nombreTratamiento, emailUsuario);
-                        ModificarTratamientosenUsuarios(emailUsuario);
+                        comprobarExistenciaTratEnUsuario(nombreTratamiento, emailUsuario);
 
-                        //comprobarExistenciaTratEnUsuario(nombreTratamiento, emailUsuario);
-                        Toast.makeText(getApplicationContext(),"Tratamiento añadido",Toast.LENGTH_SHORT).show();
+
+//                        tratInsertados = false;
+//                        tratInsertados = insertarTratamientosElegidos(nombreTratamiento, emailUsuario);
+//                        ModificarTratamientosenUsuarios(emailUsuario);
+
+
+                        //Toast.makeText(getApplicationContext(), "Tratamiento añadido", Toast.LENGTH_SHORT).show();
 
 //                        Toast.makeText(getApplicationContext(),
 //                                "Selección: "+ listaMedicamentos.get
@@ -182,9 +185,7 @@ public class AddTratamientosActivity extends AppCompatActivity implements View.O
         //Creamos este método para anular el botón atrás en el dispositivo
     }
 
-    public void consultarTratamientos(){
-
-
+    public void consultarTratamientosYRellenarRecycler() {
         FirebaseFirestore db = FirebaseFirestore.getInstance();
         db.collection("tratamientos")
                 .get()
@@ -195,7 +196,7 @@ public class AddTratamientosActivity extends AppCompatActivity implements View.O
                             for (QueryDocumentSnapshot document : task.getResult()) {
                                 String nombre = document.getString("nombre");
                                 String duracion = document.getString("duracion");
-                                listaAddTratamientos.add(new Tratamiento(document.getString("nombre") + "",document.getString("duracion") + " días", R.drawable.tratamiento_por_defecto));
+                                listaAddTratamientos.add(new Tratamiento(document.getString("nombre") + "", document.getString("duracion") + " días", R.drawable.tratamiento_por_defecto));
                                 //handleQuerysnapshot(task.getResult(), nombre, duracion);
                             }
 
@@ -203,46 +204,35 @@ public class AddTratamientosActivity extends AppCompatActivity implements View.O
                             //return listaAddTratamientos;
                         } else {
                             //Log.d(TAG, "Error getting documents: ", task.getException());
-                            Toast toastUsuarioNoValido = Toast.makeText(getApplicationContext(), "No existe el usuario y/o contraseña.", Toast.LENGTH_LONG);
+                            Toast toastUsuarioNoValido = Toast.makeText(getApplicationContext(), "Fallo al consultar.", Toast.LENGTH_LONG);
                             toastUsuarioNoValido.show();
                         }
                     }
                 });
     }
 
-    public void handleQuerysnapshot (QuerySnapshot task, String nombre, String duracion){
+    public void handleQuerysnapshot(QuerySnapshot task, String nombre, String duracion) {
         listaAddTratamientos.add(new Tratamiento(nombre + "", duracion + "", R.drawable.tratamiento_por_defecto));
     }
 
-    public boolean insertarTratamientosElegidos(String nombreTratamiento, String usuario){
+    /*
+    Método por el que insertamos en la subcoleccion usuariosTratamientos el documento con el usuario y tratamiento correspondientes
+     */
+    public boolean insertarTratamientosElegidos(String nombreTratamiento, String usuario) {
         boolean insertado = true;
         //Inserción en Firestore:
-                                // Create a new user with a first and last name
-                                Map<String, Object> trat = new HashMap<>();
-                                trat.put("email", usuario);
-
-                                // Add a new document with a generated ID
+        Map<String, Object> trat = new HashMap<>();
+        trat.put("email", usuario);
         FirebaseFirestore db = FirebaseFirestore.getInstance();
         db.collection("tratamientos").document(nombreTratamiento).collection("usuariosTratamientos").document(usuario).set(trat);
+        Toast.makeText(getApplicationContext(), "Tratamiento añadido", Toast.LENGTH_LONG).show();
         return insertado;
-
-
-//                                        .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
-//                                            @Override
-//                                            public void onSuccess(DocumentReference documentReference) {
-//                                                //Log.d(TAG, "DocumentSnapshot added with ID: " + documentReference.getId());
-//                                                //documentReference.set("usuario" + siguienteUsuario);
-//                                            }
-//                                        })
-//                                        .addOnFailureListener(new OnFailureListener() {
-//                                            @Override
-//                                            public void onFailure(@NonNull Exception e) {
-//                                                //Log.w(TAG, "Error adding document", e);
-//                                            }
-//                                        });
     }
 
-    public void ModificarTratamientosenUsuarios(String usuario){
+    /*
+    Método por el que modificamos el campo tratamiento en la colección usuarios.
+     */
+    public void ModificarTratamientosenUsuarios(String usuario) {
 
         FirebaseFirestore dbs = FirebaseFirestore.getInstance();
 
@@ -269,36 +259,23 @@ public class AddTratamientosActivity extends AppCompatActivity implements View.O
 
     }
 
-    public void comprobarExistenciaTratEnUsuario(String nombre, String email){
+    public void comprobarExistenciaTratEnUsuario(String nombreTrat, String email) {
         FirebaseFirestore dbc = FirebaseFirestore.getInstance();
-        DocumentReference docRef = dbc.collection("tratamientos").document(nombre);
+        DocumentReference docRef = dbc.collection("tratamientos").document(nombreTrat).collection("usuariosTratamientos").document(email);
         docRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
             @Override
             public void onComplete(@NonNull Task<DocumentSnapshot> task) {
                 if (task.isSuccessful()) {
                     DocumentSnapshot document = task.getResult();
                     if (document.exists()) {
-                        FirebaseFirestore dbc2 = FirebaseFirestore.getInstance();
-                        DocumentReference docRef2 = dbc2.collection("usuariosTratamientos").document(email);
-                        docRef2.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
-                            @Override
-                            public void onComplete(@NonNull Task<DocumentSnapshot> task2) {
-                                if (task2.isSuccessful()) {
-                                    DocumentSnapshot document2 = task2.getResult();
-                                    if (document2.exists()) {
-                                        Toast toastUsuarioNoValido = Toast.makeText(getApplicationContext(), "El usuario tiene el tratamiento.", Toast.LENGTH_LONG);
-                                        toastUsuarioNoValido.show();
-                                        //Log.d(TAG, "DocumentSnapshot data: " + document.getData());
-                                    } else {
-                                        //Log.d(TAG, "No such document");
-                                    }
-                                } else {
-                                    //Log.d(TAG, "get failed with ", task.getException());
-                                }
-                            }
-                        });
-                        //Log.d(TAG, "DocumentSnapshot data: " + document.getData());
+                        Toast yaExisteTratamiento = Toast.makeText(getApplicationContext(), nombreTrat + " ya se encuentra en su lista de tratamientos actual. Elija otro o finalice.", Toast.LENGTH_LONG);
+                        yaExisteTratamiento.show();
+
                     } else {
+                        tratInsertados = false;
+                        tratInsertados = insertarTratamientosElegidos(nombreTrat, email);
+                        ModificarTratamientosenUsuarios(email);
+
                         //Log.d(TAG, "No such document");
                     }
                 } else {
@@ -325,15 +302,15 @@ public class AddTratamientosActivity extends AppCompatActivity implements View.O
         handler = new Handler();
         Runnable r = new Runnable() {
             public void run() {
-                if (UtilidadesAddTratamientos.visualizacion==UtilidadesAddTratamientos.LIST){
+                if (UtilidadesAddTratamientos.visualizacion == UtilidadesAddTratamientos.LIST) {
                     recyclerAddTratamientos.setLayoutManager(new LinearLayoutManager(getApplicationContext()));
-                }else {
-                    recyclerAddTratamientos.setLayoutManager(new GridLayoutManager(getApplicationContext(),3));
+                } else {
+                    recyclerAddTratamientos.setLayoutManager(new GridLayoutManager(getApplicationContext(), 3));
                 }
 
                 //aqui el metodo
 
-                AdaptadorAddTratamientos adapter=new AdaptadorAddTratamientos(lista);
+                AdaptadorAddTratamientos adapter = new AdaptadorAddTratamientos(lista);
                 adapter.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
@@ -341,12 +318,14 @@ public class AddTratamientosActivity extends AppCompatActivity implements View.O
                         shared = getSharedPreferences("Datos", Context.MODE_PRIVATE);
                         String emailUsuario = shared.getString("Usuario", "");
                         String nombreTratamiento = listaAddTratamientos.get(recyclerAddTratamientos.getChildAdapterPosition(view)).getNombre();
-                        tratInsertados = false;
-                        tratInsertados = insertarTratamientosElegidos(nombreTratamiento, emailUsuario);
-                        ModificarTratamientosenUsuarios(emailUsuario);
 
-                        Toast.makeText(getApplicationContext(),
-                                "Tratamiento añadido",Toast.LENGTH_SHORT).show();
+                        comprobarExistenciaTratEnUsuario(nombreTratamiento, emailUsuario);
+
+//                        tratInsertados = false;
+//                        tratInsertados = insertarTratamientosElegidos(nombreTratamiento, emailUsuario);
+//                        ModificarTratamientosenUsuarios(emailUsuario);
+
+
                     }
                 });
 
@@ -357,7 +336,7 @@ public class AddTratamientosActivity extends AppCompatActivity implements View.O
         handler.postDelayed(r, 1200);
     }
 
-    public void comprobarTratUsuario(String email){
+    public void comprobarTratUsuario(String email) {
 
         FirebaseFirestore dbc = FirebaseFirestore.getInstance();
         DocumentReference docRef = dbc.collection("usuarios").document(email);
@@ -368,10 +347,10 @@ public class AddTratamientosActivity extends AppCompatActivity implements View.O
                     DocumentSnapshot document = task.getResult();
                     if (document.exists()) {
                         String tiene = document.getString("tratamiento");
-                        if(tiene.equalsIgnoreCase("no")){
+                        if (tiene.equalsIgnoreCase("no")) {
                             Toast toastUsuarioNoValido = Toast.makeText(getApplicationContext(), "Por favor, añada un tratamiento para poder finalizar.", Toast.LENGTH_LONG);
                             toastUsuarioNoValido.show();
-                        }else{
+                        } else {
                             Intent intentTrat = new Intent(getApplicationContext(), TratamientosActivity.class);
                             startActivity(intentTrat);
                             finishAffinity();// Lanzamos el activity
