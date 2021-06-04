@@ -1,4 +1,4 @@
-package com.example.asistmed;
+package com.example.asistmed.Login;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -14,6 +14,10 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import com.example.asistmed.Controladores.AdministradorActivity;
+import com.example.asistmed.R;
+import com.example.asistmed.Controladores.UsuarioActivity;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInClient;
@@ -296,7 +300,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
 
                 finishAffinity();
 
-                startActivity(new Intent(this,AdministradorActivity.class));
+                startActivity(new Intent(this, AdministradorActivity.class));
 
 
 

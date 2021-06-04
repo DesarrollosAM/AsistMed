@@ -1,4 +1,4 @@
-package com.example.asistmed;
+package com.example.asistmed.RecyclerViews;
 
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -8,6 +8,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+
+import com.example.asistmed.Modelos.Tratamiento;
+import com.example.asistmed.R;
 
 import java.util.ArrayList;
 

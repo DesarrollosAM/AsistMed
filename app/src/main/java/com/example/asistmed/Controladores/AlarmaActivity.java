@@ -1,11 +1,8 @@
-package com.example.asistmed;
+package com.example.asistmed.Controladores;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import android.app.AlarmManager;
 import android.app.AlertDialog;
-import android.app.PendingIntent;
-import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -16,19 +13,11 @@ import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.EditText;
-import android.widget.ImageButton;
-import android.widget.ImageView;
-import android.widget.TextView;
 import android.widget.Toast;
 
-import java.sql.Connection;
-import java.sql.ResultSet;
-import java.sql.Statement;
-import java.util.Calendar;
-import java.util.LinkedList;
-import java.util.regex.Pattern;
+import com.example.asistmed.R;
 
-import static androidx.core.content.ContextCompat.startActivity;
+import java.util.regex.Pattern;
 
 public class AlarmaActivity extends AppCompatActivity {
 
@@ -42,26 +31,6 @@ public class AlarmaActivity extends AppCompatActivity {
         setContentView(R.layout.activity_alarma);
 
         dialogoAlarma();
-
-    }
-
-    private boolean validaAlarma(String hora, String minutos) {
-
-        hora = hora.trim();
-        minutos = minutos.trim();
-        String horaMinutos = hora + ":" + minutos;
-
-        if (!PATRON_HORA_ALARMA.matcher(horaMinutos).find()) {
-            //Comprobamos con el patrón para validarlo
-            Toast toast = Toast.makeText(getApplicationContext(), "Introduzca un hora valida", Toast.LENGTH_SHORT);
-            toast.setGravity(Gravity.TOP | Gravity.CENTER_HORIZONTAL, 0, 500);
-            toast.show();
-            //dialogoAlarma();
-        } else {
-
-            return true;
-        }
-        return false;
     }
 
     public void dialogoAlarma() {
@@ -81,10 +50,7 @@ public class AlarmaActivity extends AppCompatActivity {
 
             //Agregamos los botones Aceptar/Cancelar.
             builderAddTratamientos.setView(vista)
-
                     .setPositiveButton("ACEPTAR", new DialogInterface.OnClickListener() {
-
-
                         @Override
                         public void onClick(DialogInterface dialog, int id) {
                             String hour = hora.getText().toString().trim();
@@ -107,7 +73,6 @@ public class AlarmaActivity extends AppCompatActivity {
                                 Al aceptar, capturamos los valores introducidos, recogemos el mensaje
                                 y la frecuencia y los usamos como parámetros para llamar al método activarAlarma
                                  */
-//
                                 shared = getSharedPreferences("Datos", Context.MODE_PRIVATE);
                                 int horas = Integer.parseInt(hora.getText().toString());
                                 int minuto = Integer.parseInt(minutos.getText().toString());
@@ -117,16 +82,13 @@ public class AlarmaActivity extends AppCompatActivity {
                                 activarAlarma(mensaje, horas, minuto, frecuencia);
                                 //Cerramos este activity
                                 finish();
-
                             }
                         }
                     })
                     .setNegativeButton("CANCELAR", new DialogInterface.OnClickListener() {
                         public void onClick(DialogInterface dialog, int id) {
-                            //Al cancelar volvemos al activity
+                            //Al cancelar volvemos al activity cerrando el actual.
                             finish();
-//                            Intent intentM = new Intent(getApplicationContext(), MedicamentosActivity.class);
-//                            startActivity(intentM);
                         }
                     });
 
@@ -139,7 +101,6 @@ public class AlarmaActivity extends AppCompatActivity {
     }
 
     private void activarAlarma(String mensaje, int hora, int minutos, int frecuencia) {
-
 
         Intent intent = new Intent(AlarmClock.ACTION_SET_ALARM)
                 .putExtra(AlarmClock.EXTRA_MESSAGE, mensaje)

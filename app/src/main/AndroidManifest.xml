@@ -30,7 +30,7 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.AsistMed"
         android:usesCleartextTraffic="true">
-        <activity android:name=".CorreoActivity"></activity>
+        <activity android:name=".Login.CorreoActivity"></activity>
         <!-- Incorporamos esta linea para un mejor funcionamiento de la lectura de códigos -->
         <!--
              The API key for Google Maps-based APIs is defined as a string resource.
@@ -45,50 +45,46 @@
             android:value="@string/google_maps_key" />
 
         <activity
-            android:name=".MapsActivity"
+            android:name=".Controladores.MapsActivity"
             android:label="@string/title_activity_maps2" />
         <activity
-            android:name=".RecuperarContrasenaActivity"
+            android:name=".Login.RecuperarContrasenaActivity"
             android:configChanges="orientation|screenSize"
             android:screenOrientation="portrait" /> <!-- Con la linea anterior, se consigue que no se reinicie el Activity al girar el movil y con esta que el Activity no gire directaemnte -->
         <activity
-            android:name=".LoginActivity"
+            android:name=".Login.LoginActivity"
             android:configChanges="orientation|screenSize"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".RegistroActivity"
+            android:name=".Login.RegistroActivity"
             android:configChanges="orientation|screenSize"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".UsuarioActivity"
+            android:name=".Controladores.UsuarioActivity"
             android:configChanges="orientation|screenSize"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".AlarmaActivity"
+            android:name=".Controladores.AlarmaActivity"
             android:configChanges="orientation|screenSize"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".MedicamentosActivity"
+            android:name=".RecyclerViews.MedicamentosActivity"
             android:configChanges="orientation|screenSize"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".AddTratamientosActivity"
+            android:name=".RecyclerViews.AddTratamientosActivity"
             android:configChanges="orientation|screenSize"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".AsistentActivity"
+            android:name=".RecyclerViews.TratamientosActivity"
             android:configChanges="orientation|screenSize"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".TratamientosActivity"
+            android:name=".Controladores.AdministradorActivity"
             android:configChanges="orientation|screenSize"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".AdministradorActivity"
-            android:configChanges="orientation|screenSize"
-            android:screenOrientation="portrait" />
-        <activity
-            android:name=".InicioActivity"
+            android:name=".Login.InicioActivity"
             android:configChanges="orientation|screenSize"
             android:screenOrientation="portrait">
             <intent-filter>
@@ -97,7 +93,6 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".MainActivity" />
     </application>
 
 </manifest>
