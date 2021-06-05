@@ -29,9 +29,10 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import java.util.HashMap;
 import java.util.Map;
 
+//Comentarios terminados
+
 public class AdministradorActivity extends AppCompatActivity implements View.OnClickListener {
 
-    //TODO: Cambiar diseño y poner botones de salir y volver a login.
 
     private Button btnAddTrat, btnModTrat, btnAddMed, btnModMed, btnRegresarLogin, btnSalir;
     private Handler handler;
@@ -49,6 +50,7 @@ public class AdministradorActivity extends AppCompatActivity implements View.OnC
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_administrador);
 
+        //
         View decorView = getWindow().getDecorView();
         int uiOptions = View.SYSTEM_UI_FLAG_IMMERSIVE | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION | View.SYSTEM_UI_FLAG_FULLSCREEN;
         decorView.setSystemUiVisibility(uiOptions);
@@ -111,7 +113,9 @@ public class AdministradorActivity extends AppCompatActivity implements View.OnC
 
                     //Cerramos sesión
                     FirebaseAuth.getInstance().signOut();
-                    /////////////////////////////////////Retrasamos el intent 2 segundos para asegurarnos al pasar al Ac
+
+                    //Retrasamos el intent 2 segundos para asegurarnos al pasar al Activity tras el cierre de sesión
+                    /////////////////////////////////////
                     handler = new Handler();
                     Runnable ru = new Runnable() {
                         public void run() {
@@ -138,7 +142,7 @@ public class AdministradorActivity extends AppCompatActivity implements View.OnC
                         }
                     };
                     handler.postDelayed(r, 2000);
-///////////////////////////////////
+                    ///////////////////////////////////
 
 
                     break;

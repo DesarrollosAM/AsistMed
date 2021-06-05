@@ -254,6 +254,7 @@ public class AddTratamientosActivity extends AppCompatActivity implements View.O
                 .addOnFailureListener(new OnFailureListener() {
                     @Override
                     public void onFailure(@NonNull Exception e) {
+                        String causa = e.getMessage();
                         //Log.w(TAG, "Error adding document", e);
                     }
                 });

@@ -54,9 +54,9 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
 
     //Declaramos variables;
     private Button btAcceso, btAccederGoogle, btContactoAsistmed;
-    private TextView tvRegistro, tvRecuperarContrasena, tvContacto;
+    private TextView tvRegistro, tvRecuperarContrasena;
     private EditText etEmail, etContrasena;
-    private ImageView ivSalir;
+    private ImageView ivSalir, ivAyuda;
 
     //Variables para Usuario y password
     private String email, password;
@@ -116,12 +116,12 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         etContrasena = findViewById(R.id.introduceContrasena);
         tvRegistro = findViewById(R.id.tvRegistrarme);
         tvRecuperarContrasena = findViewById(R.id.tvContrasenaOlvidada);
-        tvContacto = findViewById(R.id.tvContacto);
+        ivAyuda = findViewById(R.id.ivAyuda);
 
         //Asignación del evento click a los textos
         tvRegistro.setOnClickListener(this);
         tvRecuperarContrasena.setOnClickListener(this);
-        tvContacto.setOnClickListener(this);
+        ivAyuda.setOnClickListener(this);
 
 
         // Configure sign-in to request the user's ID, email address, and basic
@@ -182,7 +182,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
             Intent intent = new Intent(getApplicationContext(), RecuperarContrasenaActivity.class);
             startActivity(intent); // Lanzamos el activity
 
-        } else if ((view.getId() == R.id.tvContacto)) { //Si pulsamos en contacto, lanzamos el intent correspondiente
+        } else if ((view.getId() == R.id.ivAyuda)) { //Si pulsamos en contacto, lanzamos el intent correspondiente
 
             //Instanciamos un objeto Intent, pasandole con this el Activity actual, y como segundo parametro el Activity que vamos a cargar
             Intent intent = new Intent(getApplicationContext(), CorreoActivity.class);

@@ -4,6 +4,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -17,6 +18,7 @@ import android.widget.Toast;
 
 import com.example.asistmed.Controladores.MapsActivity;
 import com.example.asistmed.Login.LoginActivity;
+import com.example.asistmed.Login.RecuperarContrasenaActivity;
 import com.example.asistmed.R;
 import com.example.asistmed.RecyclerViews.AddTratamientosActivity;
 import com.example.asistmed.RecyclerViews.TratamientosActivity;
@@ -44,9 +46,7 @@ public class UsuarioActivity extends AppCompatActivity implements View.OnClickLi
     private String urlCitaPrevia, urlFarmacias, urlAgenciaMedicamento;
     private MediaPlayer mpCanon;
     private TextView txtUsuario;
-    //private ImageView btEliminarUsuario;
-    //private Button btFoto;
-    //private Switch swAlarma;
+
 
 
     //Declaramos las variables, tipo Shared
@@ -67,8 +67,9 @@ public class UsuarioActivity extends AppCompatActivity implements View.OnClickLi
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_usuario);
 
+
         View decorView = getWindow().getDecorView();
-        int uiOptions = View.SYSTEM_UI_FLAG_IMMERSIVE | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION | View.SYSTEM_UI_FLAG_FULLSCREEN;
+        int uiOptions =  View.SYSTEM_UI_FLAG_IMMERSIVE | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION | View.SYSTEM_UI_FLAG_FULLSCREEN ;
         decorView.setSystemUiVisibility(uiOptions);
 
         mAuth = FirebaseAuth.getInstance();
@@ -132,11 +133,15 @@ public class UsuarioActivity extends AppCompatActivity implements View.OnClickLi
 
         String lecturaQr = result.getContents();
 
+        //Si la lectura del código es exitosa, extraemos el substring con la parte del código que pasamos a la URL de la agencia del medicamento
         if(lecturaQr != null){
+
+
             String idMedicamento = lecturaQr.substring(10,16);
             Uri uri = Uri.parse(urlAgenciaMedicamento+idMedicamento);
             Intent intent = new Intent(Intent.ACTION_VIEW, uri);
             startActivity(intent);
+        //Si cancelamos la lectura
         } else{
             Toast lecturaCancelada = Toast.makeText(getApplicationContext(), "Lectura cancelada.", Toast.LENGTH_LONG);
             lecturaCancelada.show();
@@ -181,7 +186,7 @@ public class UsuarioActivity extends AppCompatActivity implements View.OnClickLi
                 }
             };
             handler.postDelayed(r, 2000);
-///////////////////////////////////
+            ///////////////////////////////////
 
 
         } else if (view.getId() == R.id.btLectorCodigos) {
@@ -225,7 +230,6 @@ public class UsuarioActivity extends AppCompatActivity implements View.OnClickLi
 
 
     }
-
 
 
     @Override
