@@ -33,6 +33,8 @@ import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+//Comentarios terminados y try/catch implementados
+
 public class RegistroActivity extends AppCompatActivity implements View.OnClickListener{
 
     //Declaramos las variables
