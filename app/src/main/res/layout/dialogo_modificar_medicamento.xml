@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="#8698EF"
+    android:orientation="vertical">
+
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="64dp"
+        android:background="#FFFFFF"
+        android:contentDescription="@string/app_name"
+        android:scaleType="center"
+        android:src="@drawable/medicamento_por_defecto" />
+
+    <TextView
+        android:id="@+id/txtMedicamento"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="4dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginRight="4dp"
+        android:layout_marginBottom="4dp"
+        android:background="@drawable/input_background"
+        android:gravity="center_horizontal"
+        android:inputType="text"
+        android:text="MODIFICAR MEDICAMENTO"
+        android:textAlignment="center"
+        android:textSize="24sp"
+        android:textStyle="bold" />
+
+    <EditText
+        android:id="@+id/edtNombreTratMed"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="4dp"
+        android:layout_marginTop="4dp"
+        android:layout_marginRight="4dp"
+        android:layout_marginBottom="16dp"
+        android:fontFamily="sans-serif"
+        android:backgroundTint="@color/white"
+        android:hint="Inserte el tratamiento..."
+        android:inputType="text" />
+
+    <!--    <EditText-->
+    <!--        android:id="@+id/edtNombreTratMed"-->
+    <!--        android:layout_width="match_parent"-->
+    <!--        android:layout_height="wrap_content"-->
+    <!--        android:layout_marginStart="32dp"-->
+    <!--        android:layout_marginTop="24dp"-->
+    <!--        android:layout_marginEnd="32dp"-->
+    <!--        android:background="@drawable/input_background"-->
+    <!--        android:drawableLeft="@drawable/ic_add_24"-->
+    <!--        android:drawablePadding="10dp"-->
+    <!--        android:ems="10"-->
+    <!--        android:hint="Inserte el tratamiento..."-->
+    <!--        android:inputType="text"-->
+    <!--        android:paddingLeft="20dp"-->
+    <!--        android:paddingTop="10dp"-->
+    <!--        android:paddingRight="10dp"-->
+    <!--        android:paddingBottom="10dp"-->
+    <!--        android:textColor="@color/white"-->
+    <!--        android:textColorHint="@color/white" />-->
+
+    <EditText
+        android:id="@+id/edtNombreMedicamento"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="4dp"
+        android:layout_marginTop="4dp"
+        android:layout_marginRight="4dp"
+        android:layout_marginBottom="16dp"
+        android:fontFamily="sans-serif"
+        android:backgroundTint="@color/white"
+        android:hint="Inserte el nuevo nombre..."
+        android:inputType="text" />
+
+    <EditText
+        android:id="@+id/edtCantidad_diaria"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="4dp"
+        android:layout_marginTop="4dp"
+        android:layout_marginRight="4dp"
+        android:layout_marginBottom="16dp"
+        android:fontFamily="sans-serif"
+        android:backgroundTint="@color/white"
+        android:hint="Inserte la nueva cantidad en cada dosis..."
+        android:inputType="text" />
+
+    <EditText
+        android:id="@+id/edtFrecuencia"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="4dp"
+        android:layout_marginTop="4dp"
+        android:layout_marginRight="4dp"
+        android:layout_marginBottom="16dp"
+        android:fontFamily="sans-serif"
+        android:backgroundTint="@color/white"
+        android:hint="Inserte la nueva frecuencia de las dosis..."
+        android:inputType="text" />
+
+    <EditText
+        android:id="@+id/edtInfo"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="4dp"
+        android:layout_marginTop="4dp"
+        android:layout_marginRight="4dp"
+        android:layout_marginBottom="16dp"
+        android:fontFamily="sans-serif"
+        android:backgroundTint="@color/white"
+        android:hint="Inserte la nueva descripción..."
+        android:inputType="text" />
+</LinearLayout>

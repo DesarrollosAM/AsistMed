@@ -1,20 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <array name="listaMedicamentos">
-        <item>Paracetamol</item>
-        <item>Ibuprofeno</item>
-        <item>Ventolín</item>
-        <item>Espidifen</item>
+        <item>Acetaminofen</item>
+        <item>Amoxicilina</item>
+        <item>Ansiolitico</item>
+        <item>Antitusivo</item>
+        <item>Aspirina</item>
         <item>Augmentine</item>
-        <item>Omeprazol</item>
-        <item>Omeprazol</item>
-        <item>Omeprazol</item>
-        <item>Omeprazol</item>
-        <item>Omeprazol</item>
-        <item>Omeprazol</item>
-        <item>Omeprazol</item>
-        <item>Omeprazol</item>
-        <item>Omeprazol</item>
+        <item>Ciprofloxacina</item>
+        <item>Fortasec</item>
+        <item>Ibuprofeno</item>
+        <item>Naproxeno</item>
+        <item>Paracetamol</item>
+        <item>Permetrina</item>
+        <item>Polaramine</item>
+        <item>Ventolín</item>
     </array>
 
     <array name="listaTratamientos">
@@ -23,14 +23,14 @@
         <item>Asma</item>
         <item>Bronquitis</item>
         <item>Conjuntivitis</item>
+        <item>Estrés</item>
         <item>Fractura</item>
-        <item>Gastroenteritis</item>
+        <item>Gastritis</item>
         <item>Gripe</item>
+        <item>Infección</item>
         <item>Otitis</item>
-        <item>Otitis</item>
-        <item>Otitis</item>
-        <item>Otitis</item>
-        <item>Otitis</item>
-        <item>Otitis</item>
+        <item>Sarna</item>
+
+
     </array>
 </resources>
