@@ -269,13 +269,16 @@ public class MedicamentosActivity extends AppCompatActivity {
                     public void onSuccess(Void aVoid) {
                         Toast toastUsuarioValido = Toast.makeText(getApplicationContext(), "Tratamiento eliminado.", Toast.LENGTH_SHORT);
                         toastUsuarioValido.show();
+                        restarTratamientoEnBBDD(email);
 
                         handler2 = new Handler();
                         Runnable r2 = new Runnable() {
                             public void run() {
-                                restarTratamientoEnBBDD(email);
-                                Intent intent = new Intent(getApplicationContext(), TratamientosActivity.class);
-                                startActivity(intent); // Lanzamos el activity
+                                //metodo que comprueba si tiene trats y lanza el activity en funcion de ello
+                                lanzarActivityTratsEsCero(email);
+
+//                                Intent intent = new Intent(getApplicationContext(), TratamientosActivity.class);
+//                                startActivity(intent); // Lanzamos el activity
                             }
                         };
                         handler2.postDelayed(r2, 2000);
@@ -371,6 +374,35 @@ public class MedicamentosActivity extends AppCompatActivity {
                         //Log.w(TAG, "Error adding document", e);
                     }
                 });
+    }
+
+    public void lanzarActivityTratsEsCero(String email) {
+        FirebaseFirestore dbs = FirebaseFirestore.getInstance();
+        DocumentReference docRefs = dbs.collection("usuarios").document(email);
+        docRefs.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                if (task.isSuccessful()) {
+                    DocumentSnapshot document = task.getResult();
+                    if (document.exists()) {
+                        int cantidad = Integer.parseInt(document.getString("cantidadTratamientos"));
+                        if (cantidad > 0) {
+                            Intent intent = new Intent(getApplicationContext(), TratamientosActivity.class);
+                            startActivity(intent); // Lanzamos el activity
+                            //Log.d(TAG, "DocumentSnapshot data: " + document.getData());
+                        } else if (cantidad == 0) {
+                            Intent intent = new Intent(getApplicationContext(), AddTratamientosActivity.class);
+                            startActivity(intent); // Lanzamos el activity
+                        }
+
+                    } else {
+                        //Log.d(TAG, "No such document");
+                    }
+                } else {
+                    //Log.d(TAG, "get failed with ", task.getException());
+                }
+            }
+        });
     }
 
 }
