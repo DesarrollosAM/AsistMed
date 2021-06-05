@@ -3,18 +3,25 @@ package com.example.asistmed.Controladores;
 
 import androidx.core.app.ActivityCompat;
 import androidx.fragment.app.FragmentActivity;
+import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.recyclerview.widget.LinearLayoutManager;
+
 import android.Manifest;
 import android.annotation.SuppressLint;
+import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
+import android.os.Handler;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.example.asistmed.R;
+import com.example.asistmed.RecyclerViews.AdaptadorAddTratamientos;
+import com.example.asistmed.RecyclerViews.UtilidadesAddTratamientos;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
@@ -26,7 +33,9 @@ import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.maps.android.data.geojson.GeoJsonLayer;
 import com.google.maps.android.data.geojson.GeoJsonPointStyle;
+
 import org.json.JSONException;
+
 import java.io.IOException;
 
 public class MapsActivity extends FragmentActivity implements OnMapReadyCallback, View.OnClickListener {
@@ -38,6 +47,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     private ImageView btVistaNormal;
     private ImageView btSatelite;
     private ImageView btVolverMap;
+    private Handler handler;
     Marker marcadorCarlosIII;
 
 
@@ -58,8 +68,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         mapFragment.getMapAsync(this);
 
         btVistaNormal = (ImageView) findViewById(R.id.btVistaNormal);
-        btSatelite = (ImageView)findViewById(R.id.btSatelite);
-        btVolverMap = (ImageView)findViewById(R.id.btVolverMaps);
+        btSatelite = (ImageView) findViewById(R.id.btSatelite);
+        btVolverMap = (ImageView) findViewById(R.id.btVolverMaps);
 
         btSatelite.setVisibility(View.VISIBLE);
         btVistaNormal.setVisibility(View.INVISIBLE);
@@ -99,7 +109,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         mMap = googleMap;
 
         //Comprobamos con el if si los permisos para la Geolocalización están revocados, y si es así, dentro del if se solicitan
-
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED
                 && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
 
@@ -107,18 +116,13 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION,}, 1000);
             ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_COARSE_LOCATION,}, 1000);
 
-        }else {
-
-
+        } else {
             //Habilitamos nuestro posicionamiento GPS
             mMap.setMyLocationEnabled(true);
 
-            //Mostrmos el botón que nos posicionará en el mapa en nuestra ubicación
+            //Mostramos el botón que nos posicionará en el mapa en nuestra ubicación
             mMap.getUiSettings().setMyLocationButtonEnabled(true);
         }
-
-
-
 
         // Definimos una imagen para el marcador
         @SuppressLint("UseCompatLoadingForDrawables") BitmapDrawable bitmapdraw = (BitmapDrawable) getResources().getDrawable(R.drawable.carlosiii_png); // Añadimos la imagen del nuevo marcador
@@ -136,38 +140,40 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         //Definimos el tipo de vista del mapa
         mMap.setMapType(GoogleMap.MAP_TYPE_NORMAL);
 
-        mMap.moveCamera(CameraUpdateFactory.newLatLng(llCarlosIII));
-        mMap.animateCamera(CameraUpdateFactory.zoomTo(10), 10000, null);//Altura de zoom (1 mundo, 5 continente) y 10 segundos
+        handler = new Handler();
+        Runnable r = new Runnable() {
+            public void run() {
 
-        try {
-            //Creamos una capa de tipo GeoJson para cargar nuestros datos de ubicación de farmacias desde el archivo tipo GeoJson
-            GeoJsonLayer layer = new GeoJsonLayer(mMap, R.raw.farmacias, this);
+                mMap.moveCamera(CameraUpdateFactory.newLatLng(llCarlosIII));
+                mMap.animateCamera(CameraUpdateFactory.zoomTo(10), 6000, null);//Altura de zoom (1 mundo, 5 continente) y 6 segundos
 
-            //A la capa layer, le aplicamos estilo de Point para el mapa
-            GeoJsonPointStyle pointstyle = layer.getDefaultPointStyle();
-            //A los points les asignamos color y titulo, que se mostrará al hacer click en ellos
-            pointstyle.setIcon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN));
-            pointstyle.setTitle("Farmacia");
+                try {
+                    //Creamos una capa de tipo GeoJson para cargar nuestros datos de ubicación de farmacias desde el archivo tipo GeoJson
+                    GeoJsonLayer layer = new GeoJsonLayer(mMap, R.raw.farmacias, MapsActivity.this);
 
-            //Finalmente, una vez configurada la capa, la añadimos al mapa
-            layer.addLayerToMap();
+                    //A la capa layer, le aplicamos estilo de Point para el mapa
+                    GeoJsonPointStyle pointstyle = layer.getDefaultPointStyle();
+                    //A los points les asignamos color y titulo, que se mostrará al hacer click en ellos
+                    pointstyle.setIcon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN));
+                    pointstyle.setTitle("Farmacia");
 
-
-        } catch (IOException e) {
-            e.printStackTrace();
-            Toast.makeText(MapsActivity.this, "Fallo Lectura JSON",
-                    Toast.LENGTH_SHORT).show();
-        } catch (JSONException e) {
-            e.printStackTrace();
-            Toast.makeText(MapsActivity.this, "Fallo JSON",
-                    Toast.LENGTH_SHORT).show();
-        }
+                    //Finalmente, una vez configurada la capa, la añadimos al mapa
+                    layer.addLayerToMap();
 
 
+                } catch (IOException e) {
+                    e.printStackTrace();
+                    Toast.makeText(MapsActivity.this, "Fallo Lectura JSON",
+                            Toast.LENGTH_SHORT).show();
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                    Toast.makeText(MapsActivity.this, "Fallo JSON",
+                            Toast.LENGTH_SHORT).show();
+                }
 
-
-
-
+            }
+        };
+        handler.postDelayed(r, 1200);
     }//Fin onMapReady
 
 

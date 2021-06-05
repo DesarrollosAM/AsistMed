@@ -15,6 +15,8 @@ import android.os.Handler;
 import android.text.Editable;
 import android.text.InputType;
 import android.text.TextWatcher;
+import android.util.Log;
+import android.view.Gravity;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -37,6 +39,7 @@ import java.util.ArrayList;
 
 public class TratamientosActivity extends AppCompatActivity implements View.OnClickListener {
 
+    //Declaramos las variables necesarias.
     ArrayList<Tratamiento> listaTratamientos;
     RecyclerView recyclerTratamientos;
     private Handler handler;
@@ -51,25 +54,22 @@ public class TratamientosActivity extends AppCompatActivity implements View.OnCl
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_tratamientos);
 
-
+        //Asociamos los elementos a los del layout
         etBuscadorTrat = findViewById(R.id.etBuscadorTrat);
-//        etBuscadorTrat.requestFocus();
         etBuscadorTrat.setFocusableInTouchMode(false);
-//        InputMethodManager inputMethodManager = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
-//        inputMethodManager.hideSoftInputFromWindow(etBuscadorTrat.getWindowToken(), 0);
 
-
+        //Lo configuramos para que salga en pantalla completa.
         View decorView = getWindow().getDecorView();
         int uiOptions = View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION | View.SYSTEM_UI_FLAG_FULLSCREEN;
         decorView.setSystemUiVisibility(uiOptions);
 
-        txtCabecera = (TextView)findViewById(R.id.txtCabeceraTratamientos);
+        //Capturamos en el shared el email y mostramos el nick en pantalla.
+        txtCabecera = (TextView) findViewById(R.id.txtCabeceraTratamientos);
         shared = getSharedPreferences("Datos", Context.MODE_PRIVATE);
         String email = shared.getString("Usuario", "");
         insertarNickEnCabecera(email, txtCabecera);
 
-
-
+        //Escuchador del editText que usamos para filtrar una búsqueda
         etBuscadorTrat.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
@@ -92,110 +92,117 @@ public class TratamientosActivity extends AppCompatActivity implements View.OnCl
     }
 
     private void llenarTratamientos() {
-        shared = getSharedPreferences("Datos", Context.MODE_PRIVATE);
-        String email = shared.getString("Usuario", "");
-        //Aquí rellenamos la lista con los tratamientos
-        cargarTratamientos(email);
-
+        try {
+            shared = getSharedPreferences("Datos", Context.MODE_PRIVATE);
+            String email = shared.getString("Usuario", "");
+            //Aquí rellenamos la lista con los tratamientos
+            cargarTratamientos(email);
+        } catch (Exception ex) {
+            Log.w("Error: ", ex.getMessage());
+            Toast toast = Toast.makeText(getApplicationContext(), "Se ha producido un error.", Toast.LENGTH_LONG);
+            toast.setGravity(Gravity.TOP | Gravity.CENTER_HORIZONTAL, 0, 500);
+            toast.show();
+        }
 
     }
 
     public void onClick(View view) {
 
-        switch (view.getId()) {
-            case R.id.btnGridActualizar:
-                UtilidadesAddTratamientos.visualizacion = UtilidadesAddTratamientos.GRID;
-                break;
-            case R.id.btVolverMenu:
-                Intent intent = new Intent(getApplicationContext(), UsuarioActivity.class);
-                startActivity(intent); // Lanzamos el activity
-                break;
-            case R.id.etBuscadorTrat:
-                etBuscadorTrat.setFocusableInTouchMode(true);
-                etBuscadorTrat.setFocusable(true);
-                etBuscadorTrat.setEnabled(true);
-                etBuscadorTrat.setInputType(InputType.TYPE_CLASS_TEXT);
-                etBuscadorTrat.setCursorVisible(true);
-                break;
-            case R.id.btAddNuevoT:
-                Intent intentNewT = new Intent(getApplicationContext(), AddTratamientosActivity.class);
-                startActivity(intentNewT);
-                break;
-        }
-        construirRecycler();
-    }
-
-    private void construirRecycler() {
-        listaTratamientos = new ArrayList<>();
-        recyclerTratamientos = (RecyclerView) findViewById(R.id.RecyclerId);
-        llenarTratamientos();
-
-
-////////////////////
-        handler = new Handler();
-        Runnable r = new Runnable() {
-            public void run() {
-                if (UtilidadesAddTratamientos.visualizacion == UtilidadesAddTratamientos.LIST) {
-                    recyclerTratamientos.setLayoutManager(new LinearLayoutManager(getApplicationContext()));
-                } else {
-                    recyclerTratamientos.setLayoutManager(new GridLayoutManager(getApplicationContext(), 3));
-                }
-
-                //aqui el metodo
-
-                AdaptadorAddTratamientos adapter = new AdaptadorAddTratamientos(listaTratamientos);
-
-                adapter.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        //Cuando hacemos click en un item de la lista.
-
-                        Intent intent = new Intent(getApplicationContext(), MedicamentosActivity.class);
-                        startActivity(intent); // Lanzamos el activity
-//                        String emailUsuario = "albertomaneiros@gmail.com";
-//                        String nombreTratamiento = listaTratamientos.get(recyclerTratamientos.getChildAdapterPosition(view)).getNombre();
-//                        insertarTratamientosElegidos(nombreTratamiento, emailUsuario);
-//
-//                        Toast.makeText(getApplicationContext(),
-//                                "Tratamiento añadido",Toast.LENGTH_SHORT).show();
-
-                        //Capturamos con shared prederences el nombre del tratamiento:
-                        String nombreTrat = listaTratamientos.get(recyclerTratamientos.getChildAdapterPosition(view)).getNombre();
-                        String duracionTrat = listaTratamientos.get(recyclerTratamientos.getChildAdapterPosition(view)).getDuracion();
-//                        Toast.makeText(getApplicationContext(),
-//                                "Selección: "+ listaMedicamentos.get
-//                                        (recyclerMedicamentos.getChildAdapterPosition(view))
-//                                        .getNombre(),Toast.LENGTH_SHORT).show();
-
-                        //Instanciamos Shared, abrimos fichero "Datos" con acceso en modo privado y abrimos editor
-
-                        shared = getApplicationContext().getSharedPreferences("Datos", Context.MODE_PRIVATE);
-                        editor = shared.edit();
-
-                        //Utilizamos el editor para guardar la variable dato recogida del EditText Usuario en la clave "Usuario" de nuestro archivo Shared que hemos llamado "Datos"
-                        editor.putString("nombreTratamiento", nombreTrat);
-                        editor.putString("duracionTratamiento", duracionTrat);
-                        editor.commit();
-
-
-                    }
-                });
-
-                recyclerTratamientos.setAdapter(adapter);
-
+        try {
+            switch (view.getId()) {
+                case R.id.btnGridActualizar:
+                    UtilidadesAddTratamientos.visualizacion = UtilidadesAddTratamientos.GRID;
+                    break;
+                case R.id.btVolverMenu:
+                    Intent intent = new Intent(getApplicationContext(), UsuarioActivity.class);
+                    startActivity(intent); // Lanzamos el activity
+                    break;
+                case R.id.etBuscadorTrat:
+                    etBuscadorTrat.setFocusableInTouchMode(true);
+                    etBuscadorTrat.setFocusable(true);
+                    etBuscadorTrat.setEnabled(true);
+                    etBuscadorTrat.setInputType(InputType.TYPE_CLASS_TEXT);
+                    etBuscadorTrat.setCursorVisible(true);
+                    break;
+                case R.id.btAddNuevoT:
+                    Intent intentNewT = new Intent(getApplicationContext(), AddTratamientosActivity.class);
+                    startActivity(intentNewT);
+                    break;
             }
-        };
-        handler.postDelayed(r, 2000);
-///////////////////////////////////
+            construirRecycler();
+        } catch (Exception ex) {
+            Log.w("Error: ", ex.getMessage());
+            Toast toast = Toast.makeText(getApplicationContext(), "Se ha producido un error.", Toast.LENGTH_LONG);
+            toast.setGravity(Gravity.TOP | Gravity.CENTER_HORIZONTAL, 0, 500);
+            toast.show();
+        }
+
 
     }
+
+    /*
+    Método por el que construimos el RecyclerView
+     */
+    private void construirRecycler() {
+
+        try {
+            listaTratamientos = new ArrayList<>();
+            recyclerTratamientos = (RecyclerView) findViewById(R.id.RecyclerId);
+            llenarTratamientos();
+
+            handler = new Handler();
+            Runnable r = new Runnable() {
+                public void run() {
+                    if (UtilidadesAddTratamientos.visualizacion == UtilidadesAddTratamientos.LIST) {
+                        recyclerTratamientos.setLayoutManager(new LinearLayoutManager(getApplicationContext()));
+                    } else {
+                        recyclerTratamientos.setLayoutManager(new GridLayoutManager(getApplicationContext(), 3));
+                    }
+
+                    AdaptadorAddTratamientos adapter = new AdaptadorAddTratamientos(listaTratamientos);
+
+                    adapter.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+                            //Cuando hacemos click en un item de la lista.
+
+                            Intent intent = new Intent(getApplicationContext(), MedicamentosActivity.class);
+                            startActivity(intent);
+
+                            //Capturamos con shared prederences el nombre del tratamiento:
+                            String nombreTrat = listaTratamientos.get(recyclerTratamientos.getChildAdapterPosition(view)).getNombre();
+                            String duracionTrat = listaTratamientos.get(recyclerTratamientos.getChildAdapterPosition(view)).getDuracion();
+
+                            //Instanciamos Shared, abrimos fichero "Datos" con acceso en modo privado y abrimos editor
+                            shared = getApplicationContext().getSharedPreferences("Datos", Context.MODE_PRIVATE);
+                            editor = shared.edit();
+
+                            //Utilizamos el editor para guardar la variable dato recogida del EditText Usuario en la clave "Usuario" de nuestro archivo Shared que hemos llamado "Datos"
+                            editor.putString("nombreTratamiento", nombreTrat);
+                            editor.putString("duracionTratamiento", duracionTrat);
+                            editor.commit();
+                        }
+                    });
+                    recyclerTratamientos.setAdapter(adapter);
+                }
+            };
+            handler.postDelayed(r, 2000);
+        } catch (Exception ex) {
+            Log.w("Error: ", ex.getMessage());
+            Toast toast = Toast.makeText(getApplicationContext(), "Se ha producido un error.", Toast.LENGTH_LONG);
+            toast.setGravity(Gravity.TOP | Gravity.CENTER_HORIZONTAL, 0, 500);
+            toast.show();
+        }
+
+    }
+
     @Override
     public void onBackPressed() {
 
         //Creamos este método para anular el botón atrás en el dispositivo
     }
 
-    public void cargarTratamientos(String usuario){
+    public void cargarTratamientos(String usuario) {
 
         FirebaseFirestore db = FirebaseFirestore.getInstance();
         CollectionReference tratRef = db.collection("tratamientos");
@@ -312,7 +319,7 @@ public class TratamientosActivity extends AppCompatActivity implements View.OnCl
         handler.postDelayed(r, 2000);
     }
 
-    public void insertarNickEnCabecera(String email, TextView txtCab){
+    public void insertarNickEnCabecera(String email, TextView txtCab) {
         FirebaseFirestore db = FirebaseFirestore.getInstance();
         DocumentReference docRef = db.collection("usuarios").document(email);
         docRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {

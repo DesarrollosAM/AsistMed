@@ -128,9 +128,6 @@ public class AddTratamientosActivity extends AppCompatActivity implements View.O
         recyclerAddTratamientos = (RecyclerView) findViewById(R.id.RecyclerId);
         llenarAddTratamientos();
 
-
-////////////////////
-
         handler = new Handler();
         Runnable r = new Runnable() {
             public void run() {
@@ -152,31 +149,12 @@ public class AddTratamientosActivity extends AppCompatActivity implements View.O
                         String emailUsuario = shared.getString("Usuario", "");
                         String nombreTratamiento = listaAddTratamientos.get(recyclerAddTratamientos.getChildAdapterPosition(view)).getNombre();
                         comprobarExistenciaTratEnUsuario(nombreTratamiento, emailUsuario);
-
-
-//                        tratInsertados = false;
-//                        tratInsertados = insertarTratamientosElegidos(nombreTratamiento, emailUsuario);
-//                        ModificarTratamientosenUsuarios(emailUsuario);
-
-
-                        //Toast.makeText(getApplicationContext(), "Tratamiento añadido", Toast.LENGTH_SHORT).show();
-
-//                        Toast.makeText(getApplicationContext(),
-//                                "Selección: "+ listaMedicamentos.get
-//                                        (recyclerMedicamentos.getChildAdapterPosition(view))
-//                                        .getNombre(),Toast.LENGTH_SHORT).show();
-
-
                     }
                 });
-
                 recyclerAddTratamientos.setAdapter(adapter);
-
             }
         };
         handler.postDelayed(r, 1200);
-///////////////////////////////////
-
     }
 
     @Override
