@@ -9,15 +9,17 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.provider.AlarmClock;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.Toast;
-
 import com.example.asistmed.R;
-
 import java.util.regex.Pattern;
+
+
+//Comentarios terminados y try/catch implementados
 
 public class AlarmaActivity extends AppCompatActivity {
 
@@ -30,6 +32,7 @@ public class AlarmaActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_alarma);
 
+        //Ocultamos barra de navegación y activamos full screen
         View decorView = getWindow().getDecorView();
         int uiOptions = View.SYSTEM_UI_FLAG_IMMERSIVE | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION | View.SYSTEM_UI_FLAG_FULLSCREEN;
         decorView.setSystemUiVisibility(uiOptions);
@@ -42,6 +45,10 @@ public class AlarmaActivity extends AppCompatActivity {
 
         //Creamos este método para anular el botón atrás en el dispositivo
     }
+
+    /*
+    Método por el que lanzamos un diálogo para soliditar la usuario los datos para activar alarma recordatorio.
+     */
 
     public void dialogoAlarma() {
         try {
@@ -105,22 +112,47 @@ public class AlarmaActivity extends AppCompatActivity {
             //Asignamos el dialogo construido a uno nuevo y lo mostramos.
             AlertDialog dialog = builderAddTratamientos.create();
             dialog.show();
-        } catch (Exception e) {
+        } catch (Exception ex) {
+
+
+            Log.w("Error: ", ex.getMessage());
+
+            Toast toast = Toast.makeText(getApplicationContext(), "Se ha producido un error.", Toast.LENGTH_LONG);
+            toast.setGravity(Gravity.TOP | Gravity.CENTER_HORIZONTAL, 0, 500);
+            toast.show();
 
         }
     }
 
+    /*
+    Método por el que activamos alarma con los datos introducidos por el usuarios.
+     */
+
     private void activarAlarma(String mensaje, int hora, int minutos, int frecuencia) {
 
-        Intent intent = new Intent(AlarmClock.ACTION_SET_ALARM)
-                .putExtra(AlarmClock.EXTRA_MESSAGE, mensaje)
-                .putExtra(AlarmClock.EXTRA_HOUR, hora)
-                .putExtra(AlarmClock.EXTRA_MINUTES, minutos)
-                .putExtra(AlarmClock.EXTRA_ALARM_SNOOZE_DURATION, frecuencia * 60);
-        //.putExtra(String.valueOf(AlarmManager.ELAPSED_REALTIME), 3);
+        try {
 
-        if (intent.resolveActivity(getPackageManager()) != null) {
-            startActivity(intent);
+            Intent intent = new Intent(AlarmClock.ACTION_SET_ALARM)
+                    .putExtra(AlarmClock.EXTRA_MESSAGE, mensaje)
+                    .putExtra(AlarmClock.EXTRA_HOUR, hora)
+                    .putExtra(AlarmClock.EXTRA_MINUTES, minutos)
+                    .putExtra(AlarmClock.EXTRA_ALARM_SNOOZE_DURATION, frecuencia * 60);
+            //.putExtra(String.valueOf(AlarmManager.ELAPSED_REALTIME), 3);
+
+            if (intent.resolveActivity(getPackageManager()) != null) {
+                startActivity(intent);
+            }
+
+        } catch (Exception ex) {
+
+            Log.w("Error: ", ex.getMessage());
+
+            Toast toast = Toast.makeText(getApplicationContext(), "Se ha producido un error.", Toast.LENGTH_LONG);
+            toast.setGravity(Gravity.TOP | Gravity.CENTER_HORIZONTAL, 0, 500);
+            toast.show();
+
         }
+
+
     }
 }

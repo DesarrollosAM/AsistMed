@@ -13,7 +13,7 @@ import android.widget.Toast;
 
 import com.example.asistmed.R;
 
-//Comentarios terminados + try hechos
+//Comentarios terminados y try/catch implementados
 
 public class CorreoActivity extends AppCompatActivity implements View.OnClickListener{
 

@@ -3,25 +3,20 @@ package com.example.asistmed.Controladores;
 
 import androidx.core.app.ActivityCompat;
 import androidx.fragment.app.FragmentActivity;
-import androidx.recyclerview.widget.GridLayoutManager;
-import androidx.recyclerview.widget.LinearLayoutManager;
-
 import android.Manifest;
 import android.annotation.SuppressLint;
-import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
 import android.os.Handler;
+import android.util.Log;
+import android.view.Gravity;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.Toast;
-
 import com.example.asistmed.R;
-import com.example.asistmed.RecyclerViews.AdaptadorAddTratamientos;
-import com.example.asistmed.RecyclerViews.UtilidadesAddTratamientos;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
@@ -33,10 +28,10 @@ import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.maps.android.data.geojson.GeoJsonLayer;
 import com.google.maps.android.data.geojson.GeoJsonPointStyle;
-
 import org.json.JSONException;
-
 import java.io.IOException;
+
+//Comentarios terminados y try/catch implementados
 
 public class MapsActivity extends FragmentActivity implements OnMapReadyCallback, View.OnClickListener {
 
@@ -55,6 +50,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+
+        //Ocultamos barra de navegación y activamos full screen
         View decorView = getWindow().getDecorView();
         int uiOptions =  View.SYSTEM_UI_FLAG_IMMERSIVE | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION | View.SYSTEM_UI_FLAG_FULLSCREEN;
         decorView.setSystemUiVisibility(uiOptions);
@@ -62,7 +59,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         binding = ActivityMapsBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
-        // Obtain the SupportMapFragment and get notified when the map is ready to be used.
+        // Obtenemos el SupportMapFragment y obtenemos una notificación cuando esté listo.
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
@@ -81,6 +78,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             btVistaNormal.setVisibility(View.VISIBLE);
         });
 
+        // Añadimos funcionalidad al botón Vista Normal
         btVistaNormal.setOnClickListener(view -> {
             mMap.setMapType(GoogleMap.MAP_TYPE_NORMAL);
             btSatelite.setVisibility(View.VISIBLE);
@@ -129,10 +127,10 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         Bitmap b = bitmapdraw.getBitmap();
         Bitmap smallMarker = Bitmap.createScaledBitmap(b, 63, 100, false);
 
-        // Add a marker in Murcia and move the camera
+        // Añado marcador con la posición del Carlos III
         LatLng llCarlosIII = new LatLng(37.6057886, -0.9901911);
         marcadorCarlosIII = mMap.addMarker(new MarkerOptions().position(llCarlosIII).title("CIFP Carlos III").icon(BitmapDescriptorFactory
-                .fromBitmap(smallMarker)));//USo el smallmarker creado con la imagen para añadirla;
+                .fromBitmap(smallMarker)));//Uso el smallmarker creado con la imagen para añadirla;
 
         //Habilita lo botones de zoom y de navegación
         mMap.getUiSettings().setZoomControlsEnabled(true);
@@ -140,6 +138,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         //Definimos el tipo de vista del mapa
         mMap.setMapType(GoogleMap.MAP_TYPE_NORMAL);
 
+        //Retrasamos la la animcación del mapa 1,2 segundos para que cargue por completo
         handler = new Handler();
         Runnable r = new Runnable() {
             public void run() {
@@ -161,12 +160,26 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                     layer.addLayerToMap();
 
 
-                } catch (IOException e) {
-                    e.printStackTrace();
+                } catch (IOException ex) {
+                    ex.printStackTrace();
+
+                    Log.w("Error: ", ex.getMessage());
+
+                    Toast toast = Toast.makeText(getApplicationContext(), "Se ha producido un error.", Toast.LENGTH_LONG);
+                    toast.setGravity(Gravity.TOP | Gravity.CENTER_HORIZONTAL, 0, 500);
+                    toast.show();
+
                     Toast.makeText(MapsActivity.this, "Fallo Lectura JSON",
                             Toast.LENGTH_SHORT).show();
-                } catch (JSONException e) {
-                    e.printStackTrace();
+                } catch (JSONException ex) {
+                    ex.printStackTrace();
+
+                    Log.w("Error: ", ex.getMessage());
+
+                    Toast toast = Toast.makeText(getApplicationContext(), "Se ha producido un error.", Toast.LENGTH_LONG);
+                    toast.setGravity(Gravity.TOP | Gravity.CENTER_HORIZONTAL, 0, 500);
+                    toast.show();
+
                     Toast.makeText(MapsActivity.this, "Fallo JSON",
                             Toast.LENGTH_SHORT).show();
                 }

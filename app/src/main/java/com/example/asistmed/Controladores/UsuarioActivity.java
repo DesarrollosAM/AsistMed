@@ -4,7 +4,6 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
-import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -12,33 +11,27 @@ import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
+import android.util.Log;
+import android.view.Gravity;
 import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
 
-import com.example.asistmed.Controladores.MapsActivity;
 import com.example.asistmed.Login.LoginActivity;
-import com.example.asistmed.Login.RecuperarContrasenaActivity;
 import com.example.asistmed.R;
 import com.example.asistmed.RecyclerViews.AddTratamientosActivity;
 import com.example.asistmed.RecyclerViews.TratamientosActivity;
 import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.QueryDocumentSnapshot;
-import com.google.firebase.firestore.QuerySnapshot;
-
 import android.widget.TextView;
-
 import com.google.firebase.auth.FirebaseAuth;
-
 import com.google.zxing.integration.android.IntentIntegrator;
 import com.google.zxing.integration.android.IntentResult;
 
+//Comentarios terminados y try/catch implementados (comentados métodos eliminarUsuarioporID y eliminarUsuarioporEmail)
 
 public class UsuarioActivity extends AppCompatActivity implements View.OnClickListener {
 
@@ -48,8 +41,7 @@ public class UsuarioActivity extends AppCompatActivity implements View.OnClickLi
     private TextView txtUsuario;
 
 
-
-    //Declaramos las variables, tipo Shared
+    //Declaramos las variables
 
     private SharedPreferences shared;
     private SharedPreferences.Editor editor;
@@ -67,38 +59,29 @@ public class UsuarioActivity extends AppCompatActivity implements View.OnClickLi
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_usuario);
 
-
+        //Ocultamos barra de navegación y activamos full screen
         View decorView = getWindow().getDecorView();
-        int uiOptions =  View.SYSTEM_UI_FLAG_IMMERSIVE | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION | View.SYSTEM_UI_FLAG_FULLSCREEN ;
+        int uiOptions = View.SYSTEM_UI_FLAG_IMMERSIVE | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION | View.SYSTEM_UI_FLAG_FULLSCREEN;
         decorView.setSystemUiVisibility(uiOptions);
 
         mAuth = FirebaseAuth.getInstance();
 
         //Recogemos el usuario que hemos guardado en nuestro fichero de Shared llamado "Datos"
-
-
         shared = getSharedPreferences("Datos", Context.MODE_PRIVATE);
         String emailRecogido = shared.getString("Usuario", "");
 
 
         //Cargamos la referencia de nuestro ImageView
-        btAsistente  = (Button) findViewById(R.id.btAsistente);
+        btAsistente = (Button) findViewById(R.id.btAsistente);
         btCitaPrevia = (Button) findViewById(R.id.btCitaPrevia);
-        btFarmacias  = (Button) findViewById(R.id.btFarmacias);
-        btSalir       = (Button) findViewById(R.id.btSalir);
+        btFarmacias = (Button) findViewById(R.id.btFarmacias);
+        btSalir = (Button) findViewById(R.id.btSalir);
         btLectorCodigos = (Button) findViewById(R.id.btLectorCodigos);
         btInicio = (Button) findViewById(R.id.btInicio);
-        //btMute       = (ImageView) findViewById(R.id.ivMute);
-        //btConSonido  = (ImageView) findViewById(R.id.ivConSonido);
-        //btEliminarUsuario = (ImageView) findViewById(R.id.ivEliminarUsuario);
-        //btFoto = (Button) findViewById(R.id.btFoto);
-        //etNombreFoto = (TextView) findViewById(R.id.etNombreFoto);
-        //swAlarma = (Switch) findViewById(R.id.swAlarma);
         txtUsuario = (TextView) findViewById(R.id.txtUsuarioActivo);
 
-
+        //Llamamos a método que mostrara el nick del usuario en el textView al efecto en el Activity
         obtenerNick(emailRecogido, txtUsuario);
-
 
         //Asignación del evento click
         btAsistente.setOnClickListener(this);
@@ -107,21 +90,15 @@ public class UsuarioActivity extends AppCompatActivity implements View.OnClickLi
         btSalir.setOnClickListener(this);
         btInicio.setOnClickListener(this);
         btLectorCodigos.setOnClickListener(this);
-        //btEliminarUsuario.setOnClickListener(this);
 
         //Asignamos las direcciones url.
         urlCitaPrevia = "https://sms.carm.es/cmap/";
-        urlFarmacias  = "https://www.farmacias.es/";
         urlAgenciaMedicamento = "https://cima.aemps.es/info/";
 
 
         //Cargamos la referencia a nuestro TextView
 
         txtUsuario = (TextView) findViewById(R.id.txtUsuarioActivo);
-
-
-
-
 
     }
 
@@ -134,99 +111,102 @@ public class UsuarioActivity extends AppCompatActivity implements View.OnClickLi
         String lecturaQr = result.getContents();
 
         //Si la lectura del código es exitosa, extraemos el substring con la parte del código que pasamos a la URL de la agencia del medicamento
-        if(lecturaQr != null){
+        if (lecturaQr != null) {
 
 
-            String idMedicamento = lecturaQr.substring(10,16);
-            Uri uri = Uri.parse(urlAgenciaMedicamento+idMedicamento);
+            String idMedicamento = lecturaQr.substring(10, 16);
+            Uri uri = Uri.parse(urlAgenciaMedicamento + idMedicamento);
             Intent intent = new Intent(Intent.ACTION_VIEW, uri);
             startActivity(intent);
-        //Si cancelamos la lectura
-        } else{
+
+            //Si cancelamos la lectura
+        } else {
             Toast lecturaCancelada = Toast.makeText(getApplicationContext(), "Lectura cancelada.", Toast.LENGTH_LONG);
             lecturaCancelada.show();
         }
-
 
     }
 
     @Override
     public void onClick(View view) {
 
-        if (view.getId() == R.id.btAsistente) {
-            shared = getSharedPreferences("Datos", Context.MODE_PRIVATE);
-            email = shared.getString("Usuario", "");
-            consultarTratamientosUsuario(email);
+        try {
 
-        } else if (view.getId() == R.id.btCitaPrevia) {
-            Uri uri = Uri.parse(urlCitaPrevia);
-            Intent intent = new Intent(Intent.ACTION_VIEW, uri);
-            startActivity(intent);
+            if (view.getId() == R.id.btAsistente) {
+                shared = getSharedPreferences("Datos", Context.MODE_PRIVATE);
+                email = shared.getString("Usuario", "");
+                consultarTratamientosUsuario(email);
 
-        } else if (view.getId() == R.id.btFarmacias) {
-            startActivity(new Intent(this, MapsActivity.class));
+            } else if (view.getId() == R.id.btCitaPrevia) {
+                Uri uri = Uri.parse(urlCitaPrevia);
+                Intent intent = new Intent(Intent.ACTION_VIEW, uri);
+                startActivity(intent);
 
-        } else if (view.getId() == R.id.btSalir) {
+            } else if (view.getId() == R.id.btFarmacias) {
+                startActivity(new Intent(this, MapsActivity.class));
 
-            //Cerramos sesión en Firebase Auth
+            } else if (view.getId() == R.id.btSalir) {
 
-            //shared.edit().remove("Usuario").commit();//Eliminamos de las Shared la key de usuario para que vuelva a coger su valor al volver de nuevo al Activity
-            mAuth.signOut();
+                //Cerramos sesión en Firebase Auth
+                mAuth.signOut();
 
-            FirebaseAuth.getInstance().signOut();
+                FirebaseAuth.getInstance().signOut();
 
-            /////////////////////////////////////Retrasamos el cierre de la aplicación 2 seg para que se pueda completar el cierre de sesión en FirebaseAucth, ya que es asíncrona.
-            handler = new Handler();
-            Runnable r = new Runnable() {
-                public void run() {
+                /////////////////////////////////////Retrasamos el cierre de la aplicación 2 seg para que se pueda completar el cierre de sesión en FirebaseAucth, ya que es asíncrona.
+                handler = new Handler();
+                Runnable r = new Runnable() {
+                    public void run() {
 
-                    finish();
-                    finishAffinity();
-                    System.exit(0);
-                }
-            };
-            handler.postDelayed(r, 2000);
-            ///////////////////////////////////
-
-
-        } else if (view.getId() == R.id.btLectorCodigos) {
-            //String idDocumento = "4V5Lr6e1WJK5ZkHzhUOy";
-            ////eliminarUsuarioPorID(idDocumento);
-            //String email = "3242343@23432.432";
-            //eliminarUsuarioPorEmail(email);
-
-            //Creamos un objeto IntentIntegrator
-            //new IntentIntegrator(this).initiateScan();
-            IntentIntegrator integrador = new IntentIntegrator(this); //Creamos el objeto del tipo IntentIntegrator
-            integrador.setDesiredBarcodeFormats(IntentIntegrator.ALL_CODE_TYPES); //Llemos todos los tipos de códigos
-            integrador.setPrompt("Lector Códigos ASISTMED");
-            integrador.setCameraId(0);//Activamos cámara trasera
-            integrador.setBeepEnabled(true);//Activamos el Beep cuando captura código
-            integrador.setBarcodeImageEnabled(true);//
-            integrador.setOrientationLocked(false);
-            integrador.initiateScan();
-
-        }else if (view.getId() == R.id.btInicio) {
+                        finish();
+                        finishAffinity();
+                        System.exit(0);
+                    }
+                };
+                handler.postDelayed(r, 2000);
+                ///////////////////////////////////
 
 
-              mAuth.signOut();
+            } else if (view.getId() == R.id.btLectorCodigos) {
 
-            /////////////////////////////////////Retrasamos el cierre de la aplicación 2 seg para que se pueda completar el cierre de sesión en FirebaseAucth, ya que es asíncrona.
-            handler = new Handler();
-            Runnable r = new Runnable() {
-                public void run() {
+                IntentIntegrator integrador = new IntentIntegrator(this); //Creamos el objeto del tipo IntentIntegrator
+                integrador.setDesiredBarcodeFormats(IntentIntegrator.ALL_CODE_TYPES); //Llemos todos los tipos de códigos
+                integrador.setPrompt("Lector Códigos ASISTMED");
+                integrador.setCameraId(0);//Activamos cámara trasera
+                integrador.setBeepEnabled(true);//Activamos el Beep cuando captura código
+                integrador.setBarcodeImageEnabled(true);//
+                integrador.setOrientationLocked(false);
+                integrador.initiateScan();
 
-                    finish();
-                    finishAffinity();
-                    startActivity(new Intent(getApplicationContext(), LoginActivity.class));
-                }
-            };
-            handler.postDelayed(r, 2000);
-            ///////////////////////////////////
+            } else if (view.getId() == R.id.btInicio) {
 
 
-         }
+                mAuth.signOut();
 
+                /////////////////////////////////////Retrasamos el cierre de la aplicación 2 seg para que se pueda completar el cierre de sesión en FirebaseAucth, ya que es asíncrona.
+                handler = new Handler();
+                Runnable r = new Runnable() {
+                    public void run() {
+
+                        finish();
+                        finishAffinity();
+                        startActivity(new Intent(getApplicationContext(), LoginActivity.class));
+                    }
+                };
+                handler.postDelayed(r, 2000);
+                ///////////////////////////////////
+
+
+            }
+
+        } catch (Exception ex) {
+
+            Log.w("Error: ", ex.getMessage());
+
+            Toast toast = Toast.makeText(getApplicationContext(), "Se ha producido un error.", Toast.LENGTH_LONG);
+            toast.setGravity(Gravity.TOP | Gravity.CENTER_HORIZONTAL, 0, 500);
+            toast.show();
+
+        }
 
 
     }
@@ -241,7 +221,7 @@ public class UsuarioActivity extends AppCompatActivity implements View.OnClickLi
     /*
     Método para eliminar un usuario de la BD a traves del ID del documento
      */
-    public void eliminarUsuarioPorID(String documento) {
+/*    public void eliminarUsuarioPorID(String documento) {
         FirebaseFirestore db = FirebaseFirestore.getInstance();
         db.collection("usuarios").document(documento)
                 .delete()
@@ -261,12 +241,12 @@ public class UsuarioActivity extends AppCompatActivity implements View.OnClickLi
                         toastUsuarioValido.show();
                     }
                 });
-    }
+    }*/
 
     /*
     Método para eliminar un registro de la BD filtrándolo por un campo
      */
-    public void eliminarUsuarioPorEmail(String email) {
+/*    public void eliminarUsuarioPorEmail(String email) {
         String idDocumento = "";
         FirebaseFirestore db = FirebaseFirestore.getInstance();
         db.collection("usuarios")
@@ -289,7 +269,7 @@ public class UsuarioActivity extends AppCompatActivity implements View.OnClickLi
                         }
                     }
                 });
-    }
+    }*/
 
     public void consultarTratamientosUsuario(String email) {
 
@@ -316,62 +296,61 @@ public class UsuarioActivity extends AppCompatActivity implements View.OnClickLi
                         }
 
                     } else {
-                        //Log.d(TAG, "Error getting documents: ", task.getException());
+
                         Toast toast = Toast.makeText(getApplicationContext(), "Error al ejecutar la tarea.", Toast.LENGTH_LONG);
                         toast.show();
                     }
                 }
             });
-        } catch (Exception e) {
-            e.printStackTrace();
+        } catch (Exception ex) {
+            Log.w("Error: ", ex.getMessage());
+
+            Toast toast = Toast.makeText(getApplicationContext(), "Se ha producido un error.", Toast.LENGTH_LONG);
+            toast.setGravity(Gravity.TOP | Gravity.CENTER_HORIZONTAL, 0, 500);
+            toast.show();
         }
     }
 
     /*
     Método por el que obtenemos de la BD, el nick del email pasado y se lo aplicamos al Textview correspondiente.
      */
-    public void obtenerNick(String email, TextView nick){
-        FirebaseFirestore dbo = FirebaseFirestore.getInstance();
-        DocumentReference docRef = dbo.collection("usuarios").document(email);
-        docRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
-            @Override
-            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                if (task.isSuccessful()) {
-                    DocumentSnapshot document = task.getResult();
-                    if (document.exists()) {
-                        String valorNick = document.getString("nick");
-                        if(valorNick != ""){
-                            nick.setText("¡BIENVENIDO " + document.getString("nick").toUpperCase() + "!");
-                        } else {
-                            nick.setText("NICK NO INTRODUCIDO");
-                        }
+    public void obtenerNick(String email, TextView nick) {
 
-                        //Log.d(TAG, "DocumentSnapshot data: " + document.getData());
+        try {
+
+            FirebaseFirestore dbo = FirebaseFirestore.getInstance();
+            DocumentReference docRef = dbo.collection("usuarios").document(email);
+            docRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                @Override
+                public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                    if (task.isSuccessful()) {
+                        DocumentSnapshot document = task.getResult();
+                        if (document.exists()) {
+                            String valorNick = document.getString("nick");
+                            if (valorNick != "") {
+                                nick.setText("¡BIENVENIDO " + document.getString("nick").toUpperCase() + "!");
+                            } else {
+                                nick.setText("NICK NO INTRODUCIDO");
+                            }
+
+                        } else {
+                        }
                     } else {
 
-                        //Log.d(TAG, "No such document");
                     }
-                } else {
-                    //Log.d(TAG, "get failed with ", task.getException());
                 }
-            }
-        });
+            });
+
+        } catch (Exception ex) {
+
+            Log.w("Error: ", ex.getMessage());
+
+            Toast toast = Toast.makeText(getApplicationContext(), "Se ha producido un error.", Toast.LENGTH_LONG);
+            toast.setGravity(Gravity.TOP | Gravity.CENTER_HORIZONTAL, 0, 500);
+            toast.show();
+
+        }
+
     }
 
-//    private void activarAlarma (String mensaje, int hora, int minutos){
-//
-//
-//        Intent intent = new Intent(AlarmClock.ACTION_SET_ALARM)
-//                .putExtra(AlarmClock.EXTRA_MESSAGE, mensaje)
-//                .putExtra(AlarmClock.EXTRA_HOUR, hora)
-//                .putExtra(AlarmClock.EXTRA_MINUTES, minutos);
-//        //.putExtra(AlarmClock.EXTRA_ALARM_SNOOZE_DURATION, 5)
-//        //.putExtra(String.valueOf(AlarmManager.ELAPSED_REALTIME), 3);
-//
-//
-//        if (intent.resolveActivity(getPackageManager()) != null){
-//
-//            startActivity(intent);
-//        }
-//    }
 }

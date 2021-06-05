@@ -2,7 +2,6 @@ package com.example.asistmed.Controladores;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
-
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -10,13 +9,14 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
+import android.util.Log;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
-
 import com.example.asistmed.Login.LoginActivity;
 import com.example.asistmed.R;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -25,11 +25,10 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
-
 import java.util.HashMap;
 import java.util.Map;
 
-//Comentarios terminados
+//Comentarios terminados y try/catch implementados
 
 public class AdministradorActivity extends AppCompatActivity implements View.OnClickListener {
 
@@ -50,7 +49,7 @@ public class AdministradorActivity extends AppCompatActivity implements View.OnC
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_administrador);
 
-        //
+        //Ocultamos barra de navegación y activamos full screen
         View decorView = getWindow().getDecorView();
         int uiOptions = View.SYSTEM_UI_FLAG_IMMERSIVE | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION | View.SYSTEM_UI_FLAG_FULLSCREEN;
         decorView.setSystemUiVisibility(uiOptions);
@@ -147,7 +146,13 @@ public class AdministradorActivity extends AppCompatActivity implements View.OnC
 
                     break;
             }
-        } catch (Exception e) {
+        } catch (Exception ex) {
+
+            Log.w("Error: ", ex.getMessage());
+
+            Toast toast = Toast.makeText(getApplicationContext(), "Se ha producido un error.", Toast.LENGTH_LONG);
+            toast.setGravity(Gravity.TOP | Gravity.CENTER_HORIZONTAL, 0, 500);
+            toast.show();
 
         }
     }
@@ -220,7 +225,13 @@ public class AdministradorActivity extends AppCompatActivity implements View.OnC
 
             AlertDialog dialog = builderTratamientos.create();
             dialog.show();
-        } catch (Exception e) {
+        } catch (Exception ex) {
+
+            Log.w("Error: ", ex.getMessage());
+
+            Toast toast = Toast.makeText(getApplicationContext(), "Se ha producido un error.", Toast.LENGTH_LONG);
+            toast.setGravity(Gravity.TOP | Gravity.CENTER_HORIZONTAL, 0, 500);
+            toast.show();
 
         }
     }
@@ -289,7 +300,13 @@ public class AdministradorActivity extends AppCompatActivity implements View.OnC
 
             AlertDialog dialog = builderMedicamentos.create();
             dialog.show();
-        } catch (Exception e) {
+        } catch (Exception ex) {
+
+            Log.w("Error: ", ex.getMessage());
+
+            Toast toast = Toast.makeText(getApplicationContext(), "Se ha producido un error.", Toast.LENGTH_LONG);
+            toast.setGravity(Gravity.TOP | Gravity.CENTER_HORIZONTAL, 0, 500);
+            toast.show();
 
         }
     }
@@ -340,7 +357,13 @@ public class AdministradorActivity extends AppCompatActivity implements View.OnC
             //Asignamos el dialogo construido a uno nuevo y lo mostramos.
             AlertDialog dialog = builderAddTratamientos.create();
             dialog.show();
-        } catch (Exception e) {
+        } catch (Exception ex) {
+
+            Log.w("Error: ", ex.getMessage());
+
+            Toast toast = Toast.makeText(getApplicationContext(), "Se ha producido un error.", Toast.LENGTH_LONG);
+            toast.setGravity(Gravity.TOP | Gravity.CENTER_HORIZONTAL, 0, 500);
+            toast.show();
 
         }
     }
@@ -386,7 +409,14 @@ public class AdministradorActivity extends AppCompatActivity implements View.OnC
                     }
                 }
             });
-        } catch (Exception e) {
+        } catch (Exception ex) {
+
+
+            Log.w("Error: ", ex.getMessage());
+
+            Toast toast = Toast.makeText(getApplicationContext(), "Se ha producido un error.", Toast.LENGTH_LONG);
+            toast.setGravity(Gravity.TOP | Gravity.CENTER_HORIZONTAL, 0, 500);
+            toast.show();
 
         }
     }
@@ -444,7 +474,13 @@ public class AdministradorActivity extends AppCompatActivity implements View.OnC
             //Asignamos el dialogo construido a uno nuevo y lo mostramos.
             AlertDialog dialog = builderAddMedicamentos.create();
             dialog.show();
-        } catch (Exception e) {
+        } catch (Exception ex) {
+
+            Log.w("Error: ", ex.getMessage());
+
+            Toast toast = Toast.makeText(getApplicationContext(), "Se ha producido un error.", Toast.LENGTH_LONG);
+            toast.setGravity(Gravity.TOP | Gravity.CENTER_HORIZONTAL, 0, 500);
+            toast.show();
 
         }
     }
@@ -508,7 +544,14 @@ public class AdministradorActivity extends AppCompatActivity implements View.OnC
                     }
                 }
             });
-        } catch (Exception e) {
+        } catch (Exception ex) {
+
+            Log.w("Error: ", ex.getMessage());
+
+            Toast toast = Toast.makeText(getApplicationContext(), "Se ha producido un error.", Toast.LENGTH_LONG);
+            toast.setGravity(Gravity.TOP | Gravity.CENTER_HORIZONTAL, 0, 500);
+            toast.show();
+
 
         }
     }
@@ -570,7 +613,14 @@ public class AdministradorActivity extends AppCompatActivity implements View.OnC
             //Asignamos el dialogo construido a uno nuevo y lo mostramos.
             AlertDialog dialog = builderAddTratamientos.create();
             dialog.show();
-        } catch (Exception e) {
+        } catch (Exception ex) {
+
+            Log.w("Error: ", ex.getMessage());
+
+            Toast toast = Toast.makeText(getApplicationContext(), "Se ha producido un error.", Toast.LENGTH_LONG);
+            toast.setGravity(Gravity.TOP | Gravity.CENTER_HORIZONTAL, 0, 500);
+            toast.show();
+
 
         }
     }
@@ -606,12 +656,18 @@ public class AdministradorActivity extends AppCompatActivity implements View.OnC
                     }
                 }
             });
-        } catch (Exception e) {
+        } catch (Exception ex) {
+
+            Log.w("Error: ", ex.getMessage());
+
+            Toast toast = Toast.makeText(getApplicationContext(), "Se ha producido un error.", Toast.LENGTH_LONG);
+            toast.setGravity(Gravity.TOP | Gravity.CENTER_HORIZONTAL, 0, 500);
+            toast.show();
 
         }
     }
 
-    public void modificarMedicamentoPersonalizado(){
+    public void modificarMedicamentoPersonalizado() {
         try {
             //Creamos un constructor de diálogos.
             AlertDialog.Builder builderAddMedicamentos = new AlertDialog.Builder(this);
@@ -661,7 +717,14 @@ public class AdministradorActivity extends AppCompatActivity implements View.OnC
             //Asignamos el dialogo construido a uno nuevo y lo mostramos.
             AlertDialog dialog = builderAddMedicamentos.create();
             dialog.show();
-        } catch (Exception e) {
+        } catch (Exception ex) {
+
+
+            Log.w("Error: ", ex.getMessage());
+
+            Toast toast = Toast.makeText(getApplicationContext(), "Se ha producido un error.", Toast.LENGTH_LONG);
+            toast.setGravity(Gravity.TOP | Gravity.CENTER_HORIZONTAL, 0, 500);
+            toast.show();
 
         }
     }
@@ -723,7 +786,13 @@ public class AdministradorActivity extends AppCompatActivity implements View.OnC
                     }
                 }
             });
-        } catch (Exception e) {
+        } catch (Exception ex) {
+
+            Log.w("Error: ", ex.getMessage());
+
+            Toast toast = Toast.makeText(getApplicationContext(), "Se ha producido un error.", Toast.LENGTH_LONG);
+            toast.setGravity(Gravity.TOP | Gravity.CENTER_HORIZONTAL, 0, 500);
+            toast.show();
 
         }
     }
