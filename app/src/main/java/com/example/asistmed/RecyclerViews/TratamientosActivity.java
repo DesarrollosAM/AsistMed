@@ -36,6 +36,7 @@ import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
 
+//Comentarios terminados y try/catch implementados
 
 public class TratamientosActivity extends AppCompatActivity implements View.OnClickListener {
 
@@ -91,6 +92,9 @@ public class TratamientosActivity extends AppCompatActivity implements View.OnCl
 
     }
 
+    /*
+    Método por el que añadimos los tratamientos en la lista correspondiente
+     */
     private void llenarTratamientos() {
         try {
             shared = getSharedPreferences("Datos", Context.MODE_PRIVATE);
@@ -202,124 +206,145 @@ public class TratamientosActivity extends AppCompatActivity implements View.OnCl
         //Creamos este método para anular el botón atrás en el dispositivo
     }
 
+    /*
+    Método por el que rellenamos la lista con los tratamientos que tiene el usuario que pasamos por
+    parametro
+     */
     public void cargarTratamientos(String usuario) {
+        try {
+            FirebaseFirestore db = FirebaseFirestore.getInstance();
+            CollectionReference tratRef = db.collection("tratamientos");
+            tratRef.whereEqualTo("email", usuario);
+            CollectionReference tratRef2 = db.collection("tratamientos");
+            tratRef.get()
+                    .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                        @Override
+                        public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                            if (task.isSuccessful()) {
+                                for (QueryDocumentSnapshot document : task.getResult()) {
+                                    String nombre = document.getString("nombre");
+                                    String duracion = document.getString("duracion");
 
-        FirebaseFirestore db = FirebaseFirestore.getInstance();
-        CollectionReference tratRef = db.collection("tratamientos");
-        tratRef.whereEqualTo("email", usuario);
-
-        CollectionReference tratRef2 = db.collection("tratamientos");
-
-
-        tratRef.get()
-                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-                    @Override
-                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                        if (task.isSuccessful()) {
-                            for (QueryDocumentSnapshot document : task.getResult()) {
-                                String nombre = document.getString("nombre");
-                                String duracion = document.getString("duracion");
-//                                if(db.collection("tratamientos/"+nombre+"/usuariosTratamientos").getId().equalsIgnoreCase(usuario)){
-//                                    listaTratamientos.add(new Tratamiento(nombre ,duracion + " días", R.drawable.tratamiento_por_defecto));
-//                                    //handleQuerysnapshot(task.getResult(), nombre, duracion);
-//                                    int total2 = listaTratamientos.size();
-//                                }
-
-
-                                FirebaseFirestore db2 = FirebaseFirestore.getInstance();
-                                db2.collection("tratamientos/" + nombre + "/usuariosTratamientos/").whereEqualTo("email", usuario)
-                                        .get()
-                                        .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-                                            @Override
-                                            public void onComplete(@NonNull Task<QuerySnapshot> task2) {
-                                                if (task2.isSuccessful()) {
-                                                    for (QueryDocumentSnapshot document : task2.getResult()) {
-                                                        listaTratamientos.add(new Tratamiento(nombre, duracion + " días", R.drawable.tratamiento_por_defecto));
-                                                        //handleQuerysnapshot(task.getResult(), nombre, duracion);
-                                                        int total2 = listaTratamientos.size();
+                                    FirebaseFirestore db2 = FirebaseFirestore.getInstance();
+                                    db2.collection("tratamientos/" + nombre + "/usuariosTratamientos/").whereEqualTo("email", usuario)
+                                            .get()
+                                            .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                                                @Override
+                                                public void onComplete(@NonNull Task<QuerySnapshot> task2) {
+                                                    if (task2.isSuccessful()) {
+                                                        for (QueryDocumentSnapshot document : task2.getResult()) {
+                                                            listaTratamientos.add(new Tratamiento(nombre, duracion + " días", R.drawable.tratamiento_por_defecto));
+                                                            int total2 = listaTratamientos.size();
+                                                        }
+                                                    } else {
+                                                        Toast toastUsuarioNoValido = Toast.makeText(getApplicationContext(), "No existe el usuario y/o contraseña.", Toast.LENGTH_LONG);
+                                                        toastUsuarioNoValido.show();
                                                     }
-                                                } else {
-                                                    //Log.d(TAG, "Error getting documents: ", task.getException());
-                                                    Toast toastUsuarioNoValido = Toast.makeText(getApplicationContext(), "No existe el usuario y/o contraseña.", Toast.LENGTH_LONG);
-                                                    toastUsuarioNoValido.show();
                                                 }
-                                            }
-                                        });
-                                //listaTratamientos.add(new Tratamiento(document.getString("nombre") + "",document.getString("duracion") + " días", R.drawable.tratamiento_por_defecto));
-                                //handleQuerysnapshot(task.getResult(), nombre, duracion);
+                                            });
+                                }
+
+                                int total = listaTratamientos.size();
+                            } else {
+                                Toast toastUsuarioNoValido = Toast.makeText(getApplicationContext(), "No existe el usuario y/o contraseña.", Toast.LENGTH_LONG);
+                                toastUsuarioNoValido.show();
                             }
-
-                            int total = listaTratamientos.size();
-                            //return listaAddTratamientos;
-                        } else {
-                            //Log.d(TAG, "Error getting documents: ", task.getException());
-                            Toast toastUsuarioNoValido = Toast.makeText(getApplicationContext(), "No existe el usuario y/o contraseña.", Toast.LENGTH_LONG);
-                            toastUsuarioNoValido.show();
                         }
-                    }
-                });
-    }
-
-    public void filtrar(String texto) {
-        ArrayList<Tratamiento> filtrarLista = new ArrayList<>();
-        AdaptadorTratamientos adaptador = new AdaptadorTratamientos(listaTratamientos);
-        for (Tratamiento trat : listaTratamientos) {
-            if (trat.getNombre().toLowerCase().contains(texto.toLowerCase())) {
-                filtrarLista.add(trat);
-            }
+                    });
+        } catch (Exception ex) {
+            Log.w("Error: ", ex.getMessage());
+            Toast toast = Toast.makeText(getApplicationContext(), "Se ha producido un error.", Toast.LENGTH_LONG);
+            toast.setGravity(Gravity.TOP | Gravity.CENTER_HORIZONTAL, 0, 500);
+            toast.show();
         }
-        adaptador.filtrar(filtrarLista);
-        construirRecyclerFiltrado(filtrarLista);
+
     }
 
+    /*
+    Método por el que filtramos la lista al usar el buscador.
+     */
+    public void filtrar(String texto) {
+        try {
+            ArrayList<Tratamiento> filtrarLista = new ArrayList<>();
+            AdaptadorTratamientos adaptador = new AdaptadorTratamientos(listaTratamientos);
+            for (Tratamiento trat : listaTratamientos) {
+                if (trat.getNombre().toLowerCase().contains(texto.toLowerCase())) {
+                    filtrarLista.add(trat);
+                }
+            }
+            adaptador.filtrar(filtrarLista);
+            construirRecyclerFiltrado(filtrarLista);
+        } catch (Exception ex) {
+            Log.w("Error: ", ex.getMessage());
+            Toast toast = Toast.makeText(getApplicationContext(), "Se ha producido un error.", Toast.LENGTH_LONG);
+            toast.setGravity(Gravity.TOP | Gravity.CENTER_HORIZONTAL, 0, 500);
+            toast.show();
+        }
+    }
+
+    /*
+    Método por el que construimos un reciclerview con los resultados de la busqueda.
+     */
     private void construirRecyclerFiltrado(ArrayList<Tratamiento> lista) {
 
-        handler = new Handler();
-        Runnable r = new Runnable() {
-            public void run() {
-                if (UtilidadesAddTratamientos.visualizacion == UtilidadesAddTratamientos.LIST) {
-                    recyclerTratamientos.setLayoutManager(new LinearLayoutManager(getApplicationContext()));
-                } else {
-                    recyclerTratamientos.setLayoutManager(new GridLayoutManager(getApplicationContext(), 3));
-                }
-
-                //aqui el metodo
-
-                AdaptadorAddTratamientos adapter = new AdaptadorAddTratamientos(lista);
-
-                adapter.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        //Cuando hacemos click en un item de la lista:
-
-                        Intent intent = new Intent(getApplicationContext(), MedicamentosActivity.class);
-                        startActivity(intent); // Lanzamos el activity
-
-                        //Capturamos con shared preferences el nombre y duracion del tratamiento:
-                        String nombreTrat = listaTratamientos.get(recyclerTratamientos.getChildAdapterPosition(view)).getNombre();
-                        String duracionTrat = listaTratamientos.get(recyclerTratamientos.getChildAdapterPosition(view)).getDuracion();
-
-                        //Instanciamos Shared, abrimos fichero "Datos" con acceso en modo privado y abrimos editor
-                        shared = getApplicationContext().getSharedPreferences("Datos", Context.MODE_PRIVATE);
-                        editor = shared.edit();
-
-                        //Utilizamos el editor para guardar la variable dato recogida del EditText Usuario en la clave "Usuario" de nuestro archivo Shared que hemos llamado "Datos"
-                        editor.putString("nombreTratamiento", nombreTrat);
-                        editor.putString("duracionTratamiento", duracionTrat);
-                        editor.commit();
-
-
+        try {
+            handler = new Handler();
+            Runnable r = new Runnable() {
+                public void run() {
+                    if (UtilidadesAddTratamientos.visualizacion == UtilidadesAddTratamientos.LIST) {
+                        recyclerTratamientos.setLayoutManager(new LinearLayoutManager(getApplicationContext()));
+                    } else {
+                        recyclerTratamientos.setLayoutManager(new GridLayoutManager(getApplicationContext(), 3));
                     }
-                });
 
-                recyclerTratamientos.setAdapter(adapter);
+                    AdaptadorAddTratamientos adapter = new AdaptadorAddTratamientos(lista);
 
-            }
-        };
-        handler.postDelayed(r, 2000);
+                    adapter.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+                            //Cuando hacemos click en un item de la lista:
+                            Intent intent = new Intent(getApplicationContext(), MedicamentosActivity.class);
+                            startActivity(intent);
+
+                            //Capturamos con shared preferences el nombre y duracion del tratamiento:
+                            String nombreTrat = listaTratamientos.get(recyclerTratamientos.getChildAdapterPosition(view)).getNombre();
+                            String duracionTrat = listaTratamientos.get(recyclerTratamientos.getChildAdapterPosition(view)).getDuracion();
+
+                            //Instanciamos Shared, abrimos fichero "Datos" con acceso en modo privado y abrimos editor
+                            shared = getApplicationContext().getSharedPreferences("Datos", Context.MODE_PRIVATE);
+                            editor = shared.edit();
+
+                            //Utilizamos el editor para guardar la variable dato recogida del EditText Usuario en la clave "Usuario" de nuestro archivo Shared que hemos llamado "Datos"
+                            editor.putString("nombreTratamiento", nombreTrat);
+                            editor.putString("duracionTratamiento", duracionTrat);
+                            editor.commit();
+                        }
+                    });
+                    recyclerTratamientos.setAdapter(adapter);
+                }
+            };
+            handler.postDelayed(r, 2000);
+        } catch (Exception ex) {
+            Log.w("Error: ", ex.getMessage());
+            Toast toast = Toast.makeText(getApplicationContext(), "Se ha producido un error.", Toast.LENGTH_LONG);
+            toast.setGravity(Gravity.TOP | Gravity.CENTER_HORIZONTAL, 0, 500);
+            toast.show();
+        }
+
     }
 
+    /*
+    Método por el que insertamos el nick en el textview de la cabecera.
+     */
     public void insertarNickEnCabecera(String email, TextView txtCab) {
+        try {
+
+        } catch (Exception ex) {
+            Log.w("Error: ", ex.getMessage());
+            Toast toast = Toast.makeText(getApplicationContext(), "Se ha producido un error.", Toast.LENGTH_LONG);
+            toast.setGravity(Gravity.TOP | Gravity.CENTER_HORIZONTAL, 0, 500);
+            toast.show();
+        }
         FirebaseFirestore db = FirebaseFirestore.getInstance();
         DocumentReference docRef = db.collection("usuarios").document(email);
         docRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
