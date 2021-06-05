@@ -7,6 +7,21 @@
     android:background="@drawable/fondo_azul_letras_asistmed"
     tools:context=".Login.InicioActivity">
 
+    <ImageView
+        android:id="@+id/imageView3"
+        android:layout_width="222dp"
+        android:layout_height="301dp"
+        android:layout_marginStart="90dp"
+        android:layout_marginLeft="90dp"
+        android:layout_marginTop="180dp"
+        android:layout_marginEnd="90dp"
+        android:layout_marginRight="90dp"
+        android:alpha="0.75"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/logo_azul_alas" />
+
     <pl.droidsonroids.gif.GifImageView
         android:id="@+id/ivLoading"
         android:layout_width="72dp"
@@ -22,19 +37,5 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/imageView3" />
-
-    <ImageView
-        android:id="@+id/imageView3"
-        android:layout_width="222dp"
-        android:layout_height="301dp"
-        android:layout_marginStart="90dp"
-        android:layout_marginLeft="90dp"
-        android:layout_marginTop="180dp"
-        android:layout_marginEnd="90dp"
-        android:layout_marginRight="90dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:srcCompat="@drawable/logo_azul_alas" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

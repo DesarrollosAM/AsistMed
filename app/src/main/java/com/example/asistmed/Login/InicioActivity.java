@@ -51,9 +51,6 @@ public class InicioActivity extends AppCompatActivity {
         Runnable r = new Runnable() {
             public void run() {
 
-
-                mpHouse.stop();
-
                 //Comprobamos si el dispositivo tiene conexion a Internet
                 ConnectivityManager connectivityManager = (ConnectivityManager) getSystemService(InicioActivity.CONNECTIVITY_SERVICE);
                 NetworkInfo networkInfo = connectivityManager.getActiveNetworkInfo();
@@ -65,7 +62,7 @@ public class InicioActivity extends AppCompatActivity {
                     mpHouse.stop();
 
                 } else {
-                    // Si no hay conexión a Internet en este momento, lanzamos un mensaje informando de que no hay conexion, esperamos 5 s para observar el mensaje y salimos.
+                    //Si no hay conexión a Internet en este momento, lanzamos un mensaje informando de que no hay conexion, esperamos 5 s para observar el mensaje y salimos.
                     Toast.makeText(getApplicationContext(),
                             "No se puede conectar a Internet.\nPor favor, revise su conexión.", Toast.LENGTH_LONG).show();
                     handler2 = new Handler();
@@ -77,10 +74,7 @@ public class InicioActivity extends AppCompatActivity {
                         }
                     };
                     handler2.postDelayed(r2, 4000);
-
                 }
-
-
             }
         };
         handler.postDelayed(r, 8000);
