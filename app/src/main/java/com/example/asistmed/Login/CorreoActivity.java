@@ -49,11 +49,12 @@ public class CorreoActivity extends AppCompatActivity implements View.OnClickLis
 
         try{
 
-            if ((view.getId() == R.id.btn_enviar)) {
+            String enviarcorreo = correo.getText().toString();
+            String enviarasunto = asunto.getText().toString();
+            String enviarmensaje = mensaje.getText().toString();
 
-                String enviarcorreo = correo.getText().toString();
-                String enviarasunto = asunto.getText().toString();
-                String enviarmensaje = mensaje.getText().toString();
+            if ((view.getId() == R.id.btn_enviar) && ((!enviarasunto.isEmpty() ) && (!enviarmensaje.isEmpty()))) {
+
 
                 // Defino mi Intent y hago uso del objeto ACTION_SEND
                 Intent intent = new Intent(Intent.ACTION_SEND);
@@ -72,6 +73,12 @@ public class CorreoActivity extends AppCompatActivity implements View.OnClickLis
                         Intent
                                 .createChooser(intent,
                                         "Elije un cliente de Correo:"));
+
+            }else if ((view.getId() == R.id.btn_enviar) && ((enviarasunto.isEmpty()) || (enviarmensaje.isEmpty()))){
+
+                Toast toast = Toast.makeText(getApplicationContext(), "Por favor, complete Asunto y Mensaje.", Toast.LENGTH_LONG);
+                toast.setGravity(Gravity.TOP | Gravity.CENTER_HORIZONTAL, 0, 600);
+                toast.show();
 
             }else if ((view.getId() == R.id.btInicioCorreo)) {
 

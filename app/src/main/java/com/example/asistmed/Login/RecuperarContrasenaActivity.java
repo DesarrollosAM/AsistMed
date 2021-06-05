@@ -6,6 +6,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
 import android.widget.Button;
@@ -16,6 +17,9 @@ import com.example.asistmed.R;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
+
+//Comentarios terminados y try/catch implementados
+
 
 public class RecuperarContrasenaActivity extends AppCompatActivity {
 
@@ -36,6 +40,7 @@ public class RecuperarContrasenaActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_recuperar_contrasena);
 
+        //Ocultamos botones y barra para disponer de la pantalla completa del dispositivo
         View decorView = getWindow().getDecorView();
         int uiOptions = View.SYSTEM_UI_FLAG_IMMERSIVE | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION | View.SYSTEM_UI_FLAG_FULLSCREEN;
         decorView.setSystemUiVisibility(uiOptions);
@@ -54,13 +59,14 @@ public class RecuperarContrasenaActivity extends AppCompatActivity {
         //Cargamos la referencia de nuestros Input
         mailRecuperaContrasena = findViewById(R.id.introduceEmail);
 
+        //Si pulsamos el botón para recuperar contraseña, comprobamos que el campo correo se ha rellenado y llamamos al método
         btRecuperarContrasena.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
                 email = mailRecuperaContrasena.getText().toString();
 
-                if(!email.isEmpty()){
+                if (!email.isEmpty()) {
 
                     //Mostramos mensaje
                     pDialog.setMessage("Espere un momento por favor...");
@@ -72,10 +78,10 @@ public class RecuperarContrasenaActivity extends AppCompatActivity {
 
                     restablecerPassword();
 
-                }else{
+                } else {
 
-                    Toast toast= Toast.makeText(getApplicationContext(), "Introduzca correo", Toast.LENGTH_SHORT);
-                    toast.setGravity(Gravity.TOP|Gravity.CENTER_HORIZONTAL, 0, 800);
+                    Toast toast = Toast.makeText(getApplicationContext(), "Introduzca correo", Toast.LENGTH_SHORT);
+                    toast.setGravity(Gravity.TOP | Gravity.CENTER_HORIZONTAL, 0, 800);
                     toast.show();
                 }
 
@@ -100,7 +106,9 @@ public class RecuperarContrasenaActivity extends AppCompatActivity {
         //Creamos este método para anular el botón atrás en el dispositivo
     }
 
-    private void restablecerPassword(){
+    private void restablecerPassword() {
+
+        try {
 
             //Indicamos el idioma en el que recibiremos el correo de recuperación de contraseña
             mAuth.setLanguageCode("es");
@@ -110,16 +118,16 @@ public class RecuperarContrasenaActivity extends AppCompatActivity {
                 @Override
                 public void onComplete(@NonNull Task<Void> task) {
 
-                    if(task.isSuccessful()){
+                    if (task.isSuccessful()) {
 
-                        Toast toast= Toast.makeText(getApplicationContext(), "Se ha enviado correo de recuperación", Toast.LENGTH_LONG);
-                        toast.setGravity(Gravity.TOP|Gravity.CENTER_HORIZONTAL, 0, 770);
+                        Toast toast = Toast.makeText(getApplicationContext(), "Se ha enviado correo de recuperación", Toast.LENGTH_LONG);
+                        toast.setGravity(Gravity.TOP | Gravity.CENTER_HORIZONTAL, 0, 770);
                         toast.show();
 
-                    }else{
+                    } else {
 
-                        Toast toast= Toast.makeText(getApplicationContext(), "Correo no registrado. Proceso no completado", Toast.LENGTH_LONG);
-                        toast.setGravity(Gravity.TOP|Gravity.CENTER_HORIZONTAL, 0, 770);
+                        Toast toast = Toast.makeText(getApplicationContext(), "Correo no registrado. Proceso no completado", Toast.LENGTH_LONG);
+                        toast.setGravity(Gravity.TOP | Gravity.CENTER_HORIZONTAL, 0, 770);
                         toast.show();
 
 
@@ -128,6 +136,17 @@ public class RecuperarContrasenaActivity extends AppCompatActivity {
                     pDialog.dismiss();
                 }
             });
+
+        } catch (Exception ex) {
+
+            Log.w("Error: ", ex.getMessage());
+
+            Toast toast = Toast.makeText(getApplicationContext(), "Se ha producido un error.", Toast.LENGTH_LONG);
+            toast.setGravity(Gravity.TOP | Gravity.CENTER_HORIZONTAL, 0, 500);
+            toast.show();
+
+        }
+
 
     }
 }

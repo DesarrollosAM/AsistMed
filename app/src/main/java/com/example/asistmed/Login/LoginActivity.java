@@ -42,6 +42,8 @@ import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+//Comentarios terminados y try/catch implementados
+
 public class LoginActivity extends AppCompatActivity implements View.OnClickListener {
 
     //Instanciamos objeto FirebaseFirestore
@@ -124,17 +126,17 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         ivAyuda.setOnClickListener(this);
 
 
-        // Configure sign-in to request the user's ID, email address, and basic
-        // profile. ID and basic profile are included in DEFAULT_SIGN_IN.
+        //Configura la respuesta de acceso con el ID, email y perfil básico
+        // . ID and perfil básico están incluidos en DEFAULT_SIGN_IN.
         GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
                 .requestIdToken(getString(R.string.default_web_client_id))
                 .requestEmail()
                 .build();
 
-        // Build a GoogleSignInClient with the options specified by gso.
+        // Construimos un GoogleSignInClient con las opciones especificadas por gso.
         mGoogleSignInClient = GoogleSignIn.getClient(this, gso);
 
-        // Initialize Firebase Auth
+        // Inicializamos Firebase Auth
         mAuth = FirebaseAuth.getInstance();
 
     }
@@ -142,63 +144,77 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     @Override
     public void onClick(View view) {
 
-        email = etEmail.getText().toString();
-        password = etContrasena.getText().toString();
+        try {
 
-        if ((view.getId() == R.id.btAcceder)) //Si pulsamos el botón Acceder
-        {
+            email = etEmail.getText().toString();
+            password = etContrasena.getText().toString();
 
-            if (validaEmail() && validaPassword()) { //Llamamos a los métodos que validan email y password y si son true...
+            if ((view.getId() == R.id.btAcceder)) //Si pulsamos el botón Acceder
+            {
 
-                //Con la instancia de FirebaseAuth le pasamos al método de login, email y contraseña
-                mAuth.signInWithEmailAndPassword(email, password).addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
-                    @Override
-                    public void onComplete(@NonNull Task<AuthResult> task) {
-                        if (task.isSuccessful()) { //Si la tarea se completa con exito
+                if (validaEmail() && validaPassword()) { //Llamamos a los métodos que validan email y password y si son true...
 
-                            updateUI(mAuth.getCurrentUser()); //Llamamos al método para actualizar UI pasando el user correspondiente
+                    //Con la instancia de FirebaseAuth le pasamos al método de login, email y contraseña
+                    mAuth.signInWithEmailAndPassword(email, password).addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
+                        @Override
+                        public void onComplete(@NonNull Task<AuthResult> task) {
+                            if (task.isSuccessful()) { //Si la tarea se completa con exito
 
-                        } else {//Si el proceso de login no se completa, informamos con un Toast al usuario
+                                updateUI(mAuth.getCurrentUser()); //Llamamos al método para actualizar UI pasando el user correspondiente
 
-                            Toast toast = Toast.makeText(getApplicationContext(), "El email " + email + " no está registrado o la contraseña es incorrecta", Toast.LENGTH_LONG);
-                            toast.setGravity(Gravity.TOP | Gravity.CENTER_HORIZONTAL, 0, 500);
-                            toast.show();
+                            } else {//Si el proceso de login no se completa, informamos con un Toast al usuario
 
+                                Toast toast = Toast.makeText(getApplicationContext(), "El email " + email + " no está registrado o la contraseña es incorrecta", Toast.LENGTH_LONG);
+                                toast.setGravity(Gravity.TOP | Gravity.CENTER_HORIZONTAL, 0, 500);
+                                toast.show();
+
+                            }
                         }
-                    }
-                });
+                    });
 
+                }
+
+            } else if ((view.getId() == R.id.tvRegistrarme)) { //Si pulsamos el texto para Registrarse lanzamos intent a RegistroActivity
+
+                //Instanciamos un objeto Intent, pasandole con this el Activity actual, y como segundo parametro el Activity que vamos a cargar
+                Intent intent = new Intent(getApplicationContext(), RegistroActivity.class);
+                startActivity(intent); // Lanzamos el activity
+
+            } else if ((view.getId() == R.id.tvContrasenaOlvidada)) { //Si pulsamos el texto de contraseña olvidada lanzamos intent al Activity correspondiente
+
+                //Instanciamos un objeto Intent, pasandole con this el Activity actual, y como segundo parametro el Activity que vamos a cargar
+                Intent intent = new Intent(getApplicationContext(), RecuperarContrasenaActivity.class);
+                startActivity(intent); // Lanzamos el activity
+
+            } else if ((view.getId() == R.id.ivAyuda)) { //Si pulsamos en contacto, lanzamos el intent correspondiente
+
+                //Instanciamos un objeto Intent, pasandole con this el Activity actual, y como segundo parametro el Activity que vamos a cargar
+                Intent intent = new Intent(getApplicationContext(), CorreoActivity.class);
+                startActivity(intent); // Lanzamos el activity
+
+            } else if ((view.getId() == R.id.ivSalir)) { //Si pulsamos el imageview con el botón de salir, finalizaremos app
+
+                finish();
+                finishAffinity();
+                System.exit(0);
+
+            } else { //Recogemos la pulsación en el botón Accceder con Google
+
+
+                signIn(); //Llamamos al método que procedera a logar al usuario con la cuenta de google
             }
 
-        } else if ((view.getId() == R.id.tvRegistrarme)) { //Si pulsamos el texto para Registrarse lanzamos intent a RegistroActivity
+        } catch (Exception ex) {
 
-            //Instanciamos un objeto Intent, pasandole con this el Activity actual, y como segundo parametro el Activity que vamos a cargar
-            Intent intent = new Intent(getApplicationContext(), RegistroActivity.class);
-            startActivity(intent); // Lanzamos el activity
+            Log.w("Error: ", ex.getMessage());
 
-        } else if ((view.getId() == R.id.tvContrasenaOlvidada)) { //Si pulsamos el texto de contraseña olvidada lanzamos intent al Activity correspondiente
+            Toast toast = Toast.makeText(getApplicationContext(), "Se ha producido un error.", Toast.LENGTH_LONG);
+            toast.setGravity(Gravity.TOP | Gravity.CENTER_HORIZONTAL, 0, 500);
+            toast.show();
 
-            //Instanciamos un objeto Intent, pasandole con this el Activity actual, y como segundo parametro el Activity que vamos a cargar
-            Intent intent = new Intent(getApplicationContext(), RecuperarContrasenaActivity.class);
-            startActivity(intent); // Lanzamos el activity
-
-        } else if ((view.getId() == R.id.ivAyuda)) { //Si pulsamos en contacto, lanzamos el intent correspondiente
-
-            //Instanciamos un objeto Intent, pasandole con this el Activity actual, y como segundo parametro el Activity que vamos a cargar
-            Intent intent = new Intent(getApplicationContext(), CorreoActivity.class);
-            startActivity(intent); // Lanzamos el activity
-
-        } else if ((view.getId() == R.id.ivSalir)) { //Si pulsamos el imageview con el botón de salir, finalizaremos app
-
-            finish();
-            finishAffinity();
-            System.exit(0);
-
-        } else { //Recogemos la pulsación en el botón Accceder con Google
-
-
-            signIn(); //Llamamos al método que procedera a logar al usuario con la cuenta de google
         }
+
+
     }
 
     private void signIn() {//Se procesa la petición en el onActivityResult
@@ -239,9 +255,14 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
 
                 Log.d(TAG, "firebaseAuthWithGoogle:" + account.getId());
                 firebaseAuthWithGoogle(account.getIdToken());
-            } catch (ApiException e) {
-                // En caso de que no se complete el login
-                Log.w(TAG, "Falló el acceso con Google", e);
+            } catch (ApiException ex) {
+
+                Log.w("Error: ", ex.getMessage());
+
+                Toast toast = Toast.makeText(getApplicationContext(), "Se ha producido un error.", Toast.LENGTH_LONG);
+                toast.setGravity(Gravity.TOP | Gravity.CENTER_HORIZONTAL, 0, 500);
+                toast.show();
+
             }
         }
     }
@@ -282,7 +303,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         return false;
     }
 
-    //Change UI according to user data.
+    //Cambia el Interfaz de usuario en funcion del usuario pasado.
     public void updateUI(FirebaseUser user) {
 
         if (user != null) {
@@ -301,10 +322,6 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                 editor.commit();
 
 
-//                Toast toast= Toast.makeText(getApplicationContext(), "Sesión inciada como " + email, Toast.LENGTH_LONG);
-//                toast.setGravity(Gravity.TOP|Gravity.CENTER_HORIZONTAL, 0, 500);
-//                toast.show();
-
                 finishAffinity();
 
                 startActivity(new Intent(this, AdministradorActivity.class));
@@ -321,14 +338,9 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                 editor.putString("Usuario", email);
                 editor.commit();
 
-//                Toast toast= Toast.makeText(getApplicationContext(), "Sesión inciada como " + email, Toast.LENGTH_LONG);
-//                toast.setGravity(Gravity.TOP|Gravity.CENTER_HORIZONTAL, 0, 500);
-//                toast.show();
-
                 finishAffinity();
 
                 startActivity(new Intent(this, UsuarioActivity.class));
-
 
             }
 
@@ -336,80 +348,119 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
 
         if (user == null) {
 
-//            Toast toast= Toast.makeText(getApplicationContext(), "No hay sesión iniciada", Toast.LENGTH_SHORT);
-//            toast.setGravity(Gravity.TOP|Gravity.CENTER_HORIZONTAL, 0, 500);
-//            toast.show();
         }
 
     }
 
     private void firebaseAuthWithGoogle(String idToken) {
-        AuthCredential credential = GoogleAuthProvider.getCredential(idToken, null);
-        mAuth.signInWithCredential(credential)
-                .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
-                    @Override
-                    public void onComplete(@NonNull Task<AuthResult> task) {
-                        if (task.isSuccessful()) {
-                            // Sign in success, update UI with the signed-in user's information
-                            Log.d(TAG, "signInWithCredential:success");
-                            FirebaseUser user = mAuth.getCurrentUser();
-                            updateUI(user);
-                        } else {
-                            // If sign in fails, display a message to the user.
-                            Log.w(TAG, "signInWithCredential:failure", task.getException());
-                            updateUI(null);
+
+        try {
+
+            AuthCredential credential = GoogleAuthProvider.getCredential(idToken, null);
+            mAuth.signInWithCredential(credential)
+                    .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
+                        @Override
+                        public void onComplete(@NonNull Task<AuthResult> task) {
+                            if (task.isSuccessful()) {
+                                // Login exitoso, actualizamos UI
+                                FirebaseUser user = mAuth.getCurrentUser();
+                                updateUI(user);
+                            } else {
+                                // Si falla el login guardamos mensaje.
+
+                                updateUI(null);
+                            }
                         }
-                    }
-                });
+                    });
+
+        } catch (Exception ex) {
+
+            Log.w("Error: ", ex.getMessage());
+
+            Toast toast = Toast.makeText(getApplicationContext(), "Se ha producido un error.", Toast.LENGTH_LONG);
+            toast.setGravity(Gravity.TOP | Gravity.CENTER_HORIZONTAL, 0, 500);
+            toast.show();
+
+        }
+
+
     }
 
     public void insertarUsuarioenBBDD(String usuario, String nick) {
-        //Inserción en Firestore:
-        FirebaseFirestore dbs = FirebaseFirestore.getInstance();
 
-        // Create a new user with a first and last name
-        Map<String, Object> user = new HashMap<>();
-        user.put("email", usuario);
-        user.put("password", "password automatico de Google");
-        user.put("nick", nick);
-        user.put("tratamiento", "no");
-        user.put("cantidadTratamientos", "0");
+        try {
 
-        dbs.collection("usuarios").document(usuario)
-                .set(user)
-                .addOnSuccessListener(new OnSuccessListener<Void>() {
-                    @Override
-                    public void onSuccess(Void avoid) {
-                        //Log.d(TAG, "DocumentSnapshot added with ID: " + documentReference.getId());
-                        //documentReference.set("usuario" + siguienteUsuario);
-                    }
-                })
-                .addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception e) {
-                        //Log.w(TAG, "Error adding document", e);
-                    }
-                });
+            //Inserción en Firestore:
+            FirebaseFirestore dbs = FirebaseFirestore.getInstance();
+
+            // Create a new user with a first and last name
+            Map<String, Object> user = new HashMap<>();
+            user.put("email", usuario);
+            user.put("password", "password automatico de Google");
+            user.put("nick", nick);
+            user.put("tratamiento", "no");
+            user.put("cantidadTratamientos", "0");
+
+            dbs.collection("usuarios").document(usuario)
+                    .set(user)
+                    .addOnSuccessListener(new OnSuccessListener<Void>() {
+                        @Override
+                        public void onSuccess(Void avoid) {
+                            //Log.d(TAG, "DocumentSnapshot added with ID: " + documentReference.getId());
+                            //documentReference.set("usuario" + siguienteUsuario);
+                        }
+                    })
+                    .addOnFailureListener(new OnFailureListener() {
+                        @Override
+                        public void onFailure(@NonNull Exception e) {
+
+                        }
+                    });
+
+        } catch (Exception ex) {
+            Log.w("Error: ", ex.getMessage());
+
+            Toast toast = Toast.makeText(getApplicationContext(), "Se ha producido un error.", Toast.LENGTH_LONG);
+            toast.setGravity(Gravity.TOP | Gravity.CENTER_HORIZONTAL, 0, 500);
+            toast.show();
+
+        }
+
     }
 
     public void comprobarUsuarioGoogleEnBBDD(String emailGoogle, String nick) {
-        FirebaseFirestore dbcu = FirebaseFirestore.getInstance();
-        DocumentReference docRefcu = dbcu.collection("usuarios").document(emailGoogle);
-        docRefcu.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
-            @Override
-            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                if (task.isSuccessful()) {
-                    DocumentSnapshot document = task.getResult();
-                    if (document.exists()) {
-                        //Log.d(TAG, "DocumentSnapshot data: " + document.getData());
+
+        try {
+
+            FirebaseFirestore dbcu = FirebaseFirestore.getInstance();
+            DocumentReference docRefcu = dbcu.collection("usuarios").document(emailGoogle);
+            docRefcu.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                @Override
+                public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                    if (task.isSuccessful()) {
+                        DocumentSnapshot document = task.getResult();
+                        if (document.exists()) {
+                            //Log.d(TAG, "DocumentSnapshot data: " + document.getData());
+                        } else {
+                            insertarUsuarioenBBDD(emailGoogle, nick);
+
+                        }
                     } else {
-                        insertarUsuarioenBBDD(emailGoogle, nick);
-                        //Log.d(TAG, "No such document");
+
                     }
-                } else {
-                    //Log.d(TAG, "get failed with ", task.getException());
                 }
-            }
-        });
+            });
+
+
+        } catch (Exception ex) {
+
+            Log.w("Error: ", ex.getMessage());
+
+            Toast toast = Toast.makeText(getApplicationContext(), "Se ha producido un error.", Toast.LENGTH_LONG);
+            toast.setGravity(Gravity.TOP | Gravity.CENTER_HORIZONTAL, 0, 500);
+            toast.show();
+
+        }
+
     }
 }
