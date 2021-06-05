@@ -7,6 +7,8 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.util.Log;
+import android.view.Gravity;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -56,7 +58,7 @@ public class RegistroActivity extends AppCompatActivity implements View.OnClickL
     @Override
     public void onStart() {
         super.onStart();
-        // Check if user is signed in (non-null) and update UI accordingly.
+        // Chequeamos si el usuario está logado y actualizamos UI al respecto.
         FirebaseUser currentUser = mAuth.getCurrentUser();
         if(currentUser != null){
             currentUser.reload();
@@ -79,12 +81,6 @@ public class RegistroActivity extends AppCompatActivity implements View.OnClickL
         yaEstoyregistrado = findViewById(R.id.yaEstoyRegistrado);
 
 
-        //Cargamos la referencia de nuestros Input
-/*      introduceUsuario = findViewById(R.id.introduceUsuario);
-        introduceContrasena = findViewById(R.id.introduceContrasena);
-        introduceEmail = findViewById(R.id.introduceEmail);
-        repiteContrasena = findViewById(R.id.repiteContrasena);*/
-
         //Asignación del evento click
         btRegistro.setOnClickListener(this);
         yaEstoyregistrado.setOnClickListener(this);
@@ -106,12 +102,13 @@ public class RegistroActivity extends AppCompatActivity implements View.OnClickL
     @Override
     public void onClick(View view) {
 
-        //Asignamos a una variable tipo EditText el usuario y password introducidos
+        //Asignamos a variables nuestros componentes visuales
         EditText etMail= (EditText) findViewById(R.id.introduceEmail);
         EditText etPassword= (EditText) findViewById(R.id.introduceContrasena);
         EditText etUsuario= (EditText) findViewById(R.id.introduceUsuario);
         EditText etconfirmaPassword = (EditText) findViewById(R.id.repiteContrasena);
 
+        //Recogemos en variables los textView
         email = etMail.getText().toString();
         nick = etUsuario.getText().toString();
         password = etPassword.getText().toString();
@@ -182,6 +179,7 @@ public class RegistroActivity extends AppCompatActivity implements View.OnClickL
 
 
     private boolean validaPassword(){
+
         password = password.trim();
         confirmaPassword = confirmaPassword.trim();
         if (password.isEmpty()){
@@ -213,32 +211,46 @@ public class RegistroActivity extends AppCompatActivity implements View.OnClickL
     }
 
     public void insertarUsuarioenRegistroActivity(String usuario, String contraseña, String nick){
-        //Inserción en Firestore:
-        FirebaseFirestore dbs = FirebaseFirestore.getInstance();
 
-        // Create a new user with a first and last name
-        Map<String, Object> user = new HashMap<>();
-        user.put("email", usuario);
-        user.put("password", contraseña);
-        user.put("nick", nick);
-        user.put("tratamiento", "no");
-        user.put("cantidadTratamientos", "0");
+        try{
 
-        dbs.collection("usuarios").document(usuario)
-                .set(user)
-                .addOnSuccessListener(new OnSuccessListener<Void>() {
-                    @Override
-                    public void onSuccess(Void avoid) {
-                        //Log.d(TAG, "DocumentSnapshot added with ID: " + documentReference.getId());
-                        //documentReference.set("usuario" + siguienteUsuario);
-                    }
-                })
-                .addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception e) {
-                        //Log.w(TAG, "Error adding document", e);
-                    }
-                });
+            //Inserción en Firestore:
+            FirebaseFirestore dbs = FirebaseFirestore.getInstance();
+
+            // Create a new user with a first and last name
+            Map<String, Object> user = new HashMap<>();
+            user.put("email", usuario);
+            user.put("password", contraseña);
+            user.put("nick", nick);
+            user.put("tratamiento", "no");
+            user.put("cantidadTratamientos", "0");
+
+            dbs.collection("usuarios").document(usuario)
+                    .set(user)
+                    .addOnSuccessListener(new OnSuccessListener<Void>() {
+                        @Override
+                        public void onSuccess(Void avoid) {
+                            //Log.d(TAG, "DocumentSnapshot added with ID: " + documentReference.getId());
+                            //documentReference.set("usuario" + siguienteUsuario);
+                        }
+                    })
+                    .addOnFailureListener(new OnFailureListener() {
+                        @Override
+                        public void onFailure(@NonNull Exception e) {
+
+                        }
+                    });
+
+        }catch (Exception ex){
+
+            Log.w("Error: ", ex.getMessage());
+
+            Toast toast = Toast.makeText(getApplicationContext(), "Se ha producido un error.", Toast.LENGTH_LONG);
+            toast.setGravity(Gravity.TOP | Gravity.CENTER_HORIZONTAL, 0, 500);
+            toast.show();
+
+        }
+
     }
 
     public static String encriptarContraseña(String password) {
@@ -262,8 +274,11 @@ public class RegistroActivity extends AppCompatActivity implements View.OnClickL
 
             contraseñaFinal = hexString1.toString();
             //md5_result.setText(hexString1.toString());
-        } catch (NoSuchAlgorithmException e) {
-            e.printStackTrace();
+        } catch (NoSuchAlgorithmException ex) {
+
+            Log.w("Error: ", ex.getMessage());
+
+
         }
 
         return contraseñaFinal;
