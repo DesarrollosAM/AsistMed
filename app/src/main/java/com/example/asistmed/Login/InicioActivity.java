@@ -16,7 +16,6 @@ import android.widget.Toast;
 
 import com.example.asistmed.R;
 
-//Comentarios terminados y try/catch implementados
 
 public class InicioActivity extends AppCompatActivity {
 

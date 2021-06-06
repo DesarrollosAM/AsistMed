@@ -42,7 +42,6 @@ import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-//Comentarios terminados y try/catch implementados
 
 public class LoginActivity extends AppCompatActivity implements View.OnClickListener {
 
@@ -55,7 +54,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     private SharedPreferences.Editor editor;
 
     //Declaramos variables;
-    private Button btAcceso, btAccederGoogle, btContactoAsistmed;
+    private Button btAcceso, btAccederGoogle;
     private TextView tvRegistro, tvRecuperarContrasena;
     private EditText etEmail, etContrasena;
     private ImageView ivSalir, ivAyuda;

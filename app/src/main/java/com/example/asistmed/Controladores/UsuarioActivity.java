@@ -26,12 +26,13 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
+
 import android.widget.TextView;
+
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.zxing.integration.android.IntentIntegrator;
 import com.google.zxing.integration.android.IntentResult;
 
-//Comentarios terminados y try/catch implementados (comentados métodos eliminarUsuarioporID y eliminarUsuarioporEmail)
 
 public class UsuarioActivity extends AppCompatActivity implements View.OnClickListener {
 
@@ -47,7 +48,7 @@ public class UsuarioActivity extends AppCompatActivity implements View.OnClickLi
     private SharedPreferences.Editor editor;
 
     private String email;
-    private TextView etNombreFoto;
+
 
     FirebaseAuth mAuth;
 
@@ -210,7 +211,6 @@ public class UsuarioActivity extends AppCompatActivity implements View.OnClickLi
 
 
     }
-
 
     @Override
     public void onBackPressed() {

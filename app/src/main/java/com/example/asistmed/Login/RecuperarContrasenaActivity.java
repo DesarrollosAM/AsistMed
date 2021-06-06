@@ -18,12 +18,9 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 
-//Comentarios terminados y try/catch implementados
-
 
 public class RecuperarContrasenaActivity extends AppCompatActivity {
 
-    //ImageView btAcceso, btRegistro;
     private Button btRecuperarContrasena, btRegresarLogin;
     private EditText mailRecuperaContrasena;
 

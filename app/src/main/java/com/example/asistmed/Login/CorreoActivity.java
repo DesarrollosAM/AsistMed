@@ -13,9 +13,8 @@ import android.widget.Toast;
 
 import com.example.asistmed.R;
 
-//Comentarios terminados y try/catch implementados
 
-public class CorreoActivity extends AppCompatActivity implements View.OnClickListener{
+public class CorreoActivity extends AppCompatActivity implements View.OnClickListener {
 
     // Defino los objetos de la interface
     Button button, btInicioCorreo;
@@ -47,13 +46,13 @@ public class CorreoActivity extends AppCompatActivity implements View.OnClickLis
     @Override
     public void onClick(View view) {
 
-        try{
+        try {
 
             String enviarcorreo = correo.getText().toString();
             String enviarasunto = asunto.getText().toString();
             String enviarmensaje = mensaje.getText().toString();
 
-            if ((view.getId() == R.id.btn_enviar) && ((!enviarasunto.isEmpty() ) && (!enviarmensaje.isEmpty()))) {
+            if ((view.getId() == R.id.btn_enviar) && ((!enviarasunto.isEmpty()) && (!enviarmensaje.isEmpty()))) {
 
 
                 // Defino mi Intent y hago uso del objeto ACTION_SEND
@@ -74,13 +73,13 @@ public class CorreoActivity extends AppCompatActivity implements View.OnClickLis
                                 .createChooser(intent,
                                         "Elije un cliente de Correo:"));
 
-            }else if ((view.getId() == R.id.btn_enviar) && ((enviarasunto.isEmpty()) || (enviarmensaje.isEmpty()))){
+            } else if ((view.getId() == R.id.btn_enviar) && ((enviarasunto.isEmpty()) || (enviarmensaje.isEmpty()))) {
 
                 Toast toast = Toast.makeText(getApplicationContext(), "Por favor, complete Asunto y Mensaje.", Toast.LENGTH_LONG);
                 toast.setGravity(Gravity.TOP | Gravity.CENTER_HORIZONTAL, 0, 600);
                 toast.show();
 
-            }else if ((view.getId() == R.id.btInicioCorreo)) {
+            } else if ((view.getId() == R.id.btInicioCorreo)) {
 
                 //Instanciamos un objeto Intent, pasandole con this el Activity actual, y como segundo parametro el Activity que vamos a cargar
                 Intent intent = new Intent(getApplicationContext(), LoginActivity.class);
@@ -88,7 +87,7 @@ public class CorreoActivity extends AppCompatActivity implements View.OnClickLis
 
             }
 
-        }catch (Exception ex){
+        } catch (Exception ex) {
 
             Log.w("Error: ", ex.getMessage());
 
@@ -100,7 +99,6 @@ public class CorreoActivity extends AppCompatActivity implements View.OnClickLis
             Intent intent = new Intent(getApplicationContext(), LoginActivity.class);
             startActivity(intent); // Lanzamos el activity
         }
-
 
 
     }

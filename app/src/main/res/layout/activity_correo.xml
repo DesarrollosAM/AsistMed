@@ -156,7 +156,7 @@
         android:layout_marginRight="8dp"
         android:layout_marginBottom="8dp"
         android:justificationMode="inter_word"
-        android:text="Por favor, para resolver cualquier tipo de incidencia, o duda administraqtiva, como baja o modificación de usuario, indiquelo a continuación y le responderemos a la mayor brevedad posible."
+        android:text="Por favor, para resolver cualquier tipo de incidencia, o duda administrativa, como baja o modificación de usuario, indiquelo a continuación y le responderemos a la mayor brevedad posible."
         android:textStyle="bold"
         app:layout_constraintBottom_toTopOf="@+id/txt_asunto"
         app:layout_constraintEnd_toEndOf="parent"

@@ -15,11 +15,11 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.Toast;
+
 import com.example.asistmed.R;
+
 import java.util.regex.Pattern;
 
-
-//Comentarios terminados y try/catch implementados
 
 public class AlarmaActivity extends AppCompatActivity {
 
@@ -137,7 +137,6 @@ public class AlarmaActivity extends AppCompatActivity {
                     .putExtra(AlarmClock.EXTRA_HOUR, hora)
                     .putExtra(AlarmClock.EXTRA_MINUTES, minutos)
                     .putExtra(AlarmClock.EXTRA_ALARM_SNOOZE_DURATION, frecuencia * 60);
-            //.putExtra(String.valueOf(AlarmManager.ELAPSED_REALTIME), 3);
 
             if (intent.resolveActivity(getPackageManager()) != null) {
                 startActivity(intent);

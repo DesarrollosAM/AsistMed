@@ -33,15 +33,12 @@ import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-//Comentarios terminados y try/catch implementados
 
-public class RegistroActivity extends AppCompatActivity implements View.OnClickListener{
+public class RegistroActivity extends AppCompatActivity implements View.OnClickListener {
 
     //Declaramos las variables
-
     private Button btRegistro;
     private TextView yaEstoyregistrado;
-    private EditText introduceUsuario, introduceEmail, introduceContrasena, repiteContrasena;
     private SharedPreferences shared;
     private SharedPreferences.Editor editor;
 
@@ -62,7 +59,7 @@ public class RegistroActivity extends AppCompatActivity implements View.OnClickL
         super.onStart();
         // Chequeamos si el usuario está logado y actualizamos UI al respecto.
         FirebaseUser currentUser = mAuth.getCurrentUser();
-        if(currentUser != null){
+        if (currentUser != null) {
             currentUser.reload();
         }
     }
@@ -74,8 +71,9 @@ public class RegistroActivity extends AppCompatActivity implements View.OnClickL
 
         setContentView(R.layout.activity_registro);
 
+        //Ocultamos botones y barra para disponer de la pantalla completa del dispositivo
         View decorView = getWindow().getDecorView();
-        int uiOptions =  View.SYSTEM_UI_FLAG_HIDE_NAVIGATION; // | View.SYSTEM_UI_FLAG_FULLSCREEN; //View.SYSTEM_UI_FLAG_IMMERSIVE |
+        int uiOptions = View.SYSTEM_UI_FLAG_HIDE_NAVIGATION | View.SYSTEM_UI_FLAG_FULLSCREEN | View.SYSTEM_UI_FLAG_IMMERSIVE;
         decorView.setSystemUiVisibility(uiOptions);
 
         //Cargamos la referencia de nuestro botón
@@ -105,9 +103,9 @@ public class RegistroActivity extends AppCompatActivity implements View.OnClickL
     public void onClick(View view) {
 
         //Asignamos a variables nuestros componentes visuales
-        EditText etMail= (EditText) findViewById(R.id.introduceEmail);
-        EditText etPassword= (EditText) findViewById(R.id.introduceContrasena);
-        EditText etUsuario= (EditText) findViewById(R.id.introduceUsuario);
+        EditText etMail = (EditText) findViewById(R.id.introduceEmail);
+        EditText etPassword = (EditText) findViewById(R.id.introduceContrasena);
+        EditText etUsuario = (EditText) findViewById(R.id.introduceUsuario);
         EditText etconfirmaPassword = (EditText) findViewById(R.id.repiteContrasena);
 
         //Recogemos en variables los textView
@@ -116,15 +114,15 @@ public class RegistroActivity extends AppCompatActivity implements View.OnClickL
         password = etPassword.getText().toString();
         confirmaPassword = etconfirmaPassword.getText().toString();
 
-        if ((view.getId() == R.id.btRegistro)){
-            if (validaUsuario() && validaEmail() && validaPassword()){
+        if ((view.getId() == R.id.btRegistro)) {
+            if (validaUsuario() && validaEmail() && validaPassword()) {
 
-                mAuth.createUserWithEmailAndPassword(email,password).addOnCompleteListener(this,new OnCompleteListener<AuthResult>() {
+                mAuth.createUserWithEmailAndPassword(email, password).addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
 
 
-                        if(task.isSuccessful()){
+                        if (task.isSuccessful()) {
                             passwordEncriptado = encriptarContraseña(password);
                             insertarUsuarioenRegistroActivity(email, passwordEncriptado, nick);
 
@@ -141,7 +139,7 @@ public class RegistroActivity extends AppCompatActivity implements View.OnClickL
                             //Instanciamos un objeto Intent, pasandole con this el Activity actual, y como segundo parametro el Activity que vamos a cargar
                             Intent intent = new Intent(getApplicationContext(), UsuarioActivity.class);
                             startActivity(intent); // Lanzamos el activity
-                        }else{
+                        } else {
                             Toast toastUsuarioValido = Toast.makeText(getApplicationContext(), "El registro no se ha podido completar", Toast.LENGTH_LONG);
                             toastUsuarioValido.show();
                         }
@@ -150,7 +148,7 @@ public class RegistroActivity extends AppCompatActivity implements View.OnClickL
 
             }
 
-        }else{
+        } else {
 
             //Instanciamos un objeto Intent, pasandole con this el Activity actual, y como segundo parametro el Activity que vamos a cargar
             Intent intent = new Intent(getApplicationContext(), LoginActivity.class);
@@ -162,14 +160,14 @@ public class RegistroActivity extends AppCompatActivity implements View.OnClickL
     }
 
 
-    private boolean validaEmail(){
+    private boolean validaEmail() {
 
         email = email.trim();
 
-        if (email.isEmpty()){
+        if (email.isEmpty()) {
             Toast toastEmailVacio = Toast.makeText(this, "Introduzca correo electrónico", Toast.LENGTH_SHORT);
             toastEmailVacio.show();
-        } else if (!VALID_EMAIL_ADDRESS_REGEX.matcher(email).find()){
+        } else if (!VALID_EMAIL_ADDRESS_REGEX.matcher(email).find()) {
             Toast toastEmailNoValido = Toast.makeText(this, "Introduzca un correo válido", Toast.LENGTH_SHORT);
             toastEmailNoValido.show();
         } else {
@@ -180,41 +178,39 @@ public class RegistroActivity extends AppCompatActivity implements View.OnClickL
     }
 
 
-    private boolean validaPassword(){
+    private boolean validaPassword() {
 
         password = password.trim();
         confirmaPassword = confirmaPassword.trim();
-        if (password.isEmpty()){
+        if (password.isEmpty()) {
             Toast toastPasswordVacia = Toast.makeText(this, "Introduzca contraseña", Toast.LENGTH_SHORT);
             toastPasswordVacia.show();
-        } else if (password.length() < 8){
+        } else if (password.length() < 8) {
             Toast toastPasswordCorta = Toast.makeText(this, "La contraseña debe tener al menos 8 caracteres", Toast.LENGTH_SHORT);
             toastPasswordCorta.show();
 
-        }else if (!password.equals(confirmaPassword)){
+        } else if (!password.equals(confirmaPassword)) {
 
             Toast toastPasswordDistintas = Toast.makeText(this, "Las contraseñas introducidas no coinciden", Toast.LENGTH_SHORT);
             toastPasswordDistintas.show();
-        }
-
-        else {
+        } else {
             return true;
         }
         return false;
     }
 
-    private boolean validaUsuario(){
+    private boolean validaUsuario() {
 
-        if(nick.isEmpty()){
+        if (nick.isEmpty()) {
             Toast toastUsuarioVacio = Toast.makeText(this, "Por favor, introduzca usuario", Toast.LENGTH_SHORT);
             toastUsuarioVacio.show();
         }
-        return  true;
+        return true;
     }
 
-    public void insertarUsuarioenRegistroActivity(String usuario, String contraseña, String nick){
+    public void insertarUsuarioenRegistroActivity(String usuario, String contraseña, String nick) {
 
-        try{
+        try {
 
             //Inserción en Firestore:
             FirebaseFirestore dbs = FirebaseFirestore.getInstance();
@@ -243,7 +239,7 @@ public class RegistroActivity extends AppCompatActivity implements View.OnClickL
                         }
                     });
 
-        }catch (Exception ex){
+        } catch (Exception ex) {
 
             Log.w("Error: ", ex.getMessage());
 

@@ -2,12 +2,15 @@ package com.example.asistmed.RecyclerViews;
 
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.content.Context;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.asistmed.Modelos.Tratamiento;
 import com.example.asistmed.R;
@@ -21,6 +24,7 @@ public class AdaptadorAddTratamientos
     //Creamos las variables necesarias.
     private ArrayList<Tratamiento> listaAddTratamientos;
     private View.OnClickListener listener;
+    private Context context;
 
     /*
     Método por el que inyectamos la lista de tratamientos nuevos.
@@ -48,8 +52,15 @@ public class AdaptadorAddTratamientos
             view.setOnClickListener(this);
 
             //Capturamos e insertamos en el log, cualquier posible excepción.
-        } catch (Exception e) {
-            Log.w("Excepción: ", e.getMessage());
+        } catch (Exception ex) {
+
+            Log.w("Error: ", ex.getMessage());
+
+            Toast toast = Toast.makeText(context, "Se ha producido un error.", Toast.LENGTH_LONG);
+            toast.setGravity(Gravity.TOP | Gravity.CENTER_HORIZONTAL, 0, 500);
+            toast.show();
+
+
         }
         //Devolvemos el viewHolder con la vista configurada como parametro.
         return new ViewHolderAddTratamientos(view);
@@ -72,8 +83,14 @@ public class AdaptadorAddTratamientos
             holder.foto.setImageResource(listaAddTratamientos.get(position).getFoto());
 
             //Capturamos e insertamos en el log, cualquier posible excepción.
-        } catch (Exception e) {
-            Log.w("Excepción: ", e.getMessage());
+        } catch (Exception ex) {
+
+            Log.w("Error: ", ex.getMessage());
+
+            Toast toast = Toast.makeText(context, "Se ha producido un error.", Toast.LENGTH_LONG);
+            toast.setGravity(Gravity.TOP | Gravity.CENTER_HORIZONTAL, 0, 500);
+            toast.show();
+
         }
 
     }
@@ -114,8 +131,13 @@ public class AdaptadorAddTratamientos
                 }
                 foto = (ImageView) itemView.findViewById(R.id.idImagen);
                 //Capturamos e insertamos en el log, cualquier posible excepción.
-            } catch (Exception e) {
-                Log.w("Excepción: ", e.getMessage());
+            } catch (Exception ex) {
+
+                Log.w("Error: ", ex.getMessage());
+
+                Toast toast = Toast.makeText(context, "Se ha producido un error.", Toast.LENGTH_LONG);
+                toast.setGravity(Gravity.TOP | Gravity.CENTER_HORIZONTAL, 0, 500);
+                toast.show();
             }
         }
     }
