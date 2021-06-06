@@ -236,7 +236,9 @@ public class AddTratamientosActivity extends AppCompatActivity implements View.O
             FirebaseFirestore db = FirebaseFirestore.getInstance();
             db.collection("tratamientos").document(nombreTratamiento).collection("usuariosTratamientos").document(usuario).set(trat);
             sumarTratamientoEnBBDD(usuario);
-            Toast.makeText(getApplicationContext(), "Tratamiento añadido", Toast.LENGTH_LONG).show();
+            Toast toast = Toast.makeText(getApplicationContext(), "Tratamiento añadido", Toast.LENGTH_LONG);
+            toast.setGravity(Gravity.TOP | Gravity.CENTER_HORIZONTAL, 0, 600);
+            toast.show();
 
         } catch (Exception ex) {
             Log.w("Error: ", ex.getMessage());
@@ -295,6 +297,7 @@ public class AddTratamientosActivity extends AppCompatActivity implements View.O
                         DocumentSnapshot document = task.getResult();
                         if (document.exists()) {
                             Toast yaExisteTratamiento = Toast.makeText(getApplicationContext(), nombreTrat + " ya se encuentra en su lista de tratamientos actual. Elija otro o finalice.", Toast.LENGTH_LONG);
+                            yaExisteTratamiento.setGravity(Gravity.TOP | Gravity.CENTER_HORIZONTAL, 0, 600);
                             yaExisteTratamiento.show();
 
                         } else {
