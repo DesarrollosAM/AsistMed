@@ -14,7 +14,7 @@
         android:src="@drawable/medicamento_por_defecto" />
 
     <TextView
-        android:id="@+id/txtMedicamento"
+        android:id="@+id/txtMedicamento2"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginLeft="4dp"
@@ -24,7 +24,7 @@
         android:background="@drawable/input_background"
         android:gravity="center_horizontal"
         android:inputType="text"
-        android:text="MODIFICAR MEDICAMENTO"
+        android:text="MODIFICAR "
         android:textAlignment="center"
         android:textSize="24sp"
         android:textStyle="bold" />

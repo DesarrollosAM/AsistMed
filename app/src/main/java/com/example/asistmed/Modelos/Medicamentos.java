@@ -1,9 +1,8 @@
 package com.example.asistmed.Modelos;
 
-import java.io.File;
-
 public class Medicamentos {
 
+    //Declaramos las variables necesarias.
     private String nombreTratamiento;
     private String usuario;
     private String nombre;
@@ -14,9 +13,11 @@ public class Medicamentos {
     private String info;
     private String addFoto;
 
+    //Constructor vacío.
     public Medicamentos() {
     }
 
+    //Constructor con parámetros.
     public Medicamentos(String nombreTratamiento, String usuario, String nombre, int fotoInicial, int cantidad, int frecuencia, int duracion, String info, String addFoto) {
         this.nombreTratamiento = nombreTratamiento;
         this.usuario = usuario;
@@ -29,6 +30,9 @@ public class Medicamentos {
         this.addFoto = addFoto;
     }
 
+    /*
+    Getter´s & Setter´s
+     */
     public String getNombreTratamiento() {
         return nombreTratamiento;
     }

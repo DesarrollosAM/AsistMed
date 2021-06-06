@@ -40,8 +40,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
-//Comentarios terminados y try/catch implementados
-
 public class MedicamentosActivity extends AppCompatActivity {
 
     //Declaramos las variables necesarias.

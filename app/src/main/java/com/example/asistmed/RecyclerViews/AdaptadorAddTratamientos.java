@@ -14,7 +14,6 @@ import com.example.asistmed.R;
 
 import java.util.ArrayList;
 
-//Comentarios terminados.
 public class AdaptadorAddTratamientos
         extends RecyclerView.Adapter<AdaptadorAddTratamientos.ViewHolderAddTratamientos>
         implements View.OnClickListener {

@@ -36,8 +36,6 @@ import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
 
-//Comentarios terminados y try/catch implementados
-
 public class TratamientosActivity extends AppCompatActivity implements View.OnClickListener {
 
     //Declaramos las variables necesarias.

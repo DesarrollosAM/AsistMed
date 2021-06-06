@@ -179,46 +179,42 @@ public class AdministradorActivity extends AppCompatActivity implements View.OnC
                     .setItems(R.array.listaTratamientos, new DialogInterface.OnClickListener() {
                         public void onClick(DialogInterface dialog, int which) {
                             switch (which) {
-
-
                                 case 0:
-                                    dialogoModificarTratamientosPersonalizado();
+                                    dialogoModificarTratamientosPersonalizado("Alergia");
                                     break;
                                 case 1:
-                                    dialogoModificarTratamientosPersonalizado();
+                                    dialogoModificarTratamientosPersonalizado("Artritis");
                                     break;
                                 case 2:
-                                    dialogoModificarTratamientosPersonalizado();
+                                    dialogoModificarTratamientosPersonalizado("Asma");
                                     break;
                                 case 3:
-                                    dialogoModificarTratamientosPersonalizado();
+                                    dialogoModificarTratamientosPersonalizado("Bronquitis");
                                     break;
                                 case 4:
-                                    dialogoModificarTratamientosPersonalizado();
+                                    dialogoModificarTratamientosPersonalizado("Conjuntivitis");
                                     break;
                                 case 5:
-                                    dialogoModificarTratamientosPersonalizado();
+                                    dialogoModificarTratamientosPersonalizado("Estrés");
                                     break;
                                 case 6:
-                                    dialogoModificarTratamientosPersonalizado();
+                                    dialogoModificarTratamientosPersonalizado("Fractura");
                                     break;
                                 case 7:
-                                    dialogoModificarTratamientosPersonalizado();
+                                    dialogoModificarTratamientosPersonalizado("Gastritis");
                                     break;
                                 case 8:
-                                    dialogoModificarTratamientosPersonalizado();
+                                    dialogoModificarTratamientosPersonalizado("Gripe");
                                     break;
                                 case 9:
-                                    dialogoModificarTratamientosPersonalizado();
+                                    dialogoModificarTratamientosPersonalizado("Infección");
                                     break;
                                 case 10:
-                                    dialogoModificarTratamientosPersonalizado();
+                                    dialogoModificarTratamientosPersonalizado("Otitis");
                                     break;
                                 case 11:
-                                    dialogoModificarTratamientosPersonalizado();
+                                    dialogoModificarTratamientosPersonalizado("Sarna");
                                     break;
-
-
                             }
                         }
                     });
@@ -253,46 +249,46 @@ public class AdministradorActivity extends AppCompatActivity implements View.OnC
                         public void onClick(DialogInterface dialog, int which) {
                             switch (which) {
                                 case 0:
-                                    modificarMedicamentoPersonalizado();
+                                    modificarMedicamentoPersonalizado("Acetaminofen");
                                     break;
                                 case 1:
-                                    modificarMedicamentoPersonalizado();
+                                    modificarMedicamentoPersonalizado("Amoxicilina");
                                     break;
                                 case 2:
-                                    modificarMedicamentoPersonalizado();
+                                    modificarMedicamentoPersonalizado("Ansiolitico");
                                     break;
                                 case 3:
-                                    modificarMedicamentoPersonalizado();
+                                    modificarMedicamentoPersonalizado("Antitusivo");
                                     break;
                                 case 4:
-                                    modificarMedicamentoPersonalizado();
+                                    modificarMedicamentoPersonalizado("Aspirina");
                                     break;
                                 case 5:
-                                    modificarMedicamentoPersonalizado();
+                                    modificarMedicamentoPersonalizado("Augmentine");
                                     break;
                                 case 6:
-                                    modificarMedicamentoPersonalizado();
+                                    modificarMedicamentoPersonalizado("Ciprofloxacina");
                                     break;
                                 case 7:
-                                    modificarMedicamentoPersonalizado();
+                                    modificarMedicamentoPersonalizado("Fortasec");
                                     break;
                                 case 8:
-                                    modificarMedicamentoPersonalizado();
+                                    modificarMedicamentoPersonalizado("Ibuprofeno");
                                     break;
                                 case 9:
-                                    modificarMedicamentoPersonalizado();
+                                    modificarMedicamentoPersonalizado("Naproxeno");
                                     break;
                                 case 10:
-                                    modificarMedicamentoPersonalizado();
+                                    modificarMedicamentoPersonalizado("Paracetamol");
                                     break;
                                 case 11:
-                                    modificarMedicamentoPersonalizado();
+                                    modificarMedicamentoPersonalizado("Permetrina");
                                     break;
                                 case 12:
-                                    modificarMedicamentoPersonalizado();
+                                    modificarMedicamentoPersonalizado("Polaramine");
                                     break;
                                 case 13:
-                                    modificarMedicamentoPersonalizado();
+                                    modificarMedicamentoPersonalizado("Ventolín");
                                     break;
                             }
                         }
@@ -570,7 +566,7 @@ public class AdministradorActivity extends AppCompatActivity implements View.OnC
         dbm.collection("tratamientos").document(nombreTratMed).collection("usuariosTratamientos").document("medicamentos").set(medi);
     }
 
-    public void dialogoModificarTratamientosPersonalizado() {
+    public void dialogoModificarTratamientosPersonalizado(String nombreTratamiento) {
         try {
             //Creamos un constructor de diálogos.
             AlertDialog.Builder builderAddTratamientos = new AlertDialog.Builder(this);
@@ -581,7 +577,9 @@ public class AdministradorActivity extends AppCompatActivity implements View.OnC
             //Creamos una vista para poder capturar los valores de los editText y le asociamos el layout correspondiente.
             View vista = inflater.inflate(R.layout.dialogo_modificar_tratamiento, null);
 
-            //Asociamos los editText con los del layout.
+            //Asociamos los elementos con los del layout.
+            TextView txtTratam = (TextView)vista.findViewById(R.id.txtTratamientos2);
+            txtTratam.setText("MODIFICAR " + nombreTratamiento.toUpperCase());
             final EditText duracion = (EditText) vista.findViewById(R.id.edtDuracionTratamientoMod);
             final EditText nombre = (EditText) vista.findViewById(R.id.edtNombreTratamientoMod);
 
@@ -593,14 +591,13 @@ public class AdministradorActivity extends AppCompatActivity implements View.OnC
                             if (nombre.getText().toString().equalsIgnoreCase("") || duracion.getText().toString().equalsIgnoreCase("")) {
                                 Toast camposVacios = Toast.makeText(AdministradorActivity.this, "Debe rellenar todos los campos.", Toast.LENGTH_LONG);
                                 camposVacios.show();
-                                dialogoModificarTratamientosPersonalizado();
+                                dialogoModificarTratamientosPersonalizado(nombreTratamiento);
                             } else {
                                 //Pasamos a mayúscula la primera letra del tratamiento.
                                 String t = nombre.getText().toString().toLowerCase();
                                 String tratamiento = t.substring(0, 1).toUpperCase() + t.substring(1);
                                 //Al aceptar, capturamos los valores introducidos y los usamos como parámetros para llamar al método insertar
                                 ModTratamiento(tratamiento, duracion.getText().toString());
-                                //colocarUsuariosTratamientos(tratamiento);
                             }
                         }
                     })
@@ -667,7 +664,7 @@ public class AdministradorActivity extends AppCompatActivity implements View.OnC
         }
     }
 
-    public void modificarMedicamentoPersonalizado() {
+    public void modificarMedicamentoPersonalizado(String nombreMedicamento) {
         try {
             //Creamos un constructor de diálogos.
             AlertDialog.Builder builderAddMedicamentos = new AlertDialog.Builder(this);
@@ -677,6 +674,8 @@ public class AdministradorActivity extends AppCompatActivity implements View.OnC
 
             //Creamos una vista para poder capturar los valores de los editText y le asociamos el layout correspondiente.
             View vista = inflater.inflate(R.layout.dialogo_modificar_medicamento, null);
+            TextView txtMedicamento = (TextView)vista.findViewById(R.id.txtMedicamento2);
+            txtMedicamento.setText("MODIFICAR " + nombreMedicamento.toUpperCase());
             final EditText cantidad_diaria = (EditText) vista.findViewById(R.id.edtCantidad_diaria);
             final EditText nombreTrat = (EditText) vista.findViewById(R.id.edtNombreTratMed);
             final EditText nombreMed = (EditText) vista.findViewById(R.id.edtNombreMedicamento);
@@ -696,6 +695,7 @@ public class AdministradorActivity extends AppCompatActivity implements View.OnC
                                     descripcion.getText().toString().equalsIgnoreCase("")) {
                                 Toast camposVacios = Toast.makeText(AdministradorActivity.this, "Debe rellenar todos los campos.", Toast.LENGTH_LONG);
                                 camposVacios.show();
+                                modificarMedicamentoPersonalizado(nombreMedicamento);
                             } else {
 
                                 //Pasamos a mayúscula la primera letra del tratamiento.
