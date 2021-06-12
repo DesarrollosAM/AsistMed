@@ -239,9 +239,7 @@ public class AddTratamientosActivity extends AppCompatActivity implements View.O
             Toast toast = Toast.makeText(getApplicationContext(), "Tratamiento añadido", Toast.LENGTH_SHORT);
             toast.setGravity(Gravity.TOP | Gravity.CENTER_HORIZONTAL, 0, 500);
             toast.show();
-            Toast toast = Toast.makeText(getApplicationContext(), "Tratamiento añadido", Toast.LENGTH_LONG);
-            toast.setGravity(Gravity.TOP | Gravity.CENTER_HORIZONTAL, 0, 600);
-            toast.show();
+
 
         } catch (Exception ex) {
             Log.w("Error: ", ex.getMessage());
