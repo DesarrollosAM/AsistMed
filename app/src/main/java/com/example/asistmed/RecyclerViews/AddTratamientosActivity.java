@@ -236,11 +236,13 @@ public class AddTratamientosActivity extends AppCompatActivity implements View.O
             FirebaseFirestore db = FirebaseFirestore.getInstance();
             db.collection("tratamientos").document(nombreTratamiento).collection("usuariosTratamientos").document(usuario).set(trat);
             sumarTratamientoEnBBDD(usuario);
-            Toast.makeText(getApplicationContext(), "Tratamiento añadido", Toast.LENGTH_LONG).show();
+            Toast toast = Toast.makeText(getApplicationContext(), "Tratamiento añadido", Toast.LENGTH_SHORT);
+            toast.setGravity(Gravity.TOP | Gravity.CENTER_HORIZONTAL, 0, 500);
+            toast.show();
 
         } catch (Exception ex) {
             Log.w("Error: ", ex.getMessage());
-            Toast toast = Toast.makeText(getApplicationContext(), "Se ha producido un error.", Toast.LENGTH_LONG);
+            Toast toast = Toast.makeText(getApplicationContext(), "Se ha producido un error.", Toast.LENGTH_SHORT);
             toast.setGravity(Gravity.TOP | Gravity.CENTER_HORIZONTAL, 0, 500);
             toast.show();
         } finally {

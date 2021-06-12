@@ -147,13 +147,11 @@
 
     <TextView
         android:id="@+id/tvMotivos"
-        android:layout_width="330dp"
-        android:layout_height="75dp"
-        android:layout_marginStart="100dp"
-        android:layout_marginLeft="100dp"
+        android:layout_width="380dp"
+        android:layout_height="70dp"
+        android:layout_marginStart="32dp"
         android:layout_marginTop="16dp"
         android:layout_marginEnd="8dp"
-        android:layout_marginRight="8dp"
         android:layout_marginBottom="8dp"
         android:justificationMode="inter_word"
         android:text="Por favor, para resolver cualquier tipo de incidencia, o duda administrativa, como baja o modificación de usuario, indiquelo a continuación y le responderemos a la mayor brevedad posible."

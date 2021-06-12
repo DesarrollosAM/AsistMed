@@ -13,41 +13,38 @@
         android:layout_height="match_parent"
         tools:context=".Controladores.MapsActivity"
         tools:layout_editor_absoluteX="0dp"
-        tools:layout_editor_absoluteY="-81dp" />
+        tools:layout_editor_absoluteY="-39dp" />
 
     <ImageView
         android:id="@+id/btSatelite"
         android:layout_width="50dp"
         android:layout_height="50dp"
-        android:layout_marginEnd="76dp"
-        android:layout_marginRight="76dp"
+        android:layout_marginEnd="80dp"
         android:layout_marginBottom="676dp"
         android:src="@drawable/boton_satelite_transparente"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/map"
-        app:layout_constraintVertical_bias="0.878" />
+        app:layout_constraintVertical_bias="1.0" />
 
     <ImageView
         android:id="@+id/btVistaNormal"
         android:layout_width="82dp"
         android:layout_height="92dp"
         android:layout_marginTop="80dp"
-        android:layout_marginEnd="60dp"
-        android:layout_marginRight="60dp"
+        android:layout_marginEnd="64dp"
         android:layout_marginBottom="648dp"
         android:src="@drawable/boton_google_maps"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.494" />
+        app:layout_constraintVertical_bias="0.898" />
 
     <ImageView
         android:id="@+id/btVolverMaps"
         android:layout_width="50dp"
         android:layout_height="50dp"
-        android:layout_marginEnd="284dp"
-        android:layout_marginRight="284dp"
+        android:layout_marginEnd="344dp"
         android:layout_marginBottom="32dp"
         android:src="@drawable/boton_atras_maps"
         app:layout_constraintBottom_toBottomOf="parent"
