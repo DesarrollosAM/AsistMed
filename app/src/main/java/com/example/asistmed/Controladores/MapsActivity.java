@@ -2,6 +2,7 @@ package com.example.asistmed.Controladores;
 
 
 import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 import androidx.fragment.app.FragmentActivity;
 
 import android.Manifest;
@@ -35,6 +36,9 @@ import org.json.JSONException;
 
 import java.io.IOException;
 
+import static android.Manifest.permission.ACCESS_COARSE_LOCATION;
+import static android.Manifest.permission.ACCESS_FINE_LOCATION;
+
 
 public class MapsActivity extends FragmentActivity implements OnMapReadyCallback, View.OnClickListener {
 
@@ -46,6 +50,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     private ImageView btSatelite;
     private ImageView btVolverMap;
     private Handler handler;
+    private int permiso, permiso2;
     Marker marcadorCarlosIII;
 
 
@@ -59,6 +64,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         int uiOptions = View.SYSTEM_UI_FLAG_IMMERSIVE | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION | View.SYSTEM_UI_FLAG_FULLSCREEN;
         decorView.setSystemUiVisibility(uiOptions);
 
+
         binding = ActivityMapsBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
@@ -66,6 +72,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
+
 
         btVistaNormal = (ImageView) findViewById(R.id.btVistaNormal);
         btSatelite = (ImageView) findViewById(R.id.btSatelite);
@@ -107,23 +114,58 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     @Override
     public void onMapReady(GoogleMap googleMap) {
 
-        mMap = googleMap;
 
-        //Comprobamos con el if si los permisos para la Geolocalización están revocados, y si es así, dentro del if se solicitan
-        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED
-                && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+        if (ActivityCompat.checkSelfPermission(this, ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
 
-            //En el caso de que los permisos estén revocados, los solicitamos.
-            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION,}, 1000);
+
+            ActivityCompat.requestPermissions(this, new String[]{ACCESS_FINE_LOCATION,}, 1000);
             ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_COARSE_LOCATION,}, 1000);
 
-        } else {
+
+            /////////////////////////////////////Retrasamos el cierre de la aplicación 2 seg para que se pueda completar el cierre de sesión en FirebaseAucth, ya que es asíncrona.
+            handler = new Handler();
+            Runnable r = new Runnable() {
+                public void run() {
+
+                    permiso = ContextCompat.checkSelfPermission(getApplicationContext(), ACCESS_FINE_LOCATION);
+                    permiso2 = ContextCompat.checkSelfPermission(getApplicationContext(), ACCESS_COARSE_LOCATION);
+
+                    if (permiso == -1 || permiso2 == -1){
+
+                        Toast toast = Toast.makeText(getApplicationContext(), "Funcionalidad abortada por no conceder permisos", Toast.LENGTH_LONG);
+                        toast.setGravity(Gravity.TOP | Gravity.CENTER_HORIZONTAL, 0, 500);
+                        toast.show();
+
+                        finishAffinity();
+                        startActivity(new Intent(getApplicationContext(), UsuarioActivity.class));
+
+                    }else {
+
+                        Toast toast = Toast.makeText(getApplicationContext(), "Permisos concedidos acceda de nuevo", Toast.LENGTH_LONG);
+                        toast.setGravity(Gravity.TOP | Gravity.CENTER_HORIZONTAL, 0, 500);
+                        toast.show();
+
+                        finishAffinity();
+                        startActivity(new Intent(getApplicationContext(), UsuarioActivity.class));
+
+                    }
+
+                }
+            };
+            handler.postDelayed(r, 3500);
+            ///////////////////////////////////
+
+
+            return;
+        }
+            mMap = googleMap;
+
             //Habilitamos nuestro posicionamiento GPS
             mMap.setMyLocationEnabled(true);
 
             //Mostramos el botón que nos posicionará en el mapa en nuestra ubicación
             mMap.getUiSettings().setMyLocationButtonEnabled(true);
-        }
+        //}
 
         // Definimos una imagen para el marcador
         @SuppressLint("UseCompatLoadingForDrawables") BitmapDrawable bitmapdraw = (BitmapDrawable) getResources().getDrawable(R.drawable.carlosiii_png); // Añadimos la imagen del nuevo marcador

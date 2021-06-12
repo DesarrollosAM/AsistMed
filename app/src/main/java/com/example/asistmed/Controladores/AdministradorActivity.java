@@ -335,6 +335,7 @@ public class AdministradorActivity extends AppCompatActivity implements View.OnC
                             if (nombre.getText().toString().equalsIgnoreCase("") && duracion.getText().toString().equalsIgnoreCase("")) {
                                 Toast camposVacios = Toast.makeText(AdministradorActivity.this, "Debe rellenar todos los campos.", Toast.LENGTH_LONG);
                                 camposVacios.show();
+                                dialogoAddTratamientos();
                             } else {
 
                                 //Pasamos a mayúscula la primera letra del tratamiento.
@@ -451,6 +452,7 @@ public class AdministradorActivity extends AppCompatActivity implements View.OnC
                                     descripcion.getText().toString().equalsIgnoreCase("")) {
                                 Toast camposVacios = Toast.makeText(AdministradorActivity.this, "Debe rellenar todos los campos.", Toast.LENGTH_LONG);
                                 camposVacios.show();
+                                dialogoAddMedicamentos();
                             } else {
 
                                 //Pasamos a mayúscula la primera letra del tratamiento.

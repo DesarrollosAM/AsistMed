@@ -111,19 +111,33 @@ public class UsuarioActivity extends AppCompatActivity implements View.OnClickLi
 
         String lecturaQr = result.getContents();
 
-        //Si la lectura del código es exitosa, extraemos el substring con la parte del código que pasamos a la URL de la agencia del medicamento
-        if (lecturaQr != null) {
+        try{
 
+            if (lecturaQr != null || lecturaQr.length() > 13) {
+                //Si la lectura del código es exitosa, extraemos el substring con la parte del código que pasamos a la URL de la agencia del medicamento
+                String idMedicamento = lecturaQr.substring(10, 16);
+                Uri uri = Uri.parse(urlAgenciaMedicamento + idMedicamento);
+                Intent intent = new Intent(Intent.ACTION_VIEW, uri);
+                startActivity(intent);
 
-            String idMedicamento = lecturaQr.substring(10, 16);
-            Uri uri = Uri.parse(urlAgenciaMedicamento + idMedicamento);
-            Intent intent = new Intent(Intent.ACTION_VIEW, uri);
-            startActivity(intent);
+            } else if(lecturaQr.length() == 13){
+                //Si la lectura corresponde a un código de barras.
+                Toast error = Toast.makeText(getApplicationContext(), "Código no reconocido.", Toast.LENGTH_LONG);
+                error.show();
 
-            //Si cancelamos la lectura
-        } else {
+            }
+        } catch (NullPointerException npe) {
+            //Si cancelamos la lectura.
             Toast lecturaCancelada = Toast.makeText(getApplicationContext(), "Lectura cancelada.", Toast.LENGTH_LONG);
             lecturaCancelada.show();
+
+        } catch (Exception ex) {
+            Log.w("Error: ", ex.getMessage());
+            Toast toast = Toast.makeText(getApplicationContext(), "Se ha producido un error.", Toast.LENGTH_LONG);
+            toast.setGravity(Gravity.TOP | Gravity.CENTER_HORIZONTAL, 0, 500);
+            toast.show();
+
+
         }
 
     }
